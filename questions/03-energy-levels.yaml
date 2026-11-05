@@ -1,0 +1,52 @@
+# Question bank, Module 3. Each item: id, lesson, level (core|extension|challenge),
+# type (concept|numeric|python), prompt, answer, and optional worked solution.
+
+- id: m3-q1
+  lesson: "3.4"
+  level: core
+  type: numeric
+  prompt: >
+    Find the wavelength of the photon emitted when hydrogen's electron drops
+    from n = 3 to n = 2. What colour is it?
+  answer: "about 656 nm, red (H-alpha)"
+  solution: >
+    ΔE = 13.6 × (1/2² − 1/3²) = 1.89 eV.
+    λ = 1240 / 1.89 ≈ 656 nm, which is red.
+
+- id: m3-q2
+  lesson: "3.6"
+  level: core
+  type: numeric
+  prompt: How much energy is needed to ionise hydrogen from n = 2?
+  answer: "3.4 eV"
+  solution: E₂ = −13.6 / 4 = −3.4 eV, so 3.4 eV lifts it to E = 0.
+
+- id: m3-q3
+  lesson: "3.5"
+  level: extension
+  type: numeric
+  prompt: >
+    How many times slower than light is the electron in hydrogen's ground
+    state?
+  answer: "about 137 times (v = 2.19 × 10⁶ m/s)"
+  solution: c / v₁ = 3.00 × 10⁸ / 2.19 × 10⁶ ≈ 137, which is 1/α.
+
+- id: m3-q4
+  lesson: "3.4"
+  level: extension
+  type: python
+  prompt: >
+    Write code that lists every transition between n = 1 and n = 6 whose
+    photon is visible (380–750 nm).
+  answer: "3→2, 4→2, 5→2, 6→2"
+  solution: See labs/03-bohr/balmer_lines.ipynb, exercise 2.
+
+- id: m3-q5
+  lesson: "3.5"
+  level: challenge
+  type: concept
+  prompt: Why does gold look yellow while silver looks white?
+  answer: >
+    Gold's inner electrons move at a large fraction of c, so relativistic
+    effects shift its 5d→6s absorption into the blue; gold reflects red and
+    yellow light. In silver the same gap stays in the ultraviolet.

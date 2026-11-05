@@ -1,0 +1,31 @@
+site_name: Quantum Visual
+site_description: Quantum physics from the atom up, with 3D visuals and Python labs
+docs_dir: curriculum
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - search.suggest
+  palette:
+    - scheme: default
+      toggle: { icon: material/brightness-7, name: Dark mode }
+    - scheme: slate
+      toggle: { icon: material/brightness-4, name: Light mode }
+markdown_extensions:
+  - tables
+  - admonition
+  - pymdownx.arithmatex:
+      generic: true
+extra_javascript:
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+nav:
+  - Home: index.md
+  - "0 · Toolkit": 00-toolkit.md
+  - "1 · The atom": 01-atom.md
+  - "2 · Light and the photon": 02-light-and-photon.md
+  - "3 · Energy levels": 03-energy-levels.md
+  - "4 · Waves and particles": 04-wave-particle.md
+  - "5 · Orbitals and spin": 05-orbitals-and-spin.md
+  - "6 · The nucleus": 06-nucleus.md
+  - "7 · Modern quantum": 07-modern-quantum.md
+  - "The Newtonian thread": newtonian-thread.md

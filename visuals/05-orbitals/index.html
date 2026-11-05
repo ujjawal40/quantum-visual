@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hydrogen Orbitals 3D</title>
+<link rel="stylesheet" href="../shared/style.css">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<div id="scene"></div>
+
+<aside class="panel">
+  <h1>Hydrogen orbitals</h1>
+  <p class="sub">Lesson 5.1–5.3 · each dot is one possible position of the electron</p>
+
+  <label for="orbital">Orbital</label>
+  <select id="orbital">
+    <option value="1s">1s &nbsp;(n=1, l=0)</option>
+    <option value="2s">2s &nbsp;(n=2, l=0)</option>
+    <option value="2pz">2pz (n=2, l=1)</option>
+    <option value="2px">2px (n=2, l=1)</option>
+    <option value="3dz2">3dz² (n=3, l=2)</option>
+    <option value="3dxy">3dxy (n=3, l=2)</option>
+  </select>
+
+  <label for="count">Dots: <span id="countLabel">30,000</span></label>
+  <input id="count" type="range" min="2000" max="80000" step="2000" value="30000">
+
+  <label class="check"><input id="phase" type="checkbox" checked> Colour by sign of ψ (phase)</label>
+  <label class="check"><input id="spin" type="checkbox" checked> Auto-rotate</label>
+
+  <dl id="info"></dl>
+  <p class="legend"><span class="sw pos"></span> ψ &gt; 0 &nbsp; <span class="sw neg"></span> ψ &lt; 0 &nbsp; <span class="sw nuc"></span> nucleus</p>
+  <p class="hint">Drag to rotate · scroll to zoom · axes in units of a₀ = 0.0529 nm</p>
+</aside>
+
+<script type="module">
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
+// |psi|^2 (unnormalised, a0 = 1), sign of psi, sampling box half-width, and facts
+const ORBITALS = {
+  "1s":   { dens: (x,y,z,r) => Math.exp(-2*r),                         sign: () => 1,                       box: 5, spherical: true,
+            n:1, l:0, ml:"0",  E:-13.6, nodes:"0 radial, 0 angular", note:"Spherical. Most likely distance = a₀, Bohr's radius." },
+  "2s":   { dens: (x,y,z,r) => (2-r)**2 * Math.exp(-r),                 sign: (x,y,z,r) => Math.sign(2-r),   box: 13, spherical: true,
+            n:2, l:0, ml:"0",  E:-3.40, nodes:"1 radial (sphere at r = 2a₀), 0 angular", note:"Spherical, with an inner ball and an outer shell separated by an empty node." },
+  "2pz":  { dens: (x,y,z,r) => z*z * Math.exp(-r),                      sign: (x,y,z) => Math.sign(z),       box: 12,
+            n:2, l:1, ml:"0",  E:-3.40, nodes:"0 radial, 1 angular (the xy-plane)", note:"Dumbbell along z. Same energy as 2s in hydrogen." },
+  "2px":  { dens: (x,y,z,r) => x*x * Math.exp(-r),                      sign: (x) => Math.sign(x),           box: 12,
+            n:2, l:1, ml:"±1 combination", E:-3.40, nodes:"0 radial, 1 angular (the yz-plane)", note:"Same shape as 2pz, pointing along x." },
+  "3dz2": { dens: (x,y,z,r) => (3*z*z - r*r)**2 * Math.exp(-2*r/3),     sign: (x,y,z,r) => Math.sign(3*z*z - r*r), box: 22,
+            n:3, l:2, ml:"0",  E:-1.51, nodes:"0 radial, 2 angular (two cones)", note:"Two lobes along z plus a ring (donut) around the middle, of opposite sign." },
+  "3dxy": { dens: (x,y,z,r) => (x*y)**2 * Math.exp(-2*r/3),             sign: (x,y) => Math.sign(x*y),       box: 22,
+            n:3, l:2, ml:"±2 combination", E:-1.51, nodes:"0 radial, 2 angular (xz and yz planes)", note:"Four-leaf clover in the xy-plane, between the axes." },
+};
+
+// ---------- scene ----------
+const el = document.getElementById("scene");
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+el.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
+camera.up.set(0, 0, 1);   // chemistry convention: z axis points up
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+
+const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+let cloud, axes, nucleus;
+
+function makeAxes(len) {
+  const g = new THREE.Group();
+  const mat = new THREE.LineBasicMaterial({ color: css("--axis"), transparent: true, opacity: 0.5 });
+  [[1,0,0],[0,1,0],[0,0,1]].forEach(d => {
+    const geo = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(-d[0]*len, -d[1]*len, -d[2]*len), new THREE.Vector3(d[0]*len, d[1]*len, d[2]*len)]);
+    g.add(new THREE.Line(geo, mat));
+  });
+  ["x","y","z"].forEach((t, i) => {
+    const c = document.createElement("canvas"); c.width = c.height = 64;
+    const ctx = c.getContext("2d"); ctx.fillStyle = css("--axis"); ctx.font = "bold 40px system-ui";
+    ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(t, 32, 32);
+    const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), transparent: true }));
+    s.position.set(i===0?len*1.08:0, i===1?len*1.08:0, i===2?len*1.08:0); s.scale.setScalar(len*0.09);
+    g.add(s);
+  });
+  return g;
+}
+
+// Rejection sampling of |psi|^2.
+// s orbitals (spherical): sample the radial distribution r^2|psi|^2 in 1D, then a random direction.
+// Others: sample inside a cube.
+function sample(o, N) {
+  const B = o.box;
+  let max = 0;
+  if (o.spherical) {
+    for (let i = 1; i <= 2000; i++) { const r = B*i/2000; max = Math.max(max, r*r*o.dens(0, 0, 0, r)); }
+  } else {
+    const G = 48;
+    for (let i = 0; i < G; i++) for (let j = 0; j < G; j++) for (let k = 0; k < G; k++) {
+      const x = -B + 2*B*(i+0.5)/G, y = -B + 2*B*(j+0.5)/G, z = -B + 2*B*(k+0.5)/G;
+      max = Math.max(max, o.dens(x, y, z, Math.hypot(x, y, z)));
+    }
+  }
+  max *= 1.1;
+  const draw = o.spherical
+    ? () => {
+        const r = Math.random()*B;
+        if (Math.random()*max >= r*r*o.dens(0, 0, 0, r)) return null;
+        const ct = Math.random()*2 - 1, st = Math.sqrt(1 - ct*ct), ph = Math.random()*2*Math.PI;
+        return [r*st*Math.cos(ph), r*st*Math.sin(ph), r*ct, r];
+      }
+    : () => {
+        const x = (Math.random()*2-1)*B, y = (Math.random()*2-1)*B, z = (Math.random()*2-1)*B;
+        const r = Math.hypot(x, y, z);
+        return Math.random()*max < o.dens(x, y, z, r) ? [x, y, z, r] : null;
+      };
+  const pos = new Float32Array(N*3), col = new Float32Array(N*3);
+  const cPos = new THREE.Color(css("--pos")), cNeg = new THREE.Color(css("--neg")), cOne = new THREE.Color(css("--mono"));
+  const usePhase = document.getElementById("phase").checked;
+  let n = 0, guard = 0;
+  while (n < N && guard++ < N*4000) {
+    const p = draw();
+    if (p) {
+      const [x, y, z, r] = p;
+      pos.set([x, y, z], n*3);
+      const c = !usePhase ? cOne : (o.sign(x, y, z, r) >= 0 ? cPos : cNeg);
+      col.set([c.r, c.g, c.b], n*3);
+      n++;
+    }
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+  geo.setAttribute("color", new THREE.BufferAttribute(col, 3));
+  return new THREE.Points(geo, new THREE.PointsMaterial({
+    size: B/220, vertexColors: true, transparent: true, opacity: 0.55, depthWrite: false }));
+}
+
+function build() {
+  const key = document.getElementById("orbital").value;
+  const o = ORBITALS[key];
+  const N = +document.getElementById("count").value;
+  [cloud, axes, nucleus].forEach(m => m && scene.remove(m));
+  cloud = sample(o, N); scene.add(cloud);
+  axes = makeAxes(o.box*0.95); scene.add(axes);
+  nucleus = new THREE.Mesh(new THREE.SphereGeometry(o.box*0.012, 16, 16),
+                           new THREE.MeshBasicMaterial({ color: css("--nuc") }));
+  scene.add(nucleus);
+  camera.position.set(o.box*2.3, o.box*1.7, o.box*1.1);
+  controls.target.set(0, 0, 0); controls.update();
+  document.getElementById("info").innerHTML = `
+    <dt>Quantum numbers</dt><dd>n = ${o.n}, l = ${o.l}, mₗ = ${o.ml}</dd>
+    <dt>Energy</dt><dd>${o.E.toFixed(2)} eV &nbsp;(−13.6 / n²)</dd>
+    <dt>Nodes</dt><dd>${o.nodes}</dd>
+    <dt>What you see</dt><dd>${o.note}</dd>
+    <dt>Spin</dt><dd>Each orbital holds 2 electrons: mₛ = +½ and −½</dd>`;
+}
+
+function resize() {
+  const w = el.clientWidth, h = el.clientHeight;
+  renderer.setSize(w, h); camera.aspect = w/h; camera.updateProjectionMatrix();
+}
+
+const count = document.getElementById("count");
+count.addEventListener("input", () => document.getElementById("countLabel").textContent = (+count.value).toLocaleString());
+["orbital", "phase"].forEach(id => document.getElementById(id).addEventListener("change", build));
+count.addEventListener("change", build);
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", build);
+addEventListener("resize", resize);
+
+resize(); build();
+renderer.setAnimationLoop(() => {
+  controls.autoRotate = document.getElementById("spin").checked;
+  controls.autoRotateSpeed = 1.2;
+  controls.update();
+  renderer.render(scene, camera);
+});
+</script>
+</body>
+</html>

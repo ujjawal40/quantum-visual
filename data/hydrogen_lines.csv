@@ -1,0 +1,6 @@
+series,n_upper,n_lower,wavelength_nm_air,name
+Balmer,3,2,656.28,H-alpha
+Balmer,4,2,486.13,H-beta
+Balmer,5,2,434.05,H-gamma
+Balmer,6,2,410.17,H-delta
+Balmer,7,2,397.01,H-epsilon
