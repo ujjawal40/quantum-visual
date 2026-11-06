@@ -15,6 +15,11 @@
 <link rel="stylesheet" href="../../assets/css/lesson.css">
 <script type="module" src="../../assets/js/ui/lesson.js"></script>
 <script type="module" src="./sim.js"></script>
+<style>
+  /* Lesson-only: the measurement graph under the bench. */
+  .pe-chart { position: relative; width: 100%; aspect-ratio: 16 / 10; margin-top: var(--space-3); }
+  .pe-chart canvas { width: 100%; height: 100%; }
+</style>
 </head>
 <body data-lesson="photoelectric">
 <a class="skip-link" href="#main">Skip to the lesson</a>
@@ -129,6 +134,54 @@
         </div>
         <p class="bench__caption">Light from the lamp hits the metal plate on the left. Any electrons it frees fly across the vacuum to the collector on the right, and the meter counts them.</p>
         <p class="status" id="status" aria-live="polite">The lamp is on. Change the colour, brightness or metal and watch what the plate does.</p>
+
+        <dl class="readouts">
+          <div class="readout"><dt>Photon energy</dt><dd><span id="r-photon">2.48</span><small>eV</small></dd></div>
+          <div class="readout"><dt>Fastest electron</dt><dd id="r-ke">none</dd></div>
+          <div class="readout"><dt>Current</dt><dd><span id="r-current">0</span><small>µA</small></dd></div>
+        </dl>
+
+        <div class="bench__controls">
+          <div>
+            <div class="control">
+              <label class="control__label" for="wavelength">Light wavelength <span class="control__value"><span data-value-for="wavelength"></span></span></label>
+              <input type="range" id="wavelength" min="100" max="800" step="1" value="500">
+            </div>
+            <div class="control">
+              <label class="control__label" for="brightness">Brightness <span class="control__value"><span data-value-for="brightness"></span></span></label>
+              <input type="range" id="brightness" min="0" max="100" step="1" value="50">
+            </div>
+          </div>
+          <div>
+            <div class="control">
+              <label class="control__label" for="metal">Metal plate</label>
+              <select id="metal">
+                <option value="caesium">Caesium, φ = 2.10 eV</option>
+                <option value="sodium" selected>Sodium, φ = 2.28 eV</option>
+                <option value="calcium">Calcium, φ = 2.87 eV</option>
+                <option value="zinc">Zinc, φ = 4.30 eV</option>
+                <option value="copper">Copper, φ = 4.70 eV</option>
+              </select>
+            </div>
+            <div class="control">
+              <label class="control__label" for="voltage">Stopping voltage <span class="control__value"><span data-value-for="voltage"></span> V</span></label>
+              <input type="range" id="voltage" min="0" max="5" step="0.01" value="0">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bench">
+        <h2 class="tasks__title">Your measurements</h2>
+        <p class="bench__caption">For each colour, raise the stopping voltage until the current just reaches zero, then record the point. The stopping voltage in volts equals the fastest electron's energy in eV.</p>
+        <div class="pe-chart">
+          <canvas id="chart" aria-label="Graph of fastest electron energy against light frequency, with your recorded points and a best-fit line."></canvas>
+        </div>
+        <p class="bench__caption" id="fit" aria-live="polite">Record at least 3 points to draw a best-fit line.</p>
+        <div class="bench__actions">
+          <button class="btn" type="button" id="record">Record point</button>
+          <button class="btn btn--quiet" type="button" id="clear-data">Clear points</button>
+        </div>
       </div>
 
       <section data-tasks aria-label="Experiments"></section>
