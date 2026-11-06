@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Double-Slit Experiment</title>
+<meta name="description" content="Fire electrons one at a time through two slits and watch an interference pattern build up. Then look at which slit they use, and watch it vanish.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="../../assets/css/tokens.css">
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/controls.css">
+<link rel="stylesheet" href="../../assets/css/layout.css">
+<link rel="stylesheet" href="../../assets/css/lesson.css">
+<script type="module" src="../../assets/js/ui/lesson.js"></script>
+<script type="module" src="./sim.js"></script>
+</head>
+<body data-lesson="double-slit">
+<a class="skip-link" href="#main">Skip to the lesson</a>
+<header data-chrome></header>
+
+<main id="main" class="lesson">
+  <nav data-crumbs aria-label="Breadcrumb"></nav>
+  <div class="lesson__intro">
+    <h1>The double-slit experiment</h1>
+    <p class="lede">Send electrons through two narrow slits, one at a time. Each one lands as a single dot, like a particle. Yet thousands of dots together draw stripes that only a wave could make.</p>
+  </div>
+
+  <div class="lesson__grid">
+    <article class="lesson__prose prose">
+      <h2>When waves meet</h2>
+      <p>Drop two stones into a pond and their ripples cross. Where a crest meets a crest, the water rises twice as high. Where a crest meets a trough, the two cancel and the water stays flat. This adding and cancelling is called <em>interference</em>, and only waves do it.</p>
+      <p>In 1801 Thomas Young shone light through two thin slits onto a wall. Instead of two bright lines, he saw a row of bright and dark stripes, or <em>fringes</em>. Light from the two slits travels slightly different distances to each point on the wall. Where the difference is a whole number of wavelengths the waves add up; where it is a half-wavelength they cancel.</p>
+      <div class="formula">Δy = <span class="frac"><span>λ L</span><span>d</span></span>
+        <small>Spacing between bright fringes: λ is the wavelength, L the distance to the screen, d the distance between the slits.</small></div>
+
+      <h2>Electrons are waves too</h2>
+      <p>In 1924 Louis de Broglie suggested that every moving particle has a wavelength, set by its momentum:</p>
+      <div class="formula">λ = <span class="frac"><span>h</span><span>p</span></span> = <span class="frac"><span>h</span><span>√(2 m e V)</span></span>
+        <small>for an electron accelerated through a voltage V. At 10 kV this gives λ ≈ 12 pm, about ten times smaller than an atom.</small></div>
+      <p>So electrons should interfere. Because their wavelength is so tiny, the slits must be tiny too: in the real experiments they are less than a micrometre apart. Raise the voltage in the simulation and the wavelength shrinks, so the fringes squeeze together.</p>
+
+      <h2>One electron at a time</h2>
+      <p>Here is the strange part. Turn the firing rate down so that only one electron is in the apparatus at once. Each electron arrives as a single dot at one spot. There is no other electron for it to interfere with.</p>
+      <p>Yet as the dots pile up, the stripes appear anyway. Electrons never land in the dark fringes. Each single electron behaves as if it passed through both slits and interfered with itself. Akira Tonomura's team filmed exactly this in 1989, one dot at a time.</p>
+      <p>Quantum physics describes this with a <em>wavefunction</em>: a wave that spreads through both slits and sets the probability of finding the electron at each point. The wave decides where electrons are likely to land. The dot is where one actually lands.</p>
+
+      <h2>Looking destroys the pattern</h2>
+      <p>Suppose you put a detector at the slits to see which one each electron goes through. Every electron is now caught at one slit or the other, never both, half the time each.</p>
+      <p>But the fringes disappear. The screen fills with a smooth hump, the simple sum of what each slit gives on its own. Learning which path the electron took removes the second path, and with it the interference. Switch the detector on in the simulation and watch it happen.</p>
+      <p>This is <em>wave–particle duality</em>. An electron is not a little ball and not a spread-out wave. It is a quantum object that travels like a wave and is detected like a particle.</p>
+
+      <section class="versus" aria-labelledby="versus-title">
+        <h2 id="versus-title">Newton vs quantum</h2>
+        <div class="versus__grid">
+          <div class="versus__col versus__col--classical">
+            <h3>What Newton predicts</h3>
+            <p>Fire tiny balls at two slits and each one goes through one slit on a straight path. Behind the barrier you get two piles, one behind each slit, and nothing in between. Opening the second slit can only add hits, never remove them.</p>
+          </div>
+          <div class="versus__col">
+            <h3>What actually happens</h3>
+            <p>Electrons build many fringes. Opening the second slit makes some places on the screen receive <em>fewer</em> electrons than with one slit, because the two waves cancel there.</p>
+          </div>
+        </div>
+        <p class="versus__meet">Where they meet: interference needs the wavelength to be comparable with the slit spacing. A cricket ball's de Broglie wavelength is about 10<sup>−34</sup> m, so its fringes would be far too fine to see, and it behaves just as Newton says.</p>
+      </section>
+
+      <section class="lab-card" aria-labelledby="lab-title">
+        <h2 id="lab-title">Python lab: build the pattern yourself</h2>
+        <p>Compute an electron's de Broglie wavelength, plot the two-slit pattern, then simulate thousands of electrons landing and watch the histogram turn into fringes.</p>
+        <ul>
+          <li>Write <code>de_broglie(V)</code> for an accelerating voltage</li>
+          <li>Plot the intensity with and without a which-slit detector</li>
+          <li>Sample hits with a Monte Carlo method and compare with the theory</li>
+        </ul>
+        <div class="lab-card__actions">
+          <a class="btn" data-colab="labs/04-wave-particle/double_slit.ipynb">Open in Colab</a>
+          <a class="btn btn--quiet" data-repo="labs/04-wave-particle/double_slit.ipynb">View on GitHub</a>
+        </div>
+      </section>
+
+      <section data-quiz>
+        <script type="application/json">
+        []
+        </script>
+      </section>
+    </article>
+
+    <aside class="lesson__bench" aria-label="Simulation and experiments">
+      <div class="bench">
+        <div class="bench__stage">
+          <canvas id="stage" aria-label="Top view of a double-slit experiment: an electron gun, a barrier with two slits, and a detector screen with a histogram of hits. Use the controls below."></canvas>
+        </div>
+        <p class="bench__caption">Seen from above. Slits 0.2 µm wide, screen 1 m away; the screen shows a 120 µm strip. Drawn not to scale.</p>
+        <p class="status" id="status" aria-live="polite">Press "Fire one electron" to send a single electron through the slits.</p>
+      </div>
+
+      <section data-tasks aria-label="Experiments"></section>
+    </aside>
+  </div>
+</main>
+
+<nav data-lesson-nav aria-label="Lessons"></nav>
+<footer data-chrome></footer>
+</body>
+</html>
