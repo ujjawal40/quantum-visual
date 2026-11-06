@@ -1,0 +1,76 @@
+# Question bank, Module 6. Each item: id, lesson, level (core|extension|challenge),
+# type (concept|numeric|python), prompt, answer, and optional worked solution.
+
+- id: m6-q1
+  lesson: "6.4"
+  level: core
+  type: numeric
+  prompt: >
+    A sample has a half-life of 5 days. What fraction remains after 20 days?
+  answer: "1/16 (6.25%)"
+  solution: 20 days is 4 half-lives, so (½)⁴ = 1/16.
+
+- id: m6-q2
+  lesson: "6.4"
+  level: core
+  type: concept
+  prompt: >
+    A nucleus with a half-life of 1 hour has already survived 5 hours. What is
+    the chance it decays in the next hour?
+  answer: "50%"
+  solution: >
+    Nuclei do not age. Each half-life every surviving nucleus faces the same
+    50% chance, whatever has happened before.
+
+- id: m6-q3
+  lesson: "6.4"
+  level: core
+  type: numeric
+  prompt: >
+    A bone has 25% of its carbon-14 left. Carbon-14's half-life is 5,730
+    years. How old is the bone?
+  answer: "11,460 years"
+  solution: 25% is two halvings, so 2 × 5,730 = 11,460 years.
+
+- id: m6-q4
+  lesson: "6.4"
+  level: extension
+  type: numeric
+  prompt: >
+    Find the decay constant λ of iodine-131 (half-life 8.02 days) in s⁻¹.
+  answer: "1.0 × 10⁻⁶ s⁻¹"
+  solution: >
+    λ = ln 2 / T½ = 0.693 / (8.02 × 86,400 s) = 1.00 × 10⁻⁶ s⁻¹.
+
+- id: m6-q5
+  lesson: "6.4"
+  level: extension
+  type: numeric
+  prompt: >
+    A wooden beam has 70% of its carbon-14 left. How old is it?
+  answer: "about 2,950 years"
+  solution: t = 5,730 × log₂(1/0.70) = 5,730 × 0.515 ≈ 2,950 years.
+
+- id: m6-q6
+  lesson: "6.4"
+  level: extension
+  type: python
+  prompt: >
+    Simulate the decay of 10,000 nuclei with NumPy and fit the half-life from
+    a straight-line fit of ln N against t.
+  answer: "within a few percent of the true half-life"
+  solution: See labs/06-nucleus/half_life.ipynb, section 3.
+
+- id: m6-q7
+  lesson: "6.4"
+  level: challenge
+  type: concept
+  prompt: >
+    Uranium-238 has a half-life of 4.47 billion years, close to the age of the
+    Earth. Roughly what fraction of the Earth's original uranium-238 is left,
+    and why is radioactive dating of rocks reliable even though each decay is
+    random?
+  answer: >
+    About half. Each decay is random, but a rock holds around 10²⁰ uranium
+    nuclei, so the statistical scatter is about 1 part in 10¹⁰ and the
+    exponential law holds almost exactly.
