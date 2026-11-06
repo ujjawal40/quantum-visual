@@ -325,6 +325,7 @@ function togglePlay(on = !state.playing) {
 
 function resetAll() {
   resetNuclei();
+  state.watched = null;
   state.reported = new Set();
   updateReadouts();
   draw();
@@ -371,6 +372,64 @@ $("reset").addEventListener("click", () => {
   resetAll();
   setStatus("Fresh sample. The faint line is your previous run.");
 });
+
+// ---------- watching one nucleus ----------
+state.watched = null;     // index of the nucleus being watched
+state.watchLog = [];      // half-lives each watched nucleus survived
+
+function cellAt(px, py) {
+  const G = layout().grid;
+  if (px < G.x || py < G.y || px >= G.x + G.w || py >= G.y + G.h) return null;
+  const col = Math.floor(((px - G.x) / G.w) * grid.cols);
+  const row = Math.floor(((py - G.y) / G.h) * grid.rows);
+  const i = row * grid.cols + col;
+  return i < state.n0 ? i : null;
+}
+
+function cellRect(i) {
+  const G = layout().grid;
+  const cw = G.w / grid.cols, ch = G.h / grid.rows;
+  return { x: G.x + (i % grid.cols) * cw, y: G.y + Math.floor(i / grid.cols) * ch, w: cw, h: ch };
+}
+
+canvas.addEventListener("pointerdown", (ev) => {
+  const r = canvas.getBoundingClientRect();
+  const i = cellAt(ev.clientX - r.left, ev.clientY - r.top);
+  if (i === null) return;
+  if (!state.alive[i]) {
+    setStatus("That nucleus has already decayed. Pick a bright one.");
+    return;
+  }
+  state.watched = i;
+  state.watchStart = state.u;
+  setStatus(`Watching nucleus #${i + 1}. It has a 50% chance of decaying in each half-life, but nothing can tell you when. Press Play.`);
+  draw();
+});
+
+onDecayed = (decayed) => {
+  if (state.watched === null || !decayed.includes(state.watched)) return;
+  const lived = state.u - state.watchStart;
+  state.watchLog.push(lived);
+  const earlier = state.watchLog.slice(0, -1).map((x) => x.toFixed(2));
+  setStatus(`Your nucleus decayed after ${lived.toFixed(2)} half-lives (${formatTime(lived)}).` +
+    (earlier.length ? ` Earlier ones lasted ${earlier.join(", ")} half-lives.` : " Watch another and compare."));
+  document.dispatchEvent(new CustomEvent("watched", { detail: { lived, count: state.watchLog.length } }));
+  state.watched = null;
+};
+
+/** Ring around the watched nucleus. */
+const baseDraw = draw;
+draw = function () {
+  baseDraw();
+  if (state.watched === null || !view.w) return;
+  const c = cellRect(state.watched);
+  const cx = c.x + c.w / 2, cy = c.y + c.h / 2;
+  const R = Math.max(7, c.w * 1.2);
+  const { ctx } = view;
+  ctx.strokeStyle = "#9fbcff";
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.stroke();
+};
 
 state.reported = new Set();
 resetAll();
