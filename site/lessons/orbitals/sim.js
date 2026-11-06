@@ -31,7 +31,7 @@ controls.enableDamping = true;
 controls.enablePan = false;
 controls.autoRotateSpeed = 1.1;
 
-const state = { orbital: find("1s"), cloud: null, axes: null, nucleus: null };
+const state = { orbital: find("1s"), cloud: null, axes: null, nucleus: null, rings: null, slice: false, view: "free" };
 
 function resize() {
   const { width, height } = host.getBoundingClientRect();
@@ -91,11 +91,15 @@ function dispose(obj) {
 function buildCloud() {
   const o = state.orbital;
   const count = Number($("count").value);
-  const { pos, sign, count: n } = sample(o, count);
+  // Slice: keep only a thin slab through the nucleus, cut along the plane the lobes lie in.
+  const slab = o.box * 0.05;
+  const axis = { x: 0, y: 1, z: 2 }[o.sliceAxis];
+  const keep = state.slice ? (...p) => Math.abs(p[axis]) < slab : null;
+  const { pos, sign, count: n } = sample(o, state.slice ? Math.round(count * 0.6) : count, { keep });
   const geo = new THREE.BufferGeometry();
   geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
   geo.setAttribute("color", new THREE.BufferAttribute(new Float32Array(n * 3), 3));
-  const mat = new THREE.PointsMaterial({ size: o.box / 190, vertexColors: true, transparent: true, opacity: 0.6, depthWrite: false });
+  const mat = new THREE.PointsMaterial({ size: o.box / (state.slice ? 150 : 190), vertexColors: true, transparent: true, opacity: 0.6, depthWrite: false });
   const points = new THREE.Points(geo, mat);
   points.userData.sign = sign;
   paint(points);
@@ -114,22 +118,64 @@ function paint(points) {
   attr.needsUpdate = true;
 }
 
+/** Dashed circles marking the radial nodes, drawn in the slice plane. */
+function makeNodeRings(o) {
+  const group = new THREE.Group();
+  const mat = new THREE.LineDashedMaterial({ color: "#ffffff", transparent: true, opacity: 0.7, dashSize: o.box * 0.03, gapSize: o.box * 0.025 });
+  for (const r of o.radialNodes) {
+    const pts = [];
+    for (let i = 0; i <= 128; i++) {
+      const a = (i / 128) * Math.PI * 2;
+      const u = r * Math.cos(a), v = r * Math.sin(a);
+      // Circle in the plane perpendicular to the slice axis.
+      pts.push(o.sliceAxis === "x" ? new THREE.Vector3(0, u, v) : o.sliceAxis === "y" ? new THREE.Vector3(u, 0, v) : new THREE.Vector3(u, v, 0));
+    }
+    const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), mat);
+    line.computeLineDistances();
+    group.add(line);
+  }
+  return group;
+}
+
 function show(key, { keepCamera = false } = {}) {
   state.orbital = find(key);
   const o = state.orbital;
   dispose(state.cloud);
   dispose(state.axes);
   dispose(state.nucleus);
+  dispose(state.rings);
   state.cloud = buildCloud();
   state.axes = makeAxes(o.box * 0.92);
   state.nucleus = new THREE.Mesh(new THREE.SphereGeometry(o.box * 0.013, 16, 12), new THREE.MeshBasicMaterial({ color: COLOURS.nucleus }));
+  state.rings = state.slice ? makeNodeRings(o) : null;
   scene.add(state.cloud, state.axes, state.nucleus);
-  if (!keepCamera) {
-    camera.position.set(o.box * 2.45, o.box * 1.8, o.box * 1.25);
-    controls.target.set(0, 0, 0);
-    controls.update();
-  }
+  if (state.rings) scene.add(state.rings);
+  if (state.slice) setView(o.sliceAxis);
+  else if (!keepCamera) setView(state.view === "free" ? "free" : state.view);
 }
+
+// ---------- views ----------
+/** Look straight down an axis, or return to the angled view ("free"). */
+function setView(view) {
+  const d = state.orbital.box * 3.1;
+  state.view = view;
+  if (view === "x") camera.position.set(d, 0, 0);
+  else if (view === "y") camera.position.set(0, -d, 0);
+  else if (view === "z") camera.position.set(0, -d * 0.002, d); // tiny tilt keeps "up" defined
+  else camera.position.set(d * 0.79, d * 0.58, d * 0.4);
+  controls.target.set(0, 0, 0);
+  controls.update();
+  if (view !== "free") $("spin").checked = false;
+  for (const b of document.querySelectorAll("#views button")) b.setAttribute("aria-pressed", String(b.dataset.view === view));
+}
+
+// Dragging the cloud leaves any axis view.
+controls.addEventListener("start", () => {
+  if (state.view !== "free") {
+    state.view = "free";
+    for (const b of document.querySelectorAll("#views button")) b.setAttribute("aria-pressed", String(b.dataset.view === "free"));
+  }
+});
 
 // ---------- controls ----------
 const select = $("orbital");
@@ -144,6 +190,12 @@ select.value = "1s";
 select.addEventListener("change", () => show(select.value));
 
 $("phase").addEventListener("change", () => state.cloud && paint(state.cloud));
+$("slice").addEventListener("change", () => {
+  state.slice = $("slice").checked;
+  show(state.orbital.key, { keepCamera: true });
+  if (!state.slice) setView("free");
+});
+for (const b of document.querySelectorAll("#views button")) b.addEventListener("click", () => setView(b.dataset.view));
 
 bindRange($("count"), { format: (v) => v.toLocaleString("en-US") });
 $("count").addEventListener("change", () => show(state.orbital.key, { keepCamera: true }));
