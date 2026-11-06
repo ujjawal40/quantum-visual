@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orbital Shapes in 3D</title>
+<meta name="description" content="Rotate hydrogen's s, p and d orbitals in 3D and find their nodes, where the electron is never found.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="../../assets/css/tokens.css">
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/controls.css">
+<link rel="stylesheet" href="../../assets/css/layout.css">
+<link rel="stylesheet" href="../../assets/css/lesson.css">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module" src="../../assets/js/ui/lesson.js"></script>
+<script type="module" src="./sim.js"></script>
+</head>
+<body data-lesson="orbitals">
+<a class="skip-link" href="#main">Skip to the lesson</a>
+<header data-chrome></header>
+
+<main id="main" class="lesson">
+  <nav data-crumbs aria-label="Breadcrumb"></nav>
+  <div class="lesson__intro">
+    <h1>Orbital shapes in 3D</h1>
+    <p class="lede">The electron in an atom has no path. Quantum physics tells us only where it is likely to be, and that likelihood has a shape: a ball, a dumbbell, a clover. Those shapes are orbitals, and they are what chemistry is built from.</p>
+  </div>
+
+  <div class="lesson__grid">
+    <article class="lesson__prose prose">
+      <h2>From orbits to clouds</h2>
+      <p>Bohr pictured the electron circling the nucleus like a planet. It was a good start, but it fails for every atom except hydrogen, and it gets the shapes of molecules wrong.</p>
+      <p>In the full quantum theory the electron is described by a wavefunction, ψ (psi). Where ψ² is large, you are likely to find the electron when you look; where it is small, you rarely will. If you could photograph one hydrogen atom thousands of times and stack the pictures, the dots would build up a cloud. That cloud is the orbital.</p>
+      <p>Each dot in the simulation is one possible place the electron could be found. Dense regions are likely, sparse ones unlikely.</p>
+
+      <h2>Three numbers give the address</h2>
+      <p>Every orbital in hydrogen is labelled by three whole numbers:</p>
+      <ul>
+        <li><strong>n</strong>, the shell (1, 2, 3, …), sets the energy and the size. Bigger n, bigger cloud.</li>
+        <li><strong>l</strong>, from 0 to n − 1, sets the shape. Chemists use letters: l = 0 is <em>s</em>, 1 is <em>p</em>, 2 is <em>d</em>, 3 is <em>f</em>.</li>
+        <li><strong>m<sub>l</sub></strong>, from −l to +l, sets which way the shape points.</li>
+      </ul>
+      <p>So a shell with number n holds n² orbitals: one in shell 1, four in shell 2 (2s and three 2p), nine in shell 3.</p>
+      <div class="formula">E<sub>n</sub> = − <span class="frac"><span>13.6 eV</span><span>n<sup>2</sup></span></span>
+        <small>In hydrogen the energy depends only on n, so 2s and all three 2p orbitals have the same energy, −3.40 eV.</small></div>
+
+      <h2>Nodes: where the electron is never found</h2>
+      <p>A <em>node</em> is a surface where ψ = 0, so the electron is never found there. There are two kinds:</p>
+      <ul>
+        <li><strong>Angular nodes</strong> are flat planes or cones through the nucleus. A p orbital has one plane between its two lobes. An orbital has l angular nodes.</li>
+        <li><strong>Radial nodes</strong> are spheres. The 2s orbital is a small ball inside a bigger shell, with an empty sphere between them. An orbital has n − l − 1 radial nodes.</li>
+      </ul>
+      <p>Add them up and every orbital has n − 1 nodes in total. Radial nodes hide inside the cloud, so switch on <strong>Slice</strong> to cut the cloud open and see them.</p>
+
+      <h2>Phase: the sign of ψ</h2>
+      <p>ψ can be positive or negative. Square it and the sign disappears, so it does not change where the electron is found. But it matters a great deal when two atoms meet: lobes with the same sign overlap to make a bond, opposite signs cancel. With <strong>Colour by phase</strong> on, blue dots are where ψ is positive and orange where it is negative. A node is always where the colour flips.</p>
+
+      <h2>Shapes worth knowing</h2>
+      <ul>
+        <li><strong>s orbitals</strong> are spheres. 1s is one ball; 2s and 3s add shells.</li>
+        <li><strong>p orbitals</strong> are dumbbells along x, y or z, three per shell from n = 2.</li>
+        <li><strong>d orbitals</strong> are mostly four-leaf clovers, five per shell from n = 3. The odd one out, d<sub>z²</sub>, is two lobes with a ring around its waist.</li>
+      </ul>
+      <p>Each orbital, whatever its shape, holds at most two electrons: one with spin +½ and one with spin −½.</p>
+
+      <section class="versus" aria-labelledby="versus-title">
+        <h2 id="versus-title">Newton vs quantum</h2>
+        <div class="versus__grid">
+          <div class="versus__col versus__col--classical">
+            <h3>What Newton predicts</h3>
+            <p>A planet has a definite position and velocity at every moment, so it traces a path. Treat the electron the same way and it should sit on a circle of fixed radius.</p>
+          </div>
+          <div class="versus__col">
+            <h3>What actually happens</h3>
+            <p>The electron has no path, only a cloud of likely positions. In the 1s orbital it can be found close to the nucleus or far away, in any direction.</p>
+          </div>
+        </div>
+        <p class="versus__meet">Where they meet: the single most likely distance for the 1s electron is exactly 0.0529 nm, the radius of Bohr's orbit. The classical orbit survives as the peak of the cloud.</p>
+      </section>
+
+      <section class="lab-card" aria-labelledby="lab-title">
+        <h2 id="lab-title">Python lab: an electron as a probability cloud</h2>
+        <p>Sample 20,000 positions of hydrogen's 1s electron, plot the cloud in 3D, and check that the most likely distance is Bohr's radius.</p>
+        <ul>
+          <li>Plot the radial probability P(r) and find its peak</li>
+          <li>Sample the cloud with NumPy and draw it</li>
+          <li>Challenge: sample the 2p<sub>z</sub> dumbbell with rejection sampling</li>
+        </ul>
+        <div class="lab-card__actions">
+          <a class="btn" data-colab="labs/05-orbitals/orbital_cloud.ipynb">Open in Colab</a>
+          <a class="btn btn--quiet" data-repo="labs/05-orbitals/orbital_cloud.ipynb">View on GitHub</a>
+        </div>
+      </section>
+    </article>
+
+    <aside class="lesson__bench" aria-label="Simulation and experiments">
+      <div class="bench">
+        <div class="bench__stage" id="stage" role="img" aria-label="3D cloud of dots showing the selected hydrogen orbital. Drag to rotate, scroll or pinch to zoom."></div>
+        <p class="bench__caption">Each dot is one place the electron could be found. Drag to rotate, scroll or pinch to zoom. Axes are in units of a₀ = 0.0529 nm.</p>
+        <p class="status" id="status" aria-live="polite">Loading the 1s orbital…</p>
+
+        <dl class="readouts">
+          <div class="readout"><dt>Orbital</dt><dd id="r-name">1s</dd></div>
+          <div class="readout"><dt>n, l, m<sub>l</sub></dt><dd id="r-qn">1, 0, 0</dd></div>
+          <div class="readout"><dt>Energy</dt><dd><span id="r-e">−13.6</span><small>eV</small></dd></div>
+          <div class="readout"><dt>Nodes</dt><dd id="r-nodes">0</dd></div>
+        </dl>
+
+        <div class="bench__controls">
+          <div>
+            <div class="control">
+              <label class="control__label" for="orbital">Orbital</label>
+              <select id="orbital"></select>
+            </div>
+            <div class="control">
+              <label class="control__label" for="count">Dots <span class="control__value"><span data-value-for="count"></span></span></label>
+              <input type="range" id="count" min="4000" max="60000" step="2000" value="24000">
+            </div>
+          </div>
+          <div>
+            <label class="toggle"><input type="checkbox" id="phase"> Colour by phase (sign of ψ)</label>
+            <label class="toggle"><input type="checkbox" id="slice"> Slice through the middle</label>
+            <label class="toggle"><input type="checkbox" id="spin" checked> Rotate slowly</label>
+            <div class="control">
+              <span class="control__label">Look down an axis</span>
+              <div class="segmented" id="views" role="group" aria-label="Look down an axis">
+                <button type="button" data-view="x">x</button><button type="button" data-view="y">y</button><button type="button" data-view="z">z</button><button type="button" data-view="free" aria-pressed="true">Free</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section data-tasks aria-label="Experiments"></section>
+    </aside>
+  </div>
+</main>
+
+<nav data-lesson-nav aria-label="Lessons"></nav>
+<footer data-chrome></footer>
+</body>
+</html>
