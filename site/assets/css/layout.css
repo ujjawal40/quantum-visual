@@ -51,11 +51,17 @@
   display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
   gap: var(--space-7); align-items: start;
 }
-.lesson__bench { position: sticky; top: 76px; display: grid; gap: var(--space-4); }
+/* The bench stays in view while the student reads. If it is taller than the
+   window it scrolls on its own, so the experiments are always reachable. */
+.lesson__bench {
+  position: sticky; top: 76px; display: grid; gap: var(--space-4);
+  max-height: calc(100vh - 92px); overflow-y: auto; overscroll-behavior: contain;
+  padding-bottom: var(--space-2); scrollbar-width: thin;
+}
 
 @media (max-width: 960px) {
   .lesson__grid { grid-template-columns: minmax(0, 1fr); gap: var(--space-5); }
-  .lesson__bench { position: static; order: -1; }
+  .lesson__bench { position: static; order: -1; max-height: none; overflow: visible; }
   .lesson__intro h1 { font-size: var(--step-4); }
 }
 
