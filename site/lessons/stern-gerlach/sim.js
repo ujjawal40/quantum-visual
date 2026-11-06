@@ -164,6 +164,16 @@ function updateReadouts() {
   $("r-down").textContent = state.down;
   $("r-up-pc").textContent = pc(upPc);
   $("r-down-pc").textContent = pc(downPc);
+
+  // Keep the canvas description current for screen readers.
+  const names = state.stages.map((st) => st.label).join(", then ");
+  const result = upPc === null
+    ? "No atoms have reached the screen yet."
+    : `${upName}: ${state.up} atoms (${upPc}%). ${downName}: ${state.down} atoms (${downPc}%).`;
+  canvas.setAttribute(
+    "aria-label",
+    `Stern–Gerlach apparatus, ${state.mode === "quantum" ? "quantum spin" : "classical magnets"}, magnets: ${names}. ${result}`
+  );
 }
 
 function announce() {
