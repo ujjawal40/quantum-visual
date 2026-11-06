@@ -13,6 +13,10 @@
 <link rel="stylesheet" href="../../assets/css/controls.css">
 <link rel="stylesheet" href="../../assets/css/layout.css">
 <link rel="stylesheet" href="../../assets/css/lesson.css">
+<style>
+  /* On phones this stage stacks the face-on screen under the apparatus, so it needs to be taller. */
+  @media (max-width: 520px) { body[data-lesson="stern-gerlach"] .bench__stage { aspect-ratio: 4 / 5; } }
+</style>
 <script type="module" src="../../assets/js/ui/lesson.js"></script>
 <script type="module" src="./sim.js"></script>
 <script type="module" src="./experiments.js"></script>

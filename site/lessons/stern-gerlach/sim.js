@@ -37,15 +37,21 @@ const view = fitCanvas(canvas, () => draw());
 // ---------- geometry ----------
 function layout() {
   const { w, h } = view;
-  const mainW = w * 0.67;
-  const D = Math.min(h * 0.115, w * 0.075); // one unit of deflection, in pixels
-  const cy = h * 0.47;
-  const x0 = Math.max(38, mainW * 0.12);    // oven exit
-  // The screen's far edge slants right by up to 1.6 units of x; keep it clear of the inset.
+  // Wide stages put the face-on screen beside the apparatus; narrow (phone)
+  // stages stack it underneath so neither gets squeezed.
+  const narrow = w < 480;
+  const mainW = narrow ? w : w * 0.67;
+  const mainH = narrow ? h * 0.6 : h;
+  const D = Math.min(mainH * 0.115, mainW * 0.075); // one unit of deflection, in pixels
+  const cy = mainH * (narrow ? 0.52 : 0.47);
+  const x0 = Math.max(38, mainW * 0.12);           // oven exit
+  // The screen's far edge slants right by up to 1.6 units of x; keep it inside the main view.
   const x1 = mainW - 1.6 * D * SLANT.k * SLANT.cos - 6;
-  const inset = { size: Math.min(w - mainW - 16, h * 0.6) };
-  inset.x = w - inset.size - 8;
-  inset.y = (h - inset.size) / 2 + 8;
+  const inset = narrow
+    ? { size: Math.min(h - mainH - 26, w * 0.6) }
+    : { size: Math.min(w - mainW - 16, h * 0.6) };
+  inset.x = narrow ? (w - inset.size) / 2 : w - inset.size - 8;
+  inset.y = narrow ? mainH + 20 : (h - inset.size) / 2 + 8;
   return { w, h, mainW, D, cy, x0, x1, inset };
 }
 
@@ -357,7 +363,8 @@ function drawInset(ctx, L, plan) {
   ctx.strokeStyle = "rgba(255,255,255,0.12)";
   ctx.beginPath(); ctx.moveTo(cx, y + 4); ctx.lineTo(cx, y + size - 4); ctx.moveTo(x + 4, cy); ctx.lineTo(x + size - 4, cy); ctx.stroke();
   ctx.fillStyle = "rgba(255,255,255,0.45)";
-  ctx.fillText("+z", cx + 4, y + 12);
+  ctx.textAlign = "right";
+  ctx.fillText("+z", cx - 4, y + 12);
   ctx.textAlign = "right";
   ctx.fillText("+x", x + size - 4, cy - 4);
 
@@ -376,7 +383,8 @@ function drawInset(ctx, L, plan) {
   for (const [sign, n, pcv] of [[1, state.up, upPc], [-1, state.down, downPc]]) {
     const hx = last.cx + sign * last.a.x, hz = last.cz + sign * last.a.z;
     const p = toInset(hx, hz);
-    const right = p.px < cx + size * 0.2;
+    // Labels point outward from the centre so two side-by-side spots never collide.
+    const right = p.px >= cx - 1;
     ctx.textAlign = right ? "left" : "right";
     ctx.fillStyle = "#ffffff";
     const tx = right ? p.px + 14 : p.px - 14;
