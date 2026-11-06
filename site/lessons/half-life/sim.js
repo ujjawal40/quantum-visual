@@ -44,19 +44,41 @@ const state = {
 // ---------- the grid image: one cell per nucleus, drawn into an offscreen canvas ----------
 const grid = { cols: 0, rows: 0, cell: 1, gap: 0, img: null, buf: document.createElement("canvas") };
 
+const PAD = 14;
+
+/** Space on the left of the stage for the grid, in CSS pixels. */
+function gridRegion() {
+  const w = view?.w || 560, h = view?.h || 420;
+  return { x: PAD, y: PAD, w: w * 0.44 - PAD * 2, h: h - PAD * 2 };
+}
+
+/**
+ * Size each cell to a whole number of screen pixels so the grid is drawn
+ * 1:1 with no resampling (scaling a pixel grid down causes moiré).
+ */
 function setupGrid() {
   const [cols, rows] = GRIDS[state.n0];
+  const R = gridRegion();
+  const px = Math.max(1, Math.floor(Math.min(R.w / cols, R.h / rows)));
   grid.cols = cols;
   grid.rows = rows;
-  grid.cell = state.n0 <= 100 ? 9 : state.n0 <= 1000 ? 4 : 1;
-  grid.gap = state.n0 <= 1000 ? 1 : 0;
-  const step = grid.cell + grid.gap;
-  grid.buf.width = cols * step;
-  grid.buf.height = rows * step;
+  grid.gap = px >= 5 ? 1 : 0;
+  grid.cell = px - grid.gap;
+  grid.px = px;
+  grid.buf.width = cols * px;
+  grid.buf.height = rows * px;
   const bctx = grid.buf.getContext("2d");
   grid.img = bctx.createImageData(grid.buf.width, grid.buf.height);
-  for (let i = 0; i < state.n0; i++) paintCell(i, COLOURS.parent);
+  for (let i = 0; i < state.n0; i++) paintCell(i, !state.alive || state.alive[i] ? COLOURS.parent : COLOURS.daughter);
   bctx.putImageData(grid.img, 0, 0);
+}
+
+/** Rebuild the grid image if a resize changed the best cell size. */
+function refitGrid() {
+  if (!grid.img) return;
+  const R = gridRegion();
+  const px = Math.max(1, Math.floor(Math.min(R.w / grid.cols, R.h / grid.rows)));
+  if (px !== grid.px) setupGrid();
 }
 
 function paintCell(i, [r, g, b]) {
@@ -132,20 +154,20 @@ function niceStep(span, count) {
 }
 
 // ---------- drawing ----------
-const view = fitCanvas(canvas, () => draw());
+const view = fitCanvas(canvas, () => {
+  refitGrid();
+  draw();
+});
 
 function layout() {
   const { w, h } = view;
-  const pad = 14;
-  const gridW = w * 0.44;
-  const aspect = grid.buf.width / grid.buf.height;
-  let gw = gridW - pad * 2;
-  let gh = gw / aspect;
-  if (gh > h - pad * 2) { gh = h - pad * 2; gw = gh * aspect; }
+  const R = gridRegion();
+  const gw = grid.buf.width, gh = grid.buf.height;
   return {
     w, h,
-    grid: { x: pad + (gridW - pad * 2 - gw) / 2, y: (h - gh) / 2, w: gw, h: gh },
-    chart: { x0: gridW + 40, x1: w - 16, y0: 22, y1: h - 40 },
+    // Whole pixels, centred in the left part of the stage.
+    grid: { x: Math.round(R.x + (R.w - gw) / 2), y: Math.round(R.y + (R.h - gh) / 2), w: gw, h: gh },
+    chart: { x0: w * 0.44 + 40, x1: w - 16, y0: 22, y1: h - 40 },
   };
 }
 
@@ -176,7 +198,7 @@ function drawChart(ctx, C) {
     ctx.setLineDash(k ? [3, 4] : []);
     ctx.beginPath(); ctx.moveTo(C.x0, y); ctx.lineTo(C.x1, y); ctx.stroke();
     ctx.fillStyle = "rgba(255,255,255,0.6)";
-    ctx.fillText(Math.round(n).toLocaleString("en-US"), C.x0 - 5, y + 4);
+    ctx.fillText(Number.isInteger(n) ? n.toLocaleString("en-US") : n.toFixed(1), C.x0 - 5, y + 4);
   }
   ctx.setLineDash([]);
 
@@ -189,14 +211,19 @@ function drawChart(ctx, C) {
   ctx.fillStyle = "rgba(255,255,255,0.6)";
   if (iso.hidden) {
     const span = uMax * iso.half;
-    const stepT = niceStep(span, 5);
-    for (let t = 0; t <= span + 1e-9; t += stepT) {
+    const stepT = niceStep(span, Math.max(3, Math.floor((C.x1 - C.x0) / 45)));
+    // Minor ticks (one fifth of a major step) make the graph readable to the nearest hour.
+    const minor = stepT / 5;
+    for (let t = 0; t <= span + 1e-9; t += minor) {
       const x = X(t / iso.half);
-      ctx.beginPath(); ctx.moveTo(x, C.y1); ctx.lineTo(x, C.y1 + 4); ctx.stroke();
-      ctx.fillText(String(+t.toFixed(2)), x, C.y1 + 16);
+      const major = Math.abs(t / stepT - Math.round(t / stepT)) < 1e-6;
+      ctx.beginPath(); ctx.moveTo(x, C.y1); ctx.lineTo(x, C.y1 + (major ? 6 : 3.5)); ctx.stroke();
+      if (major) ctx.fillText(String(+t.toFixed(2)), x, C.y1 + 16);
     }
   } else {
-    const every = uMax > 8 ? 2 : 1;
+    // Label every half-life if there is room (about 34px each), otherwise every 2nd or 5th.
+    const room = (C.x1 - C.x0) / uMax;
+    const every = room >= 34 ? 1 : room >= 17 ? 2 : 5;
     for (let k = 0; k <= uMax; k++) {
       const x = X(k);
       ctx.beginPath(); ctx.moveTo(x, C.y1); ctx.lineTo(x, C.y1 + 4); ctx.stroke();
