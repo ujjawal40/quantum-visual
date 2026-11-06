@@ -44,7 +44,7 @@ const lab = createTasks(document.querySelector("[data-tasks]"), "half-life", [
     id: "mystery",
     kind: "measure",
     title: "Find the half-life of Mystery isotope X",
-    detail: "Choose it in the isotope menu, run 10,000 nuclei, and read the time when half are left.",
+    detail: "Choose it in the isotope menu and run 10,000 nuclei. Read the time when half are left, from the graph or by pausing when the fraction reaches 50%.",
     answer: 4.5,
     tolerance: 0.5,
     unit: "hours",
