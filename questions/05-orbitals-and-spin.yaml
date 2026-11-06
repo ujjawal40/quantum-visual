@@ -1,0 +1,132 @@
+# Question bank, Module 5. Each item: id, lesson, level (core|extension|challenge),
+# type (concept|numeric|python), prompt, answer, and optional worked solution.
+
+- id: m5-q1
+  lesson: "5.1"
+  level: core
+  type: concept
+  prompt: >
+    What does an orbital picture made of dots show? Does the electron move
+    along a path inside it?
+  answer: >
+    How likely the electron is to be found in each region. It has no path:
+    each dot is one place it could be found when you look.
+  solution: >
+    The density of dots follows ψ². Dense regions are likely, sparse ones
+    unlikely, and nodes have no dots at all.
+
+- id: m5-q2
+  lesson: "5.1"
+  level: core
+  type: numeric
+  prompt: >
+    What is the most likely distance of the electron from the nucleus in
+    hydrogen's 1s orbital, in nm?
+  answer: "0.0529 nm, the Bohr radius a₀"
+  solution: >
+    The radial probability P(r) ∝ r² e^(−2r/a₀) peaks where its slope is
+    zero: 2r − 2r²/a₀ = 0, so r = a₀ = 0.0529 nm.
+
+- id: m5-q3
+  lesson: "5.2"
+  level: core
+  type: numeric
+  prompt: How many radial and how many angular nodes does a 3p orbital have?
+  answer: "1 radial, 1 angular"
+  solution: >
+    Angular nodes = l = 1. Radial nodes = n − l − 1 = 3 − 1 − 1 = 1.
+    Total = n − 1 = 2.
+
+- id: m5-q4
+  lesson: "5.2"
+  level: core
+  type: concept
+  prompt: >
+    The 2s and 2p orbitals of hydrogen have the same energy. What is it, and
+    why are they equal?
+  answer: "−3.40 eV; in hydrogen the energy depends only on n"
+  solution: E₂ = −13.6 / 2² = −3.40 eV for every orbital with n = 2.
+
+- id: m5-q5
+  lesson: "5.3"
+  level: core
+  type: concept
+  prompt: >
+    Which of these sets of quantum numbers is not allowed, and why?
+    (a) n = 3, l = 2, mₗ = −2  (b) n = 2, l = 2, mₗ = 0  (c) n = 4, l = 0, mₗ = 0
+  answer: "(b): l must be less than n"
+  solution: l runs from 0 to n − 1, so with n = 2 the largest l is 1.
+
+- id: m5-q6
+  lesson: "5.3"
+  level: core
+  type: numeric
+  prompt: >
+    How many orbitals are in the n = 3 shell, and how many electrons can it
+    hold?
+  answer: "9 orbitals, 18 electrons"
+  solution: >
+    One 3s, three 3p and five 3d make 9 = n² orbitals. Each holds two
+    electrons (spin +½ and −½), so 2n² = 18.
+
+- id: m5-q7
+  lesson: "5.4"
+  level: core
+  type: concept
+  prompt: >
+    In the Stern–Gerlach experiment, a beam of silver atoms passes through an
+    uneven magnetic field. Why does it split into exactly two spots instead
+    of a continuous smear?
+  answer: >
+    The electron's spin can only be measured as +½ or −½ along the field, so
+    every atom is pushed one of exactly two ways.
+  solution: >
+    A classical spinning magnet could point any way, giving every deflection
+    in between. Two spots show that spin is quantised.
+
+- id: m5-q8
+  lesson: "5.5"
+  level: core
+  type: concept
+  prompt: Write the four quantum numbers of both electrons in a helium atom.
+  answer: "(1, 0, 0, +½) and (1, 0, 0, −½)"
+  solution: >
+    Both sit in 1s, so n, l and mₗ are the same. Pauli's rule forbids two
+    identical sets, so their spins must differ.
+
+- id: m5-q9
+  lesson: "5.6"
+  level: extension
+  type: concept
+  prompt: >
+    Write the electron configuration of iron (Z = 26) and draw its 3d orbital
+    box diagram. How many unpaired electrons does it have?
+  answer: "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d⁶; 4 unpaired"
+  solution: >
+    By Hund's rule the six 3d electrons first fill all five boxes singly
+    (↑ ↑ ↑ ↑ ↑), then the sixth pairs up in one box, leaving four unpaired.
+
+- id: m5-q10
+  lesson: "5.6"
+  level: extension
+  type: python
+  prompt: >
+    Write a function electron_config(Z) that returns a string such as
+    "1s2 2s2 2p6", filling subshells in Aufbau order up to Z = 36.
+  answer: "electron_config(8) == '1s2 2s2 2p4'"
+  solution: >
+    Fill the order [1s, 2s, 2p, 3s, 3p, 4s, 3d, 4p] with capacities
+    2(2l + 1) until Z electrons are placed. Chromium and copper are real
+    exceptions: compare your output for Z = 24 and 29 with measured values.
+
+- id: m5-q11
+  lesson: "5.2"
+  level: challenge
+  type: python
+  prompt: >
+    For the 2s orbital, |ψ|² ∝ (2 − r)² e^(−r) with r in a₀. Plot the radial
+    probability r²|ψ|² and find the radius of the node and of both maxima.
+  answer: "node at r = 2 a₀; maxima near 0.76 a₀ and 5.24 a₀"
+  solution: >
+    The node is where 2 − r = 0. Setting the derivative of
+    r²(2 − r)² e^(−r) to zero gives r = 3 ± √5.
