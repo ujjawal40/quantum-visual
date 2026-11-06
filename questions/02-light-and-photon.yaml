@@ -1,0 +1,77 @@
+# Question bank, Module 2. Each item: id, lesson, level (core|extension|challenge),
+# type (concept|numeric|python), prompt, answer, and optional worked solution.
+
+- id: m2-q1
+  lesson: "2.2"
+  level: core
+  type: numeric
+  prompt: Find the energy in eV of a 500 nm green photon.
+  answer: "2.48 eV"
+  solution: E = 1240 eV·nm ÷ 500 nm = 2.48 eV.
+
+- id: m2-q2
+  lesson: "2.4"
+  level: core
+  type: concept
+  prompt: >
+    Why does bright red light not eject electrons from sodium when dim blue
+    light does?
+  answer: >
+    Each red photon has less energy (about 1.9 eV) than sodium's 2.28 eV work
+    function, and photons act one at a time, so no number of them can free an
+    electron. Each blue photon (about 2.7 eV) has enough on its own.
+
+- id: m2-q3
+  lesson: "2.4"
+  level: core
+  type: numeric
+  prompt: >
+    Light of wavelength 300 nm shines on sodium (φ = 2.28 eV). Find the
+    maximum kinetic energy of the freed electrons and the stopping voltage.
+  answer: "1.85 eV; 1.85 V"
+  solution: >
+    hf = 1240 ÷ 300 = 4.13 eV. KE_max = 4.13 − 2.28 = 1.85 eV, so the
+    stopping voltage is 1.85 V.
+
+- id: m2-q4
+  lesson: "2.4"
+  level: core
+  type: numeric
+  prompt: What is the threshold wavelength of zinc (φ = 4.30 eV)?
+  answer: "about 288 nm (ultraviolet)"
+  solution: λ₀ = 1240 ÷ 4.30 ≈ 288 nm.
+
+- id: m2-q5
+  lesson: "2.4"
+  level: extension
+  type: concept
+  prompt: >
+    A graph of KE_max against frequency is drawn for caesium and for copper.
+    How do the two lines compare, and what does each feature tell you?
+  answer: >
+    They are parallel. The slope of both is Planck's constant h; the
+    intercepts are −φ, so copper's line sits lower (φ = 4.7 eV) than caesium's
+    (φ = 2.1 eV), and it crosses zero at a higher threshold frequency.
+
+- id: m2-q6
+  lesson: "2.4"
+  level: extension
+  type: python
+  prompt: >
+    Given stopping voltages for five wavelengths, use numpy.polyfit to find
+    Planck's constant and the work function, then identify the metal.
+  answer: "h ≈ 6.6 × 10⁻³⁴ J·s; φ ≈ 2.9 eV (calcium)"
+  solution: See labs/02-light/photoelectric_fit.ipynb.
+
+- id: m2-q7
+  lesson: "2.4"
+  level: challenge
+  type: numeric
+  prompt: >
+    A 1 mW violet laser (405 nm) shines on caesium. If 10% of photons free an
+    electron, what current flows when nothing is stopping the electrons?
+  answer: "about 33 µA"
+  solution: >
+    Photon energy = 1240 ÷ 405 = 3.06 eV = 4.9 × 10⁻¹⁹ J. Photons per second
+    = 10⁻³ ÷ 4.9 × 10⁻¹⁹ ≈ 2.0 × 10¹⁵. Electrons per second = 2.0 × 10¹⁴, so
+    I = 2.0 × 10¹⁴ × 1.6 × 10⁻¹⁹ ≈ 3.3 × 10⁻⁵ A.
