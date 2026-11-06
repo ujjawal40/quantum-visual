@@ -29,7 +29,37 @@
 
   <div class="lesson__grid">
     <article class="lesson__prose prose">
-      <!-- lesson text -->
+      <h2>Nuclei that fall apart</h2>
+      <p>Some nuclei hold too many protons or neutrons to be stable. Sooner or later each one throws out an alpha particle, a beta particle or a gamma ray, and becomes a different nucleus. This is <em>radioactive decay</em>. The nucleus you start with is the <em>parent</em>; what it turns into is the <em>daughter</em>.</p>
+
+      <h2>One nucleus: pure chance</h2>
+      <p>Pick any single nucleus and ask when it will decay. There is no answer. It might go in the next second or wait a thousand years, and nothing about it tells you which. Physicists have looked hard for a hidden clock inside the nucleus, and found none.</p>
+      <p>Stranger still, a nucleus does not age. One that has survived a million years is exactly as likely to decay in the next second as one made a moment ago. Click a single square in the simulation and watch it: you cannot tell when it will flash.</p>
+
+      <h2>Many nuclei: a clock</h2>
+      <p>Chance becomes certainty in large numbers. Every isotope has a <em>half-life</em>, T<sub>½</sub>: the time in which each nucleus has a 50% chance of decaying. Start with N<sub>0</sub> nuclei, and after one half-life about half are left; after two, a quarter; after three, an eighth.</p>
+      <div class="formula">N = N<sub>0</sub> × (½)<sup>t / T<sub>½</sub></sup>
+        <small>N is the number left after time t.</small></div>
+      <p>Iodine-131, used to treat thyroid disease, has a half-life of 8.02 days. Start with 800 nuclei and after 24 days (three half-lives) about 800 × ⅛ = 100 remain. With 800 the answer is only roughly 100; with 800 million it would be extremely close to one eighth.</p>
+
+      <h2>The decay constant</h2>
+      <p>The same rule is often written with the <em>decay constant</em> λ, the chance per second that one nucleus decays:</p>
+      <div class="formula">N = N<sub>0</sub> e<sup>−λt</sup>, &nbsp;&nbsp; λ = <span class="frac"><span>ln 2</span><span>T<sub>½</sub></span></span> ≈ <span class="frac"><span>0.693</span><span>T<sub>½</sub></span></span></div>
+      <p>The <em>activity</em>, the number of decays each second, is A = λN. A sample with a short half-life is fiercely active but soon gone; one with a long half-life is gentle but lasts.</p>
+      <ul>
+        <li><strong>Radon-222</strong>, 3.82 days: a gas that seeps out of rocks into basements.</li>
+        <li><strong>Iodine-131</strong>, 8.02 days: treats an overactive thyroid.</li>
+        <li><strong>Cobalt-60</strong>, 5.27 years: sterilises medical equipment and food.</li>
+        <li><strong>Carbon-14</strong>, 5,730 years: dates things that were once alive.</li>
+        <li><strong>Uranium-238</strong>, 4.47 billion years: about as old as the Earth, so half of the Earth's original uranium-238 is still here.</li>
+      </ul>
+
+      <h2>Carbon dating</h2>
+      <p>Cosmic rays keep making carbon-14 in the air. Plants take it in, animals eat the plants, and every living thing holds the same tiny fraction of carbon-14. When it dies, the intake stops and the carbon-14 starts to run down.</p>
+      <p>Measure what fraction is left and you know how many half-lives have passed. A bone with half its carbon-14 is about 5,730 years old; with a quarter, two half-lives. Beyond about 50,000 years too little is left to measure, so older things are dated with longer-lived isotopes such as potassium-40 or uranium-238.</p>
+
+      <h2>Medicine</h2>
+      <p>Hospitals choose isotopes by half-life. A tracer for a scan should last a few hours: long enough to image, short enough to leave the body quickly. A source for radiotherapy should last years so it need not be replaced often.</p>
     </article>
 
     <aside class="lesson__bench" aria-label="Simulation and experiments">
