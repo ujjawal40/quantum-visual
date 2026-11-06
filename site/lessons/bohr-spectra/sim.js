@@ -1,7 +1,6 @@
 // Lesson 3.4 simulation: a Bohr hydrogen atom, its energy ladder, and a
 // spectrometer that records every photon the atom emits.
 
-import { createTasks } from "../../assets/js/ui/lesson.js";
 import { fitCanvas, animate, prefersReducedMotion, bindRange } from "../../assets/js/ui/simkit.js";
 import { energyLevel, orbitSpeed, transitionWavelength, seriesName } from "../../assets/js/physics/hydrogen.js";
 import { wavelengthToCSS, colourName, isVisible, region, VISIBLE_MIN, VISIBLE_MAX } from "../../assets/js/physics/spectrum.js";
