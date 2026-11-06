@@ -1,0 +1,74 @@
+/* Page frame: header, footer, and the lesson layout
+   (prose on the left, a sticky lab bench on the right). */
+
+.site-header {
+  position: sticky; top: 0; z-index: 20;
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  backdrop-filter: blur(6px);
+}
+.site-header__bar {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-4);
+  max-width: 1240px; margin: 0 auto; padding: var(--space-3) var(--gutter);
+}
+.wordmark {
+  font-weight: 700; font-size: var(--step-1); letter-spacing: -0.03em;
+  color: var(--ink); text-decoration: none;
+}
+.site-nav { display: flex; align-items: center; gap: var(--space-4); font-size: var(--step--1); }
+.site-nav a { color: var(--ink); text-decoration: none; }
+.site-nav a:hover { color: var(--signal); }
+.theme-switch {
+  min-height: 32px; padding: 0 var(--space-3); cursor: pointer;
+  font: 500 var(--step--1)/1 var(--font-ui); color: var(--ink);
+  background: transparent; border: 1px solid var(--grid-strong); border-radius: var(--radius-m);
+}
+
+/* The signature: hydrogen's four visible lines on a dark band. */
+.spectrum-strip { display: block; width: 100%; height: 6px; }
+.spectrum-strip__bg { fill: #0a0f1a; }
+
+@media (max-width: 640px) {
+  .site-nav a[href*="labs"] { display: none; }
+  .site-nav { gap: var(--space-3); }
+}
+
+.site-footer {
+  max-width: 1240px; margin: var(--space-8) auto 0; padding: var(--space-6) var(--gutter) var(--space-7);
+  border-top: 1px solid var(--grid-strong);
+  font-size: var(--step--1); color: var(--pencil);
+}
+.site-footer p { max-width: var(--measure); }
+
+/* Lesson page */
+.lesson { max-width: 1240px; margin: 0 auto; padding: var(--space-6) var(--gutter) 0; }
+.crumbs { display: flex; gap: var(--space-2); flex-wrap: wrap; font-size: var(--step--1); color: var(--pencil); margin-bottom: var(--space-3); }
+.crumbs a { color: var(--pencil); }
+.lesson__intro { max-width: 52rem; margin-bottom: var(--space-6); }
+.lesson__intro h1 { font-size: var(--step-5); line-height: 1.02; margin-bottom: var(--space-4); }
+.lede { font-family: var(--font-prose); font-size: var(--step-1); line-height: 1.5; color: var(--pencil); max-width: var(--measure); }
+
+.lesson__grid {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: var(--space-7); align-items: start;
+}
+.lesson__bench { position: sticky; top: 76px; display: grid; gap: var(--space-4); }
+
+@media (max-width: 960px) {
+  .lesson__grid { grid-template-columns: minmax(0, 1fr); gap: var(--space-5); }
+  .lesson__bench { position: static; order: -1; }
+  .lesson__intro h1 { font-size: var(--step-4); }
+}
+
+/* Previous / next */
+.lesson-nav {
+  display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4);
+  max-width: 1240px; margin: var(--space-8) auto 0; padding: 0 var(--gutter);
+}
+.lesson-nav__link {
+  display: grid; gap: 2px; padding: var(--space-4); text-decoration: none; color: var(--ink);
+  background: var(--paper-raised); border: 1px solid var(--grid-strong); border-radius: var(--radius-m);
+}
+.lesson-nav__link--next { text-align: right; }
+.lesson-nav__link:hover { border-color: var(--signal); }
+.lesson-nav__dir { font-size: var(--step--1); color: var(--pencil); }
+.lesson-nav__title { font-weight: 600; }
