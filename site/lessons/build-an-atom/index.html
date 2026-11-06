@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="../../assets/css/controls.css">
 <link rel="stylesheet" href="../../assets/css/layout.css">
 <link rel="stylesheet" href="../../assets/css/lesson.css">
+<link rel="stylesheet" href="./style.css">
 <script type="module" src="../../assets/js/ui/lesson.js"></script>
 <script type="module" src="./sim.js"></script>
 <script type="module" src="./experiments.js"></script>
@@ -112,8 +113,7 @@
         <p class="status" id="status" aria-live="polite">Nothing here yet. Add a proton to start an element.</p>
 
         <dl class="readouts">
-          <div class="readout"><dt>Element</dt><dd id="r-element">none</dd></div>
-          <div class="readout"><dt>Written as</dt><dd id="r-notation">—</dd></div>
+          <div class="readout"><dt>Element</dt><dd><span id="r-notation">none</span> <small id="r-element"></small></dd></div>
           <div class="readout"><dt>Mass number</dt><dd id="r-mass">0</dd></div>
           <div class="readout"><dt>Charge</dt><dd id="r-charge">0</dd></div>
           <div class="readout"><dt>Nucleus</dt><dd id="r-stable">—</dd></div>
