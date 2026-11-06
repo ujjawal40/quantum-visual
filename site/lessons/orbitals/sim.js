@@ -31,6 +31,11 @@ controls.enableDamping = true;
 controls.enablePan = false;
 controls.autoRotateSpeed = 1.1;
 
+// Plain scrolling over the cloud scrolls the lesson; pinch, or Ctrl/⌘ + scroll, zooms.
+// (A trackpad pinch arrives as a wheel event with ctrlKey set.) Touch pinch always zooms.
+host.addEventListener("wheel", (ev) => (controls.enableZoom = ev.ctrlKey || ev.metaKey), { capture: true });
+host.addEventListener("pointerdown", () => (controls.enableZoom = true), { capture: true });
+
 const state = { orbital: find("1s"), cloud: null, axes: null, nucleus: null, rings: null, slice: false, view: "free" };
 
 function resize() {
