@@ -2,7 +2,7 @@
 // vacuum tube. Photons with enough energy free electrons, which fly towards a
 // collector held at a stopping voltage. A meter shows the current.
 
-import { fitCanvas, animate, prefersReducedMotion, bindRange } from "../../assets/js/ui/simkit.js";
+import { fitCanvas, animate, prefersReducedMotion, bindRange, sci } from "../../assets/js/ui/simkit.js";
 import { hc_eV_nm, e as charge } from "../../assets/js/physics/constants.js";
 import { wavelengthToCSS, isVisible, colourName, region, VISIBLE_MIN } from "../../assets/js/physics/spectrum.js";
 
@@ -93,8 +93,8 @@ function drawTube(ctx, L) {
   ctx.font = "11px IBM Plex Sans, system-ui, sans-serif";
   ctx.fillStyle = "rgba(255,255,255,0.6)";
   ctx.textAlign = "center";
-  ctx.fillText(METALS[state.metal].name, plate.x, plate.y1 + 15);
-  ctx.fillText("collector", collector.x, collector.y1 + 15);
+  ctx.fillText(METALS[state.metal].name, plate.x, tube.y1 + 14);
+  ctx.fillText("collector", collector.x, tube.y1 + 14);
   ctx.fillText("vacuum", (tube.x0 + tube.x1) / 2, tube.y0 + 15);
 }
 
@@ -150,7 +150,7 @@ function drawCircuit(ctx, L) {
   ctx.font = "11px IBM Plex Sans, system-ui, sans-serif";
   ctx.fillStyle = "rgba(255,255,255,0.7)";
   ctx.textAlign = "center";
-  ctx.fillText(`${state.V.toFixed(2)} V`, battery.x, wire - 18);
+  ctx.fillText(`${state.V.toFixed(2)} V`, battery.x, wire + 26);
 
   // Ammeter: needle swings with current
   const frac = Math.min(1, currentMicroAmps() / 100);
@@ -261,6 +261,8 @@ function update() {
   $("r-photon").textContent = E.toFixed(2);
   $("r-ke").innerHTML = k > 0 ? `${k.toFixed(2)}<small>eV</small>` : "none";
   $("r-current").textContent = I >= 10 ? I.toFixed(0) : I.toFixed(1);
+  const freed = k > 0 ? state.brightness * MAX_PHOTON_RATE * YIELD : 0;
+  $("r-rate").textContent = freed > 0 ? sci(freed, 2) : "0";
 
   const metal = METALS[state.metal];
   let msg;
