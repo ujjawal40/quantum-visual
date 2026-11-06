@@ -243,6 +243,9 @@ $("slice").addEventListener("change", () => {
 });
 for (const b of document.querySelectorAll("#views button")) b.addEventListener("click", () => setView(b.dataset.view));
 
+// Small screens: fewer dots read more clearly and draw faster.
+if (host.getBoundingClientRect().width < 520) $("count").value = 12000;
+
 bindRange($("count"), { format: (v) => v.toLocaleString("en-US") });
 $("count").addEventListener("change", () => show(state.orbital.key, { keepCamera: true }));
 
