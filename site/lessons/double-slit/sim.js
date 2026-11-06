@@ -1,19 +1,41 @@
 // Lesson 4.3 simulation: electrons fired one at a time through two slits,
 // seen from above. Each lands as one dot; the dots build up the pattern.
 
-import { fitCanvas, animate } from "../../assets/js/ui/simkit.js";
-import { SCREEN_HALF } from "./model.js";
+import { fitCanvas, animate, prefersReducedMotion } from "../../assets/js/ui/simkit.js";
+import { SCREEN_HALF, deBroglie, sampleHit } from "./model.js";
 
 const canvas = document.getElementById("stage");
+
+const MAX_HITS = 20000;     // dots kept for redrawing after a resize
+const MAX_FLYING = 40;      // above this, electrons land without the flight animation
+const T_GUN = 0.45;         // seconds from gun to slits
+const T_SCREEN = 0.35;      // seconds from slits to screen
 
 const state = {
   d: 1.0e-6,        // slit separation, m
   V: 10000,         // accelerating voltage, V
   watch: false,     // which-slit detector on
   oneSlit: false,   // lower slit closed
+  fired: 0,         // electrons fired since the screen was cleared
+  hits: [],         // { y, slit } landed electrons (slit: 0 unknown, 1 upper, 2 lower)
+  flying: [],       // electrons in flight
 };
 
-const view = fitCanvas(canvas, () => draw());
+const mode = () => (state.oneSlit ? "one" : state.watch ? "watch" : "both");
+const params = () => ({ lambda: deBroglie(state.V), d: state.d, mode: mode() });
+
+// Landed dots are painted once onto a buffer, so thousands cost nothing per frame.
+const buffer = document.createElement("canvas");
+const bctx = buffer.getContext("2d");
+
+const view = fitCanvas(canvas, () => {
+  buffer.width = canvas.width;
+  buffer.height = canvas.height;
+  repaintHits();
+  draw();
+});
+buffer.width = canvas.width;
+buffer.height = canvas.height;
 
 // ---------- geometry ----------
 function layout() {
@@ -41,6 +63,55 @@ function slitPx(L) {
   return { upper: L.cy - sep / 2, lower: L.cy + sep / 2, open: 9 };
 }
 
+// ---------- electrons ----------
+const DOT = { 0: "#9fbcff", 1: "#9fbcff", 2: "#ffb27a" };
+
+/** Fire one electron. Its landing spot is decided by the quantum probabilities. */
+function fire({ single = false } = {}) {
+  const p = params();
+  const y = sampleHit(p);
+  // With a detector, each electron is caught at one slit, half the time each.
+  const slit = p.mode === "one" ? 1 : p.mode === "watch" ? (Math.random() < 0.5 ? 1 : 2) : 0;
+  state.fired++;
+  if (state.flying.length < MAX_FLYING && !prefersReducedMotion()) {
+    state.flying.push({ y, slit, t: 0 });
+  } else {
+    land(y, slit);
+  }
+  document.dispatchEvent(new CustomEvent("fired", { detail: { single, fired: state.fired } }));
+}
+
+function land(y, slit) {
+  if (state.hits.length < MAX_HITS) state.hits.push({ y, slit });
+  paintHit(y, slit);
+  document.dispatchEvent(new CustomEvent("hit", { detail: { total: state.hits.length, mode: mode() } }));
+}
+
+function paintHit(y, slit) {
+  const L = layout();
+  const dpr = buffer.width / (view.w || 1);
+  bctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  // Spread dots across the screen's thickness so they read as a strip.
+  const x = L.screenX - 20 + Math.random() * 20;
+  bctx.fillStyle = state.watch && slit === 2 ? DOT[2] : DOT[1];
+  bctx.globalAlpha = 0.85;
+  bctx.fillRect(x, yToPx(L, y) - 0.8, 1.6, 1.6);
+  bctx.globalAlpha = 1;
+}
+
+function repaintHits() {
+  bctx.setTransform(1, 0, 0, 1, 0, 0);
+  bctx.clearRect(0, 0, buffer.width, buffer.height);
+  for (const h of state.hits) paintHit(h.y, h.slit);
+}
+
+function clearScreen() {
+  state.hits = [];
+  state.flying = [];
+  state.fired = 0;
+  repaintHits();
+}
+
 // ---------- drawing ----------
 function draw() {
   const { ctx } = view;
@@ -48,6 +119,50 @@ function draw() {
   const L = layout();
   ctx.clearRect(0, 0, L.w, L.h);
   drawApparatus(ctx, L);
+  ctx.drawImage(buffer, 0, 0, L.w, L.h);
+  for (const e of state.flying) drawFlying(ctx, L, e);
+}
+
+function drawFlying(ctx, L, e) {
+  const s = slitPx(L);
+  const gunY = L.cy;
+  const slitY = e.slit === 2 ? s.lower : e.slit === 1 ? s.upper : L.cy;
+  if (e.t < T_GUN) {
+    // Leg 1: towards the barrier (towards the chosen slit if someone is watching)
+    const f = e.t / T_GUN;
+    const x = L.gunX + 12 + (L.barrierX - L.gunX - 12) * f;
+    const y = gunY + (slitY - gunY) * (e.slit ? f : 0);
+    dot(ctx, x, y, "#9fbcff");
+    return;
+  }
+  const f = (e.t - T_GUN) / T_SCREEN;
+  if (e.slit) {
+    // Watched (or one slit): a particle on a path from its slit to the landing spot
+    if (state.watch && f < 0.25) {
+      ctx.fillStyle = "rgba(255,209,102,0.6)";
+      ctx.fillRect(L.barrierX + 6, slitY - 7, 10, 14);
+    }
+    const x = L.barrierX + (L.screenX - L.barrierX) * f;
+    const y = slitY + (yToPx(L, e.y) - slitY) * f;
+    dot(ctx, x, y, state.watch && e.slit === 2 ? DOT[2] : "#9fbcff");
+  } else {
+    // Unwatched: no path to draw, only a wave spreading from both slits
+    const r = (L.screenX - L.barrierX) * f;
+    ctx.strokeStyle = `rgba(159,188,255,${0.45 * (1 - f)})`;
+    ctx.lineWidth = 1.2;
+    for (const y of [s.upper, s.lower]) {
+      ctx.beginPath();
+      ctx.arc(L.barrierX, y, r, -Math.PI / 2.4, Math.PI / 2.4);
+      ctx.stroke();
+    }
+  }
+}
+
+function dot(ctx, x, y, colour) {
+  ctx.fillStyle = colour;
+  ctx.beginPath();
+  ctx.arc(x, y, 3, 0, Math.PI * 2);
+  ctx.fill();
 }
 
 function drawApparatus(ctx, L) {
@@ -123,10 +238,14 @@ function drawApparatus(ctx, L) {
   ctx.fillText("10 µm", bx - 4, L.bottom - tenMicron / 2 + 4);
 }
 
-function step() {
+function step(dt) {
+  for (const e of state.flying) e.t += dt;
+  const done = state.flying.filter((e) => e.t >= T_GUN + T_SCREEN);
+  state.flying = state.flying.filter((e) => e.t < T_GUN + T_SCREEN);
+  for (const e of done) land(e.y, e.slit);
   draw();
 }
 
 animate(canvas, step);
 
-export { state, layout, yToPx, slitPx };
+export { state, layout, yToPx, slitPx, fire, clearScreen, mode, params };
