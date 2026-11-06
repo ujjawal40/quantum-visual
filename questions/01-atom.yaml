@@ -1,0 +1,90 @@
+# Question bank, Module 1. Each item: id, lesson, level (core|extension|challenge),
+# type (concept|numeric|python), prompt, answer, and optional worked solution.
+
+- id: m1-q1
+  lesson: "1.4"
+  level: core
+  type: numeric
+  prompt: >
+    Carbon-14 has 6 protons. How many neutrons and electrons does a neutral
+    carbon-14 atom have?
+  answer: "8 neutrons, 6 electrons"
+  solution: N = A − Z = 14 − 6 = 8. Neutral means electrons = protons = 6.
+
+- id: m1-q2
+  lesson: "1.4"
+  level: core
+  type: concept
+  prompt: >
+    Two atoms both have 17 protons. One has 18 neutrons and the other has 20.
+    Are they the same element? What are they called?
+  answer: "Yes: both are chlorine. They are isotopes, chlorine-35 and chlorine-37."
+  solution: >
+    The element is set only by the proton count (17 = chlorine). Different
+    neutron counts make different isotopes of the same element.
+
+- id: m1-q3
+  lesson: "1.4"
+  level: core
+  type: numeric
+  prompt: >
+    An ion has 12 protons, 12 neutrons and 10 electrons. Write it in isotope
+    notation.
+  answer: "²⁴Mg²⁺"
+  solution: >
+    12 protons is magnesium; A = 12 + 12 = 24; charge = 12 − 10 = +2.
+
+- id: m1-q4
+  lesson: "1.3"
+  level: core
+  type: concept
+  prompt: Why did most α-particles pass straight through Rutherford's gold foil?
+  answer: >
+    Because an atom is almost entirely empty space: its positive charge and
+    nearly all its mass sit in a tiny nucleus that most α-particles never
+    come near.
+
+- id: m1-q5
+  lesson: "1.4"
+  level: extension
+  type: numeric
+  prompt: >
+    What fraction of a neutral oxygen-16 atom's mass is in its electrons?
+  answer: "about 0.027% (2.7 × 10⁻⁴)"
+  solution: >
+    Electron mass: 8 × 9.109 × 10⁻³¹ = 7.29 × 10⁻³⁰ kg.
+    Nucleus: 8 × 1.673 × 10⁻²⁷ + 8 × 1.675 × 10⁻²⁷ = 2.678 × 10⁻²⁶ kg.
+    Fraction ≈ 7.29 × 10⁻³⁰ / 2.679 × 10⁻²⁶ ≈ 2.7 × 10⁻⁴.
+
+- id: m1-q6
+  lesson: "1.5"
+  level: extension
+  type: numeric
+  prompt: >
+    An atom is about 10⁻¹⁰ m across and its nucleus about 10⁻¹⁵ m. What
+    fraction of the atom's volume does the nucleus fill?
+  answer: "about 10⁻¹⁵"
+  solution: Volume scales as size cubed, so (10⁻¹⁵ / 10⁻¹⁰)³ = (10⁻⁵)³ = 10⁻¹⁵.
+
+- id: m1-q7
+  lesson: "1.4"
+  level: extension
+  type: python
+  prompt: >
+    Write describe(p, n, e) that returns the element name, mass number,
+    charge and notation (e.g. "23Na+") for up to 20 protons.
+  answer: "See labs/01-atom/build_an_atom.ipynb, section 2."
+
+- id: m1-q8
+  lesson: "1.4"
+  level: challenge
+  type: numeric
+  prompt: >
+    Add up the masses of 6 protons, 6 neutrons and 6 electrons. Carbon-12 is
+    defined as exactly 12 u (1 u = 1.6605 × 10⁻²⁷ kg). How much mass is
+    "missing", and where did it go?
+  answer: "about 0.099 u; it became the binding energy of the nucleus"
+  solution: >
+    Sum = 2.0091 × 10⁻²⁶ kg = 12.099 u. The 0.099 u difference is the mass
+    defect: binding the nucleons together released energy E = Δm c²
+    (about 92 MeV).
