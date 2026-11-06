@@ -2,7 +2,9 @@
 // seen from above. Each lands as one dot; the dots build up the pattern.
 
 import { fitCanvas, animate, prefersReducedMotion } from "../../assets/js/ui/simkit.js";
-import { SCREEN_HALF, deBroglie, sampleHit } from "./model.js";
+import { SCREEN_HALF, deBroglie, sampleHit, binProbabilities } from "./model.js";
+
+const BINS = 72;
 
 const canvas = document.getElementById("stage");
 
@@ -19,7 +21,13 @@ const state = {
   fired: 0,         // electrons fired since the screen was cleared
   hits: [],         // { y, slit } landed electrons (slit: 0 unknown, 1 upper, 2 lower)
   flying: [],       // electrons in flight
+  counts: new Array(BINS).fill(0),  // histogram of every landed electron
+  landed: 0,
+  showTheory: false,
 };
+
+let theory = null;  // cached bin probabilities for the current setup
+const theoryProbs = () => (theory ??= binProbabilities(BINS, params()));
 
 const mode = () => (state.oneSlit ? "one" : state.watch ? "watch" : "both");
 const params = () => ({ lambda: deBroglie(state.V), d: state.d, mode: mode() });
@@ -83,8 +91,11 @@ function fire({ single = false } = {}) {
 
 function land(y, slit) {
   if (state.hits.length < MAX_HITS) state.hits.push({ y, slit });
+  const b = Math.min(BINS - 1, Math.max(0, Math.floor(((y + SCREEN_HALF) / (2 * SCREEN_HALF)) * BINS)));
+  state.counts[b]++;
+  state.landed++;
   paintHit(y, slit);
-  document.dispatchEvent(new CustomEvent("hit", { detail: { total: state.hits.length, mode: mode() } }));
+  document.dispatchEvent(new CustomEvent("hit", { detail: { total: state.landed, mode: mode() } }));
 }
 
 function paintHit(y, slit) {
@@ -109,7 +120,44 @@ function clearScreen() {
   state.hits = [];
   state.flying = [];
   state.fired = 0;
+  state.landed = 0;
+  state.counts.fill(0);
+  theory = null;
   repaintHits();
+}
+
+// ---------- histogram ----------
+function drawHistogram(ctx, L) {
+  const { histX0, histX1, top, bottom } = L;
+  const binH = (bottom - top) / BINS;
+  const width = histX1 - histX0 - 30; // leave room for the scale bar
+  const probs = state.showTheory ? theoryProbs() : null;
+  let peak = Math.max(...state.counts, 1);
+  if (probs && state.landed) peak = Math.max(peak, Math.max(...probs) * state.landed);
+  const scale = width / (peak * 1.08);
+
+  // Bin b covers y from −H + b·Δ upward, so it is drawn from the bottom up.
+  ctx.fillStyle = "rgba(159,188,255,0.75)";
+  for (let b = 0; b < BINS; b++) {
+    const c = state.counts[b];
+    if (!c) continue;
+    const y = bottom - (b + 1) * binH;
+    ctx.fillRect(histX0 + 1, y + 0.5, c * scale, Math.max(1, binH - 1));
+  }
+
+  if (probs) {
+    const n = Math.max(state.landed, 1);
+    const curveScale = state.landed ? scale : width / (Math.max(...probs) * 1.08);
+    ctx.strokeStyle = "#ffd166";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    probs.forEach((p, b) => {
+      const x = histX0 + 1 + p * n * curveScale;
+      const y = bottom - (b + 0.5) * binH;
+      b ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+    });
+    ctx.stroke();
+  }
 }
 
 // ---------- drawing ----------
@@ -120,6 +168,7 @@ function draw() {
   ctx.clearRect(0, 0, L.w, L.h);
   drawApparatus(ctx, L);
   ctx.drawImage(buffer, 0, 0, L.w, L.h);
+  drawHistogram(ctx, L);
   for (const e of state.flying) drawFlying(ctx, L, e);
 }
 
