@@ -83,7 +83,28 @@
 
       <section data-quiz>
         <script type="application/json">
-        []
+        [
+          { "q": "Electrons are fired one at a time, so only one is ever in the apparatus. After thousands have landed, what does the screen show?",
+            "options": ["Two bands, one behind each slit", "Interference fringes", "A random scatter with no pattern", "Nothing: single electrons cannot reach the screen"],
+            "answer": 1,
+            "explain": "Each electron's wave passes through both slits and interferes with itself. The pattern builds up one dot at a time, even though no two electrons ever meet." },
+          { "q": "What happens to the fringes when a detector records which slit each electron goes through?",
+            "options": ["They get brighter", "They move closer together", "They disappear, leaving a smooth hump", "They split into twice as many"],
+            "answer": 2,
+            "explain": "Knowing the path means only one slit contributes for each electron, so there is nothing left to interfere. The screen shows the sum of two single-slit patterns." },
+          { "q": "You raise the voltage that accelerates the electrons. What happens to the fringes?",
+            "options": ["They get further apart", "They get closer together", "They stay the same", "They vanish"],
+            "answer": 1,
+            "explain": "Higher voltage means more momentum and a shorter de Broglie wavelength. Since Δy = λL/d, a smaller λ squeezes the fringes together." },
+          { "q": "What is the de Broglie wavelength of an electron accelerated through 10 kV?",
+            "options": ["About 12 pm", "About 12 nm", "About 500 nm", "About 0.12 m"],
+            "answer": 0,
+            "explain": "λ = h ÷ √(2meV) = 6.63 × 10⁻³⁴ ÷ √(2 × 9.11 × 10⁻³¹ × 1.60 × 10⁻¹⁹ × 10⁴) ≈ 1.2 × 10⁻¹¹ m, or 12 pm." },
+          { "q": "Why don't we see a tennis ball make interference fringes when it goes through a gap in a fence?",
+            "options": ["Tennis balls are not made of atoms", "Its de Broglie wavelength is far too small compared with the gap", "Interference only happens in a vacuum", "Tennis balls move too slowly to have a wavelength"],
+            "answer": 1,
+            "explain": "A 57 g ball at 20 m/s has λ ≈ 6 × 10⁻³⁴ m. The fringes would be unimaginably close together, so its motion looks exactly like Newton's straight-line path." }
+        ]
         </script>
       </section>
     </article>
