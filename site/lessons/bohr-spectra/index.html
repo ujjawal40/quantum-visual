@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jumps and Photons</title>
+<meta name="description" content="Excite a hydrogen atom, watch the electron fall, and build hydrogen's spectrum one photon at a time.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="../../assets/css/tokens.css">
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/controls.css">
+<link rel="stylesheet" href="../../assets/css/layout.css">
+<link rel="stylesheet" href="../../assets/css/lesson.css">
+<script type="module" src="../../assets/js/ui/lesson.js"></script>
+<script type="module" src="./sim.js"></script>
+</head>
+<body data-lesson="bohr-spectra">
+<a class="skip-link" href="#main">Skip to the lesson</a>
+<header data-chrome></header>
+
+<main id="main" class="lesson">
+  <nav data-crumbs aria-label="Breadcrumb"></nav>
+  <div class="lesson__intro">
+    <h1>Jumps and photons</h1>
+    <p class="lede">A hydrogen atom can only hold certain amounts of energy. When its electron drops from one level to another, it throws out a single photon, and that photon's colour tells you exactly how far it fell.</p>
+  </div>
+
+  <div class="lesson__grid">
+    <article class="lesson__prose prose">
+      <h2>Electrons live on a ladder</h2>
+      <p>In 1913 Niels Bohr proposed that the electron in hydrogen can only sit on certain orbits, each with its own energy. Between the rungs there is nothing: the electron is never found with an in-between energy.</p>
+      <div class="formula">E<sub>n</sub> = − <span class="frac"><span>13.6 eV</span><span>n<sup>2</sup></span></span>
+        <small>n = 1, 2, 3, … is the level number. Negative means the electron is bound to the proton.</small></div>
+      <p>The ground state, n = 1, sits at −13.6 eV. Level 2 is at −3.40 eV, level 3 at −1.51 eV, and the rungs crowd together as they approach 0 eV, where the electron breaks free.</p>
+      <p>Click a higher level on the ladder in the simulation. A photon with exactly the right energy flies in and lifts the electron up.</p>
+
+      <h2>Every jump makes one photon</h2>
+      <p>An excited electron does not stay put. It falls back, and the energy it loses leaves as one photon:</p>
+      <div class="formula">ΔE = hf = <span class="frac"><span>hc</span><span>λ</span></span>
+        &nbsp;&nbsp;so&nbsp;&nbsp; λ = <span class="frac"><span>1240 eV·nm</span><span>ΔE</span></span></div>
+      <p>For the drop from level 3 to level 2, ΔE = 3.40 − 1.51 = 1.89 eV, so λ = 1240 ÷ 1.89 ≈ 656 nm. That is red light, the glow of hydrogen in a discharge tube and in nebulae across the sky.</p>
+      <p>Big jumps give high-energy, short-wavelength photons. Small jumps give low-energy, long-wavelength ones. Many jumps make light our eyes cannot see.</p>
+
+      <h2>Hydrogen's fingerprint</h2>
+      <p>Jumps are grouped by the level they end on. Each group is a <em>series</em>, named after the person who first measured it:</p>
+      <ul>
+        <li><strong>Lyman</strong> (ending on n = 1): all ultraviolet, 91–122 nm.</li>
+        <li><strong>Balmer</strong> (ending on n = 2): four visible lines at 656, 486, 434 and 410 nm, then more in the ultraviolet.</li>
+        <li><strong>Paschen</strong> (ending on n = 3): all infrared, from 820 nm upward.</li>
+      </ul>
+      <p>No other element makes this exact set of lines. Astronomers read them in starlight to tell what stars are made of.</p>
+
+      <h2>Absorbing is fussy</h2>
+      <p>The reverse also works: an atom can swallow a photon and jump up. But only a photon whose energy matches a gap exactly. A photon with slightly too much or too little energy passes straight through. Try it with the photon gun.</p>
+      <p>A photon with 13.6 eV or more (λ ≤ 91.2 nm) does something different: it knocks the electron out of the atom entirely. That is <em>ionisation</em>.</p>
+
+      <h2>How fast is the electron?</h2>
+      <p>On Bohr's orbits the electron's speed is</p>
+      <div class="formula">v<sub>n</sub> = <span class="frac"><span>2.19 × 10<sup>6</sup> m/s</span><span>n</span></span>
+        <small>about c/137 in the ground state: fast, but not close to light speed.</small></div>
+      <p>That is around 7,900,000 km/h, fast enough to circle the Earth in about 18 seconds. Watch the speed readout change as the electron moves between levels.</p>
+
+      <section class="versus" aria-labelledby="versus-title">
+        <h2 id="versus-title">Newton vs quantum</h2>
+        <div class="versus__grid">
+          <div class="versus__col versus__col--classical">
+            <h3>What Newton predicts</h3>
+            <p>An electron orbiting a proton could have any radius and any energy. As it radiates, it should spiral inward continuously, giving off a smear of all colours, and crash into the nucleus in about 10<sup>−11</sup> s.</p>
+          </div>
+          <div class="versus__col">
+            <h3>What actually happens</h3>
+            <p>Only certain energies are allowed. Atoms are stable, and hydrogen emits sharp lines at exact wavelengths instead of a smear.</p>
+          </div>
+        </div>
+        <p class="versus__meet">Where they meet: Bohr kept Newton's force balance, mv²/r = ke²/r², and added one quantum rule. That is why Newton gives the right speed here. For very large n the rungs crowd so close together that the energy looks continuous again.</p>
+      </section>
+
+      <section class="lab-card" aria-labelledby="lab-title">
+        <h2 id="lab-title">Python lab: hydrogen's spectral lines</h2>
+        <p>Compute every transition between levels 1 and 6, check the Bohr model against measured wavelengths, and draw the visible spectrum yourself.</p>
+        <ul>
+          <li>Write <code>energy_level(n)</code> and <code>transition_wavelength_nm()</code></li>
+          <li>Find which jumps are visible</li>
+          <li>Plot the gaps between levels as n grows</li>
+        </ul>
+        <div class="lab-card__actions">
+          <a class="btn" data-colab="labs/03-bohr/balmer_lines.ipynb">Open in Colab</a>
+          <a class="btn btn--quiet" data-repo="labs/03-bohr/balmer_lines.ipynb">View on GitHub</a>
+        </div>
+      </section>
+
+      <section data-quiz>
+        <script type="application/json">
+        [
+          { "q": "An electron drops from level 4 to level 2. What comes out?",
+            "options": ["One photon with 2.55 eV of energy", "Two photons, one for each level passed", "A photon with 4.25 eV of energy", "Nothing: the energy turns into heat"],
+            "answer": 0,
+            "explain": "One jump makes one photon carrying the whole energy difference: 3.40 − 0.85 = 2.55 eV, which is blue-green light at 486 nm." },
+          { "q": "Which jump gives the photon with the longest wavelength?",
+            "options": ["2 → 1", "3 → 1", "4 → 3", "6 → 2"],
+            "answer": 2,
+            "explain": "Longest wavelength means smallest energy. The gap between levels 4 and 3 (0.66 eV) is the smallest of these, giving infrared light at 1875 nm." },
+          { "q": "A 500 nm photon (2.48 eV) hits a hydrogen atom in its ground state. What happens?",
+            "options": ["The electron jumps to level 2", "The electron is knocked out of the atom", "The photon passes through", "The electron jumps partway to level 2"],
+            "answer": 2,
+            "explain": "No gap from level 1 equals 2.48 eV; the smallest is 10.2 eV. The atom cannot take part of a photon, so it ignores it." },
+          { "q": "Why do the Lyman lines all lie in the ultraviolet?",
+            "options": ["They come from heavier atoms", "Every jump that ends on level 1 releases at least 10.2 eV", "The electron moves faster in the Lyman series", "Ultraviolet light is emitted by the nucleus"],
+            "answer": 1,
+            "explain": "The smallest Lyman jump, 2 → 1, already releases 10.2 eV (122 nm). All the others release even more, so every line is shorter than visible light." },
+          { "q": "How fast does the electron move in level 3, compared with level 1?",
+            "options": ["3 times faster", "The same speed", "One third as fast", "One ninth as fast"],
+            "answer": 2,
+            "explain": "Speed falls as 1/n, so level 3 is one third of 2.19 × 10⁶ m/s, about 7.3 × 10⁵ m/s." }
+        ]
+        </script>
+      </section>
+    </article>
+
+    <aside class="lesson__bench" aria-label="Simulation and experiments">
+      <div class="bench">
+        <div class="bench__stage">
+          <canvas id="stage" aria-label="Hydrogen atom with energy ladder and spectrometer. Use the buttons below to excite the atom."></canvas>
+        </div>
+        <p class="bench__caption">Left: the atom (orbits not to scale; real radii grow as n²). Right: the energy ladder. Bottom: every photon the atom emits.</p>
+        <p class="status" id="status" aria-live="polite">The electron is in the ground state, n = 1. Click a higher rung to excite it.</p>
+
+        <dl class="readouts">
+          <div class="readout"><dt>Level</dt><dd id="r-n">1</dd></div>
+          <div class="readout"><dt>Energy</dt><dd><span id="r-e">−13.6</span><small>eV</small></dd></div>
+          <div class="readout"><dt>Speed</dt><dd><span id="r-v">2.19</span><small>×10⁶ m/s</small></dd></div>
+          <div class="readout"><dt>Last photon</dt><dd id="r-photon">none yet</dd></div>
+        </dl>
+
+        <div class="bench__controls">
+          <div>
+            <div class="control">
+              <span class="control__label">Excite to level</span>
+              <div class="segmented" id="excite" role="group" aria-label="Excite the electron to level">
+                <button type="button" data-n="2">2</button><button type="button" data-n="3">3</button><button type="button" data-n="4">4</button><button type="button" data-n="5">5</button><button type="button" data-n="6">6</button>
+              </div>
+            </div>
+            <label class="toggle"><input type="checkbox" id="autofall" checked> Let the electron fall on its own</label>
+            <div class="bench__actions">
+              <button class="btn btn--quiet" type="button" id="drop">Drop one level</button>
+            </div>
+          </div>
+          <div>
+            <div class="control">
+              <label class="control__label" for="gun">Photon gun wavelength <span class="control__value"><span data-value-for="gun"></span> nm</span></label>
+              <input type="range" id="gun" min="80" max="1900" step="0.1" value="500">
+              <div class="task__form">
+                <label class="sr-only" for="gun-exact">Exact wavelength in nm</label>
+                <input id="gun-exact" inputmode="decimal" value="500" aria-describedby="gun-hint">
+                <span class="task__unit" id="gun-hint">nm, exact</span>
+              </div>
+            </div>
+            <div class="bench__actions">
+              <button class="btn" type="button" id="fire">Fire photon</button>
+              <button class="btn btn--quiet" type="button" id="reset">Reset atom</button>
+              <button class="btn btn--quiet" type="button" id="clear">Clear spectrum</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section data-tasks aria-label="Experiments"></section>
+    </aside>
+  </div>
+</main>
+
+<nav data-lesson-nav aria-label="Lessons"></nav>
+<footer data-chrome></footer>
+</body>
+</html>
