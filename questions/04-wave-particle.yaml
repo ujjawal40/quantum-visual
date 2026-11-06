@@ -1,0 +1,86 @@
+# Question bank, Module 4. Each item: id, lesson, level (core|extension|challenge),
+# type (concept|numeric|python), prompt, answer, and optional worked solution.
+
+- id: m4-q1
+  lesson: "4.1"
+  level: core
+  type: numeric
+  prompt: >
+    Find the de Broglie wavelength of an electron moving at 2.2 × 10⁶ m/s.
+    Compare it with the size of the hydrogen atom.
+  answer: "about 0.33 nm, roughly three times the atom's diameter (0.1 nm)"
+  solution: >
+    p = mv = 9.11 × 10⁻³¹ × 2.2 × 10⁶ = 2.0 × 10⁻²⁴ kg·m/s.
+    λ = h / p = 6.63 × 10⁻³⁴ / 2.0 × 10⁻²⁴ = 3.3 × 10⁻¹⁰ m. This equals the
+    circumference of the ground-state Bohr orbit, 2πa₀.
+
+- id: m4-q2
+  lesson: "4.3"
+  level: core
+  type: concept
+  prompt: >
+    Electrons are fired at two slits one at a time. After many have landed,
+    the screen shows bright and dark fringes. Explain how a single electron
+    can contribute to an interference pattern.
+  answer: >
+    Each electron's wavefunction passes through both slits and interferes
+    with itself. The interference sets where it is likely to land; the
+    electron is then detected at one spot. Many such spots build the pattern.
+
+- id: m4-q3
+  lesson: "4.3"
+  level: core
+  type: concept
+  prompt: >
+    A detector at the slits records which slit each electron passes through.
+    What happens to the pattern, and why?
+  answer: >
+    The fringes disappear. Knowing the path leaves only one slit's wave for
+    each electron, so there is nothing to interfere; the screen shows the sum
+    of two single-slit patterns.
+
+- id: m4-q4
+  lesson: "4.3"
+  level: extension
+  type: numeric
+  prompt: >
+    Electrons accelerated through 20 kV pass two slits 2.0 µm apart. The
+    screen is 1.0 m away. Find the fringe spacing.
+  answer: "about 4.3 µm"
+  solution: >
+    λ = h / √(2meV) = 6.63 × 10⁻³⁴ / √(2 × 9.11 × 10⁻³¹ × 1.60 × 10⁻¹⁹ × 2.0 × 10⁴)
+    = 8.67 × 10⁻¹² m. Δy = λL/d = 8.67 × 10⁻¹² × 1.0 / 2.0 × 10⁻⁶ = 4.3 × 10⁻⁶ m.
+
+- id: m4-q5
+  lesson: "4.3"
+  level: extension
+  type: concept
+  prompt: >
+    The slit separation is doubled and the voltage is quadrupled. What happens
+    to the fringe spacing?
+  answer: "It becomes one quarter as big."
+  solution: >
+    λ ∝ 1/√V, so four times the voltage halves λ. Δy = λL/d, so halving λ and
+    doubling d together divide Δy by 4.
+
+- id: m4-q6
+  lesson: "4.3"
+  level: extension
+  type: python
+  prompt: >
+    Simulate 20,000 electrons landing behind two slits using rejection
+    sampling, histogram the hits, and compare with the predicted intensity.
+  answer: "The histogram follows the cos² × sinc² curve within statistical noise."
+  solution: See labs/04-wave-particle/double_slit.ipynb, sections 3 and 4.
+
+- id: m4-q7
+  lesson: "4.3"
+  level: challenge
+  type: numeric
+  prompt: >
+    A 57 g tennis ball at 20 m/s passes through two gaps 10 cm apart in a
+    fence, 5 m from a wall. Estimate its fringe spacing. Could it ever be seen?
+  answer: "about 3 × 10⁻³² m: far smaller than a proton, so never observable"
+  solution: >
+    λ = h / mv = 6.63 × 10⁻³⁴ / (0.057 × 20) = 5.8 × 10⁻³⁴ m.
+    Δy = λL/d = 5.8 × 10⁻³⁴ × 5 / 0.10 = 2.9 × 10⁻³² m.
