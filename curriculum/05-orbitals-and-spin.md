@@ -11,7 +11,7 @@ An electron in an atom is described by four quantum numbers (n, l, mₗ, mₛ). 
 
 | Lesson | Concept | 3D visual | Chart | Python lab |
 | --- | --- | --- | --- | --- |
-| 5.1 From orbits to orbitals | An orbital is a probability cloud, not a path | **[`visuals/05-orbitals`](../visuals/05-orbitals/index.html)**: 1s point cloud | Radial probability for 1s, peak at a₀ | **[`labs/05-orbitals/orbital_cloud.ipynb`](../labs/05-orbitals/orbital_cloud.ipynb)** |
+| 5.1 From orbits to orbitals | An orbital is a probability cloud, not a path | 1s point cloud (interactive in [lesson 5.2](../site/lessons/orbitals/index.html)) | Radial probability for 1s, peak at a₀ | **[`labs/05-orbitals/orbital_cloud.ipynb`](../labs/05-orbitals/orbital_cloud.ipynb)** |
 | 5.2 Shapes: s, p, d, f | l sets the shape | Gallery of rotatable orbitals with nodes highlighted | Radial curves for 1s, 2s, 3s | Plot an isosurface of a 2p orbital |
 | 5.3 Four quantum numbers | n, l, mₗ, mₛ as an "address" | Address picker: choose n, l, mₗ and the orbital appears | Orbitals per shell (n²) | Enumerate every allowed set for n ≤ 4 |
 | 5.4 Spin: +½ and −½ | Intrinsic angular momentum; only two outcomes when measured | Stern–Gerlach: a beam splits into exactly two spots | Classical smear vs actual two spots | Simulate random spin measurements |
