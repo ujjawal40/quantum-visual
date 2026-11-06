@@ -8,6 +8,7 @@
     "serve": "python3 -m http.server 8000 --directory site"
   },
   "devDependencies": {
+    "playwright": "^1.63.0",
     "three": "^0.160.0"
   }
 }
