@@ -60,13 +60,13 @@ function project(L, s, x, z) {
 /** Where each magnet sits along the beam, its blocker, and its centre offset. */
 function magnetPlan() {
   const n = state.stages.length;
-  const len = n === 1 ? 0.2 : 0.15;
-  const gap = (0.8 - n * len) / n;
+  const len = n === 1 ? 0.18 : n === 2 ? 0.14 : 0.12;
+  const gap = (0.84 - n * len) / n;
   let cx = 0, cz = 0;
   const passUp = state.block === "down";
   return state.stages.map((stage, k) => {
     const a = axisVector(stage.deg);
-    const start = 0.09 + gap / 2 + k * (len + gap);
+    const start = 0.07 + gap / 2 + k * (len + gap);
     const plan = { ...stage, k, a, start, end: start + len, cx, cz, blockS: start + len + Math.min(0.05, gap * 0.35) };
     const sign = passUp ? 1 : -1;
     cx += sign * a.x;
@@ -138,9 +138,17 @@ function spotNames() {
   return ["Up (tilted)", "Down (tilted)"];
 }
 
-function updateReadouts() {
+/** Percent of screen hits in the up and down spots, rounded so they add to 100. */
+function percents() {
   const reached = state.up + state.down;
-  const pc = (n) => (reached ? ` ${Math.round((100 * n) / reached)}%` : "");
+  if (!reached) return [null, null];
+  const up = Math.round((100 * state.up) / reached);
+  return [up, 100 - up];
+}
+
+function updateReadouts() {
+  const [upPc, downPc] = percents();
+  const pc = (v) => (v === null ? "" : ` ${v}%`);
   const [upName, downName] = spotNames();
   $("r-fired").textContent = state.fired;
   $("r-blocked").textContent = state.blocked;
@@ -148,8 +156,8 @@ function updateReadouts() {
   $("r-down-label").textContent = downName;
   $("r-up").textContent = state.up;
   $("r-down").textContent = state.down;
-  $("r-up-pc").textContent = pc(state.up);
-  $("r-down-pc").textContent = pc(state.down);
+  $("r-up-pc").textContent = pc(upPc);
+  $("r-down-pc").textContent = pc(downPc);
 }
 
 function announce() {
@@ -245,27 +253,43 @@ function drawChannels(ctx, L, plan) {
 }
 
 function drawMagnet(ctx, L, p) {
-  // Two pole pieces, one each side of the beam along the magnet's axis.
+  // Two pole-piece blocks, one each side of the beam along the magnet's axis.
   // N sits on the +axis side, so an "up" spin is deflected toward N.
-  const along = (s, u) => project(L, s, p.cx + u * p.a.x, p.cz + u * p.a.z);
-  const piece = (u0, u1, fill, label) => {
-    const a = along(p.start, u0), b = along(p.end, u0), c = along(p.end, u1), d = along(p.start, u1);
+  // Each block spans u (along the axis) by v (across it, in the x–z plane)
+  // and is extruded along the beam, then drawn as a translucent box.
+  const b = { x: p.a.z, z: -p.a.x }; // perpendicular to the axis, still in the x–z plane
+  const pt = (s, u, v) => project(L, s, p.cx + u * p.a.x + v * b.x, p.cz + u * p.a.z + v * b.z);
+  const quad = (q, fill) => {
     ctx.beginPath();
-    ctx.moveTo(a.px, a.py); ctx.lineTo(b.px, b.py); ctx.lineTo(c.px, c.py); ctx.lineTo(d.px, d.py); ctx.closePath();
+    q.forEach((c, i) => (i ? ctx.lineTo(c.px, c.py) : ctx.moveTo(c.px, c.py)));
+    ctx.closePath();
     ctx.fillStyle = fill;
     ctx.fill();
-    ctx.strokeStyle = "rgba(255,255,255,0.35)";
+    ctx.strokeStyle = "rgba(255,255,255,0.28)";
     ctx.stroke();
-    const m = along((p.start + p.end) / 2, (u0 + u1) / 2);
-    ctx.fillStyle = "rgba(255,255,255,0.9)";
+  };
+  const block = (u0, u1, rgb, label) => {
+    const v = 0.42;
+    const face = (s) => [pt(s, u0, -v), pt(s, u0, v), pt(s, u1, v), pt(s, u1, -v)];
+    const far = face(p.end), near = face(p.start);
+    quad(far, `rgba(${rgb},0.35)`);
+    for (let i = 0; i < 4; i++) {
+      const j = (i + 1) % 4;
+      quad([near[i], near[j], far[j], far[i]], `rgba(${rgb},0.22)`);
+    }
+    quad(near, `rgba(${rgb},0.8)`);
+    const m = pt(p.start, (u0 + u1) / 2, 0);
+    ctx.fillStyle = "#ffffff";
     ctx.textAlign = "center";
     ctx.fillText(label, m.px, m.py + 4);
   };
-  piece(0.55, 1.15, "rgba(214,72,72,0.75)", "N");
-  piece(-0.55, -1.15, "rgba(80,110,170,0.75)", "S");
+  // Draw the block nearer the viewer (larger x) last so it sits in front.
+  const nFirst = p.a.x <= 0;
+  const pieces = [[0.5, 1.1, "214,72,72", "N"], [-0.5, -1.1, "80,120,190", "S"]];
+  for (const args of nFirst ? pieces : pieces.reverse()) block(...args);
 
   // Name of the magnet above it.
-  const top = project(L, (p.start + p.end) / 2, p.cx, p.cz + 1.6);
+  const top = project(L, (p.start + p.end) / 2, p.cx, p.cz + 1.75);
   ctx.fillStyle = INK;
   ctx.textAlign = "center";
   ctx.font = "600 12px IBM Plex Sans, system-ui, sans-serif";
@@ -347,9 +371,9 @@ function drawInset(ctx, L, plan) {
   const last = plan[plan.length - 1];
   const reached = state.up + state.down;
   if (!reached) return;
-  const [upName, downName] = spotNames();
   ctx.font = "600 11px IBM Plex Sans, system-ui, sans-serif";
-  for (const [sign, n, name] of [[1, state.up, upName], [-1, state.down, downName]]) {
+  const [upPc, downPc] = percents();
+  for (const [sign, n, pcv] of [[1, state.up, upPc], [-1, state.down, downPc]]) {
     const hx = last.cx + sign * last.a.x, hz = last.cz + sign * last.a.z;
     const p = toInset(hx, hz);
     const right = p.px < cx + size * 0.2;
@@ -359,7 +383,7 @@ function drawInset(ctx, L, plan) {
     ctx.fillText(`${n}`, tx, p.py - 1);
     ctx.font = FONT;
     ctx.fillStyle = "rgba(255,255,255,0.6)";
-    ctx.fillText(`${Math.round((100 * n) / reached)}%`, tx, p.py + 12);
+    ctx.fillText(`${pcv}%`, tx, p.py + 12);
     ctx.font = "600 11px IBM Plex Sans, system-ui, sans-serif";
   }
   ctx.font = FONT;
@@ -396,5 +420,73 @@ function step(dt) {
   draw();
 }
 
-updateReadouts();
+// ---------- controls ----------
+function clearScreen() {
+  state.atoms = [];
+  state.hits = [];
+  state.flashes = [];
+  state.fired = state.blocked = state.up = state.down = 0;
+  announce();
+}
+
+function describeSetup() {
+  const kept = state.block === "down" ? "up" : "down";
+  const blocked = state.block;
+  const quantum = {
+    z: "One Z magnet: each atom's spin is measured along z.",
+    zz: `Two Z magnets. The ${blocked} beam from the first is blocked, so only ${kept} atoms are measured along z again.`,
+    zx: `Z, then X. Only the ${kept} beam from the Z magnet goes on, into a magnet turned 90° to measure x.`,
+    zxz: `Z, then X, then Z again. The ${blocked} beam is blocked after each of the first two magnets.`,
+    ztilt: `The second magnet is tilted ${state.tilt}° from z. Quantum rule: chance of up = cos²(${state.tilt / 2}°) = ${Math.round(100 * probabilityUp(state.tilt))}%.`,
+  }[state.setup];
+  if (state.mode === "classical") {
+    return `Classical model: every atom is a tiny magnet pointing in a random direction, and is pushed in proportion to how much it points along the field. ${quantum}`;
+  }
+  return quantum;
+}
+
+function applyConfig() {
+  state.stages = stagesFor(state.setup, state.tilt);
+  $("block-control").hidden = state.setup === "z";
+  $("angle-control").hidden = state.setup !== "ztilt";
+  for (const b of document.querySelectorAll("#mode button")) b.setAttribute("aria-pressed", String(b.dataset.mode === state.mode));
+  for (const b of document.querySelectorAll("#block button")) b.setAttribute("aria-pressed", String(b.dataset.block === state.block));
+  clearScreen();
+  setStatus(describeSetup());
+}
+
+for (const b of document.querySelectorAll("#mode button")) {
+  b.addEventListener("click", () => { state.mode = b.dataset.mode; applyConfig(); });
+}
+for (const b of document.querySelectorAll("#block button")) {
+  b.addEventListener("click", () => { state.block = b.dataset.block; applyConfig(); });
+}
+$("setup").addEventListener("change", (ev) => { state.setup = ev.target.value; applyConfig(); });
+
+bindRange($("angle"), {
+  onInput: (v) => {
+    state.tilt = v;
+    if (state.setup === "ztilt") applyConfig();
+  },
+});
+bindRange($("rate"), { format: (v) => (v === 0 ? "paused" : v) });
+
+$("fire-one").addEventListener("click", spawn);
+$("fire-many").addEventListener("click", () => {
+  const plan = magnetPlan();
+  for (let i = 0; i < 200; i++) {
+    const result = runAtom(state.mode, state.stages, state.block);
+    state.fired++;
+    if (result.blockedAt >= 0) state.blocked++;
+    else land(result, plan);
+  }
+  announce();
+  setStatus(`Fired 200 atoms in one go. ${state.up + state.down} reached the screen.`);
+});
+$("clear").addEventListener("click", () => {
+  clearScreen();
+  setStatus("Screen cleared. " + describeSetup());
+});
+
+applyConfig();
 animate(canvas, step);
