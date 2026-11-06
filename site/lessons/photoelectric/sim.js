@@ -68,6 +68,7 @@ function draw() {
   drawCircuit(ctx, L);
   drawTube(ctx, L);
   drawLamp(ctx, L);
+  drawElectrons(ctx, L);
   for (const p of state.photons) drawPhoton(ctx, p);
 }
 
@@ -191,6 +192,41 @@ function drawPhoton(ctx, p) {
   ctx.restore();
 }
 
+// ---------- electrons ----------
+/** Turn a photon hit into (maybe) a freed electron with a random share of KE_max. */
+function hitPlate(p) {
+  const k = keMax();
+  if (k <= 0 || Math.random() > 0.45) return;
+  // Electrons from deeper in the metal lose a little on the way out, so KE ranges from 0 to KE_max.
+  state.electrons.push({ x: 0, y: p.y1, ke: k * Math.sqrt(Math.random()), dir: 1 });
+}
+
+/** Move an electron across the gap. The collector is at −V, so the electron loses V·(x/D) eV on the way. */
+function moveElectron(el, dt, D) {
+  const rem = el.ke - state.V * (el.x / D);
+  if (rem <= 0 && el.dir > 0) el.dir = -1;
+  const speed = D * 0.75 * Math.sqrt(Math.max(rem, 0.004));
+  el.x += el.dir * speed * dt;
+}
+
+function drawElectrons(ctx, L) {
+  for (const el of state.electrons) {
+    const x = L.plate.x + 4 + el.x;
+    ctx.beginPath();
+    ctx.arc(x, el.y, 3.2, 0, Math.PI * 2);
+    ctx.fillStyle = el.dir > 0 ? "#9fbcff" : "#ffb38a";
+    ctx.fill();
+  }
+}
+
+/** Current reaching the collector in µA: photons/s × yield × fraction fast enough to climb V. */
+function currentMicroAmps() {
+  const k = keMax();
+  if (k <= 0 || state.brightness === 0) return 0;
+  const frac = state.V >= k ? 0 : 1 - (state.V / k) ** 2; // KE distributed so that P(KE > E) = 1 − (E/KEmax)²
+  return state.brightness * MAX_PHOTON_RATE * YIELD * frac * charge * 1e6;
+}
+
 // ---------- animation ----------
 function step(dt) {
   const L = layout();
@@ -201,16 +237,63 @@ function step(dt) {
     const ty = L.plate.y0 + 6 + Math.random() * (L.plate.y1 - L.plate.y0 - 12);
     state.photons.push({ nm: state.nm, x0: L.lamp.x - 4, y0: L.lamp.y + 8, x1: L.plate.x + 4, y1: ty, t: 0 });
   }
-  for (const p of state.photons) p.t += dt / (reduce ? 0.2 : 0.7);
+  for (const p of state.photons) {
+    p.t += dt / (reduce ? 0.2 : 0.7);
+    if (p.t >= 1) hitPlate(p);
+  }
   state.photons = state.photons.filter((p) => p.t < 1);
+
+  const D = L.collector.x - L.plate.x - 6;
+  for (const el of state.electrons) moveElectron(el, dt, D);
+  state.electrons = state.electrons.filter((el) => el.x >= 0 && el.x <= D);
   draw();
 }
 
-/** Current reaching the collector in µA (filled in with the electron physics). */
-function currentMicroAmps() {
-  return 0;
+// ---------- readouts and controls ----------
+function describeLight(nm) {
+  return isVisible(nm) ? `${nm} nm ${colourName(nm)}` : `${nm} nm ${region(nm)}`;
 }
 
+function update() {
+  const E = photonEnergy(state.nm);
+  const k = keMax();
+  const I = currentMicroAmps();
+  $("r-photon").textContent = E.toFixed(2);
+  $("r-ke").innerHTML = k > 0 ? `${k.toFixed(2)}<small>eV</small>` : "none";
+  $("r-current").textContent = I >= 10 ? I.toFixed(0) : I.toFixed(1);
+
+  const metal = METALS[state.metal];
+  let msg;
+  if (state.brightness === 0) msg = "The lamp is off. No photons, no electrons.";
+  else if (k <= 0) msg = `Each ${describeLight(state.nm)} photon carries ${E.toFixed(2)} eV, less than ${metal.name.toLowerCase()}'s ${metal.phi.toFixed(2)} eV work function. No electrons escape, however bright the lamp.`;
+  else if (state.V >= k) msg = `Electrons leave with up to ${k.toFixed(2)} eV, but the ${state.V.toFixed(2)} V stopping voltage turns them all back. Current: zero.`;
+  else msg = `Each photon carries ${E.toFixed(2)} eV. After paying the ${metal.phi.toFixed(2)} eV work function, the fastest electrons keep ${k.toFixed(2)} eV.`;
+  $("status").textContent = msg;
+
+  document.dispatchEvent(new CustomEvent("pe-change", {
+    detail: { nm: state.nm, brightness: state.brightness, metal: state.metal, phi: metal.phi, V: state.V, E, keMax: k, current: I },
+  }));
+}
+
+bindRange($("wavelength"), {
+  format: (v) => describeLight(v),
+  onInput: (v) => { state.nm = v; update(); },
+});
+bindRange($("brightness"), {
+  format: (v) => `${v}%`,
+  onInput: (v) => { state.brightness = v / 100; update(); },
+});
+bindRange($("voltage"), {
+  format: (v) => v.toFixed(2),
+  onInput: (v) => { state.V = v; update(); },
+});
+$("metal").addEventListener("change", (ev) => {
+  state.metal = ev.target.value;
+  state.electrons = [];
+  update();
+});
+
+update();
 animate(canvas, step);
 
 export { state, keMax, phi, currentMicroAmps, layout };
