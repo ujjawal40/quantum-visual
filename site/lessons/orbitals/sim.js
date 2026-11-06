@@ -3,7 +3,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { animate, prefersReducedMotion, bindRange } from "../../assets/js/ui/simkit.js";
-import { ORBITALS, find, sample } from "./orbitals.js";
+import { ORBITALS, find, sample, nameHTML, energyEV, radialNodeCount, angularNodeCount, L_LETTER } from "./orbitals.js";
 
 // The stage is a dark room in both themes, so these colours are fixed.
 const COLOURS = {
@@ -152,6 +152,48 @@ function show(key, { keepCamera = false } = {}) {
   if (state.rings) scene.add(state.rings);
   if (state.slice) setView(o.sliceAxis);
   else if (!keepCamera) setView(state.view === "free" ? "free" : state.view);
+  describe();
+}
+
+// ---------- readouts and status ----------
+const plural = (n, word) => `${n} ${word}${n === 1 ? "" : "s"}`;
+
+function describe() {
+  const o = state.orbital;
+  const radial = radialNodeCount(o);
+  const angular = angularNodeCount(o);
+  $("r-name").innerHTML = nameHTML(o);
+  $("r-qn").textContent = `${o.n}, ${o.l}, ${o.ml}`;
+  $("r-e").textContent = (Math.abs(energyEV(o.n)) >= 10 ? energyEV(o.n).toFixed(1) : energyEV(o.n).toFixed(2)).replace("-", "−");
+  $("r-nodes").textContent = radial + angular;
+  $("r-nodes-split").textContent = `${radial} radial + ${angular} angular`;
+
+  const parts = [`<strong>${nameHTML(o)}</strong> (${L_LETTER[o.l] === "s" ? "an" : "a"} ${L_LETTER[o.l]} orbital): ${o.looks}`];
+  if (o.ml.startsWith("±")) {
+    const m = o.ml.slice(1);
+    parts.push(`Its m<sub>l</sub> is a mix of +${m} and −${m}: real-valued orbitals combine the two so the shape stands still.`);
+  }
+  if (state.slice) {
+    parts.push(
+      radial
+        ? `The dashed ${radial === 1 ? "ring marks the radial node" : "rings mark the radial nodes"}.`
+        : `This slab is the plane through the nucleus that cuts the lobes; it has no radial nodes.`
+    );
+  } else if (radial) {
+    parts.push("Its radial nodes are hidden inside the cloud: switch on the slice.");
+  }
+  parts.push(`Holds 2 electrons, spin +½ and −½.`);
+  $("status").innerHTML = parts.join(" ");
+  announce();
+}
+
+/** Tell the experiments what the student is looking at. */
+function announce() {
+  document.dispatchEvent(
+    new CustomEvent("orbitalshown", {
+      detail: { key: state.orbital.key, l: state.orbital.l, phase: $("phase").checked, slice: state.slice, view: state.view },
+    })
+  );
 }
 
 // ---------- views ----------
@@ -167,6 +209,7 @@ function setView(view) {
   controls.update();
   if (view !== "free") $("spin").checked = false;
   for (const b of document.querySelectorAll("#views button")) b.setAttribute("aria-pressed", String(b.dataset.view === view));
+  announce();
 }
 
 // Dragging the cloud leaves any axis view.
@@ -189,7 +232,10 @@ for (const o of ORBITALS) groups[o.n - 1].append(new Option(o.name, o.key));
 select.value = "1s";
 select.addEventListener("change", () => show(select.value));
 
-$("phase").addEventListener("change", () => state.cloud && paint(state.cloud));
+$("phase").addEventListener("change", () => {
+  if (state.cloud) paint(state.cloud);
+  announce();
+});
 $("slice").addEventListener("change", () => {
   state.slice = $("slice").checked;
   show(state.orbital.key, { keepCamera: true });
