@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spin: Up or Down</title>
+<meta name="description" content="Send silver atoms through a magnet and get two spots, never a smear. Then chain magnets and get surprised.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="../../assets/css/tokens.css">
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/controls.css">
+<link rel="stylesheet" href="../../assets/css/layout.css">
+<link rel="stylesheet" href="../../assets/css/lesson.css">
+<script type="module" src="../../assets/js/ui/lesson.js"></script>
+<script type="module" src="./sim.js"></script>
+</head>
+<body data-lesson="stern-gerlach">
+<a class="skip-link" href="#main">Skip to the lesson</a>
+<header data-chrome></header>
+
+<main id="main" class="lesson">
+  <nav data-crumbs aria-label="Breadcrumb"></nav>
+  <div class="lesson__intro">
+    <h1>Spin: up or down</h1>
+    <p class="lede">Fire silver atoms through a lopsided magnet and they land in exactly two spots, never anywhere in between. Every electron carries a tiny magnet that can only ever be measured pointing one of two ways.</p>
+  </div>
+
+  <div class="lesson__grid">
+    <article class="lesson__prose prose">
+    </article>
+
+    <aside class="lesson__bench" aria-label="Simulation and experiments">
+      <div class="bench">
+        <div class="bench__stage">
+          <canvas id="stage" aria-label="Stern–Gerlach apparatus: an oven fires silver atoms through magnets onto a screen. The inset on the right shows the screen face-on with hit counts."></canvas>
+        </div>
+        <p class="bench__caption">Atoms fly left to right. Up is +z; the slanted direction is x, pointing toward you. The inset shows the screen face-on.</p>
+        <p class="status" id="status" aria-live="polite">Pick a mode and a setup, then fire atoms.</p>
+
+        <dl class="readouts">
+          <div class="readout"><dt>Atoms fired</dt><dd id="r-fired">0</dd></div>
+          <div class="readout"><dt>Stopped by blockers</dt><dd id="r-blocked">0</dd></div>
+          <div class="readout"><dt id="r-up-label">Up spot</dt><dd><span id="r-up">0</span><small id="r-up-pc"></small></dd></div>
+          <div class="readout"><dt id="r-down-label">Down spot</dt><dd><span id="r-down">0</span><small id="r-down-pc"></small></dd></div>
+        </dl>
+
+        <div class="bench__controls">
+          <div>
+            <div class="control">
+              <span class="control__label">Physics</span>
+              <div class="segmented" id="mode" role="group" aria-label="Physics model">
+                <button type="button" data-mode="classical">Classical magnets</button><button type="button" data-mode="quantum" aria-pressed="true">Quantum spin</button>
+              </div>
+            </div>
+            <div class="control">
+              <label class="control__label" for="setup">Setup</label>
+              <select id="setup">
+                <option value="z">One Z magnet</option>
+                <option value="zz">Z, then Z again</option>
+                <option value="zx">Z, then X</option>
+                <option value="zxz">Z, then X, then Z</option>
+                <option value="ztilt">Z, then a tilted magnet</option>
+              </select>
+            </div>
+            <div class="control" id="block-control">
+              <span class="control__label">Beam to block between magnets</span>
+              <div class="segmented" id="block" role="group" aria-label="Beam to block between magnets">
+                <button type="button" data-block="down" aria-pressed="true">Down</button><button type="button" data-block="up">Up</button>
+              </div>
+            </div>
+            <div class="control" id="angle-control" hidden>
+              <label class="control__label" for="angle">Tilt of second magnet from z <span class="control__value"><span data-value-for="angle"></span>°</span></label>
+              <input type="range" id="angle" min="0" max="180" step="5" value="60">
+            </div>
+          </div>
+          <div>
+            <div class="control">
+              <label class="control__label" for="rate">Atoms per second <span class="control__value"><span data-value-for="rate"></span></span></label>
+              <input type="range" id="rate" min="0" max="40" step="1" value="8">
+            </div>
+            <div class="bench__actions">
+              <button class="btn" type="button" id="fire-one">Fire one atom</button>
+              <button class="btn btn--quiet" type="button" id="fire-many">Fire 200 at once</button>
+              <button class="btn btn--quiet" type="button" id="clear">Clear screen</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section data-tasks aria-label="Experiments"></section>
+    </aside>
+  </div>
+</main>
+
+<nav data-lesson-nav aria-label="Lessons"></nav>
+<footer data-chrome></footer>
+</body>
+</html>
