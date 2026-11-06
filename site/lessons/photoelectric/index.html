@@ -29,6 +29,97 @@
 
   <div class="lesson__grid">
     <article class="lesson__prose prose">
+      <h2>What the wave picture expects</h2>
+      <p>By 1900 everyone agreed light was a wave. A wave carries energy spread across its whole front, and a brighter wave carries more. So the wave picture made three clear predictions for light falling on a metal:</p>
+      <ul>
+        <li>Any colour should free electrons, if it is bright enough.</li>
+        <li>Brighter light should throw electrons out faster.</li>
+        <li>Very dim light should need time to build up enough energy before any electron leaves.</li>
+      </ul>
+      <p>Experiments, most carefully by Philipp Lenard in 1902, showed all three are wrong. Try them yourself in the simulation before reading on.</p>
+
+      <h2>What actually happens</h2>
+      <p>Below a certain frequency, no electrons come out at all, however bright the light. Above it, electrons come out instantly, even from the dimmest light. Turning up the brightness makes <em>more</em> electrons, but not faster ones. Only changing the colour changes their speed.</p>
+
+      <h2>Einstein's photons</h2>
+      <p>In 1905 Albert Einstein took Planck's idea seriously: light arrives in packets, called photons, each carrying an energy set only by its frequency.</p>
+      <div class="formula">E = hf = <span class="frac"><span>hc</span><span>λ</span></span>
+        <small>h = 6.63 × 10⁻³⁴ J·s = 4.14 × 10⁻¹⁵ eV·s. Brightness is the number of photons, not the energy of each.</small></div>
+      <p>One photon gives all its energy to one electron. Part of it is spent pulling the electron free of the metal. That cost is the <strong>work function</strong>, φ, different for each metal. Whatever is left becomes the electron's kinetic energy:</p>
+      <div class="formula">KE<sub>max</sub> = hf − φ
+        <small>"max" because electrons deeper in the metal lose a little extra on the way out.</small></div>
+      <p>If hf is less than φ, no single photon can free an electron, and a million weak photons do not add up: each one is absorbed alone. That explains the cut-off.</p>
+
+      <h2>The threshold</h2>
+      <p>Setting KE<sub>max</sub> = 0 gives the lowest frequency that works, the threshold:</p>
+      <div class="formula">f<sub>0</sub> = <span class="frac"><span>φ</span><span>h</span></span>
+        &nbsp;&nbsp;or&nbsp;&nbsp; λ<sub>0</sub> = <span class="frac"><span>1240 eV·nm</span><span>φ</span></span></div>
+      <p>Caesium has φ = 2.1 eV, so its threshold is 1240 ÷ 2.1 ≈ 590 nm: even yellow light works. Copper has φ = 4.7 eV, so it needs ultraviolet shorter than 264 nm. This is why light meters and old camera tubes used caesium.</p>
+
+      <h2>Measuring the energy with a stopping voltage</h2>
+      <p>To measure how fast the electrons leave, make the collector negative. Electrons must then climb an electric hill to reach it. Raise the voltage until the current just stops. At that <strong>stopping voltage</strong> V<sub>s</sub>, even the fastest electrons are turned back:</p>
+      <div class="formula">e V<sub>s</sub> = KE<sub>max</sub>
+        <small>A stopping voltage of 1.5 V means the fastest electrons had 1.5 eV.</small></div>
+      <p>Plot KE<sub>max</sub> against frequency for several colours and you get a straight line. Its slope is Planck's constant h, the same for every metal. Its intercept is −φ. Robert Millikan did exactly this in 1916, hoping to prove Einstein wrong, and instead measured h to within 0.5%.</p>
+
+      <h2>Why it won a Nobel prize</h2>
+      <p>Einstein's 1921 Nobel prize was awarded for this explanation, not for relativity. It was the first strong evidence that light comes in quanta, and it opened the road to quantum physics. Today the same effect runs solar cells, camera sensors and the night-vision tubes in telescopes.</p>
+
+      <section class="versus" aria-labelledby="versus-title">
+        <h2 id="versus-title">Classical waves vs photons</h2>
+        <div class="versus__grid">
+          <div class="versus__col versus__col--classical">
+            <h3>What wave theory predicts</h3>
+            <p>Energy depends on brightness. Bright red light should free electrons, brighter light should make them faster, and dim light should need a delay to soak up enough energy.</p>
+          </div>
+          <div class="versus__col">
+            <h3>What actually happens</h3>
+            <p>Energy per photon depends only on frequency. Below the threshold nothing happens at any brightness; above it, electrons leave instantly, and brightness only changes how many.</p>
+          </div>
+        </div>
+        <p class="versus__meet">Where they meet: a bright beam carries an enormous number of photons. Averaged together they behave like the smooth classical wave, which is why wave optics still works perfectly for lenses, interference and radio.</p>
+      </section>
+
+      <section class="lab-card" aria-labelledby="lab-title">
+        <h2 id="lab-title">Python lab: measure Planck's constant</h2>
+        <p>Take stopping-voltage measurements for several colours of light, fit a straight line, and recover h and the metal's work function, just as Millikan did.</p>
+        <ul>
+          <li>Convert wavelengths to frequencies and stopping voltages to energies</li>
+          <li>Fit KE<sub>max</sub> against f with <code>numpy.polyfit</code></li>
+          <li>Identify the metal from its work function</li>
+        </ul>
+        <div class="lab-card__actions">
+          <a class="btn" data-colab="labs/02-light/photoelectric_fit.ipynb">Open in Colab</a>
+          <a class="btn btn--quiet" data-repo="labs/02-light/photoelectric_fit.ipynb">View on GitHub</a>
+        </div>
+      </section>
+
+      <section data-quiz>
+        <script type="application/json">
+        [
+          { "q": "Red light (1.9 eV photons) shines on sodium (φ = 2.28 eV). You make the light ten times brighter. What happens?",
+            "options": ["Electrons start to come out", "Still no electrons come out", "Electrons come out after a short delay", "The electrons that were coming out speed up"],
+            "answer": 1,
+            "explain": "Each photon still has only 1.9 eV, less than the 2.28 eV needed. Brighter light means more photons, but none of them can free an electron on its own." },
+          { "q": "Violet light frees electrons from caesium. You make it twice as bright. What changes?",
+            "options": ["The electrons are twice as fast", "Twice as many electrons come out, at the same speeds", "The work function halves", "The stopping voltage doubles"],
+            "answer": 1,
+            "explain": "Brightness is the number of photons. Twice the photons free twice the electrons, but each photon has the same energy, so KE_max and the stopping voltage stay the same." },
+          { "q": "Light of 4.0 eV hits a metal with φ = 2.5 eV. What stopping voltage stops the current?",
+            "options": ["4.0 V", "2.5 V", "1.5 V", "6.5 V"],
+            "answer": 2,
+            "explain": "KE_max = hf − φ = 4.0 − 2.5 = 1.5 eV, so a 1.5 V stopping voltage turns back even the fastest electrons." },
+          { "q": "You plot KE_max against light frequency for two different metals. How do the two straight lines compare?",
+            "options": ["Same slope, different intercepts", "Different slopes, same intercept", "Both slope and intercept differ", "They are the same line"],
+            "answer": 0,
+            "explain": "The slope is Planck's constant, the same for everything. The intercept is −φ, which depends on the metal, so the lines are parallel." },
+          { "q": "What is copper's threshold wavelength, given φ = 4.7 eV?",
+            "options": ["About 590 nm (yellow)", "About 470 nm (blue)", "About 264 nm (ultraviolet)", "About 1240 nm (infrared)"],
+            "answer": 2,
+            "explain": "λ₀ = 1240 ÷ 4.7 ≈ 264 nm, in the ultraviolet. No visible light, however bright, frees electrons from copper." }
+        ]
+        </script>
+      </section>
     </article>
 
     <aside class="lesson__bench" aria-label="Simulation and experiments">
