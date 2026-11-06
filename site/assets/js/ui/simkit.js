@@ -12,7 +12,7 @@ export const cssVar = (name) => getComputedStyle(document.documentElement).getPr
 export function fitCanvas(canvas, onResize) {
   const ctx = canvas.getContext("2d");
   const state = { ctx, w: 0, h: 0 };
-  const apply = () => {
+  const apply = (notify) => {
     const rect = canvas.getBoundingClientRect();
     if (!rect.width || !rect.height) return;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -21,10 +21,12 @@ export function fitCanvas(canvas, onResize) {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     state.w = rect.width;
     state.h = rect.height;
-    onResize?.(state);
+    if (notify) onResize?.(state);
   };
-  new ResizeObserver(apply).observe(canvas);
-  apply();
+  // Size now without calling back (the caller may still be setting up);
+  // the observer fires once it starts and on every later resize.
+  apply(false);
+  new ResizeObserver(() => apply(true)).observe(canvas);
   return state;
 }
 
