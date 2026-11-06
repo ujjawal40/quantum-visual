@@ -2,7 +2,7 @@
 // spectrometer that records every photon the atom emits.
 
 import { createTasks } from "../../assets/js/ui/lesson.js";
-import { fitCanvas, animate, prefersReducedMotion } from "../../assets/js/ui/simkit.js";
+import { fitCanvas, animate, prefersReducedMotion, bindRange } from "../../assets/js/ui/simkit.js";
 import { energyLevel, orbitSpeed, transitionWavelength, seriesName } from "../../assets/js/physics/hydrogen.js";
 import { wavelengthToCSS, colourName, isVisible, region, VISIBLE_MIN, VISIBLE_MAX } from "../../assets/js/physics/spectrum.js";
 
@@ -288,11 +288,106 @@ function step(dt) {
   draw();
 }
 
-// Placeholder until the photon gun is added: arriving photons are always absorbed.
+/** How close a photon's wavelength must be to a gap to be absorbed (nm). */
+const tolerance = (nm) => Math.max(0.6, nm * 0.004);
+
+/** Which higher level (if any) a photon of this wavelength can lift the electron to. */
+function matchLevel(nm) {
+  for (let m = state.n + 1; m <= MAX_N; m++) {
+    if (Math.abs(transitionWavelength(m, state.n) - nm) <= tolerance(nm)) return m;
+  }
+  return null;
+}
+
+/** A photon reaches the electron: absorbed, ionising, or ignored. */
 function arrive(p) {
   p.done = true;
-  excite(p.target);
+  if (state.ionised) {
+    passThrough(p);
+    setStatus("There is no electron left to absorb it. Press Reset atom to give the proton a new electron.");
+    return;
+  }
+  const photonE = 1239.84 / p.nm;
+  const bound = -energyLevel(state.n);
+  if (photonE >= bound) {
+    ionise(photonE - bound, p.nm);
+    return;
+  }
+  const m = p.target ?? matchLevel(p.nm);
+  if (m) {
+    const from = excite(m);
+    setStatus(`Absorbed: the ${p.nm.toFixed(1)} nm photon (${photonE.toFixed(2)} eV) lifted the electron from ${from} to ${m}.`);
+    document.dispatchEvent(new CustomEvent("absorbed", { detail: { from, to: m, nm: p.nm } }));
+  } else {
+    passThrough(p);
+    setStatus(`Passed straight through. ${photonE.toFixed(2)} eV does not match any gap above level ${state.n}, so the atom ignores it.`);
+    document.dispatchEvent(new CustomEvent("missed", { detail: { nm: p.nm } }));
+  }
 }
+
+/** Send an unabsorbed photon on across the stage. */
+function passThrough(p) {
+  const L = layout();
+  state.photons.push({ ...p, kind: "out", done: false, x0: p.x1, y0: p.y1, x1: L.w + 60, y1: p.y1, t: 0 });
+}
+
+function ionise(spareEV, nm) {
+  const L = layout();
+  const e = electronPos(L);
+  const speed = 120 + Math.min(spareEV, 20) * 25;
+  const a = Math.atan2(e.y - L.atom.y, e.x - L.atom.x);
+  const from = state.n;
+  state.ionised = true;
+  state.escape = { x: e.x, y: e.y, vx: Math.cos(a) * speed, vy: Math.sin(a) * speed };
+  updateReadouts();
+  setStatus(`Ionised! The ${nm.toFixed(1)} nm photon carried more than the ${(-energyLevel(from)).toFixed(2)} eV holding the electron, so it escaped with ${spareEV.toFixed(2)} eV to spare.`);
+  document.dispatchEvent(new CustomEvent("ionised", { detail: { from, nm } }));
+}
+
+function resetAtom() {
+  state.n = 1;
+  state.dwell = 0;
+  state.ionised = false;
+  state.escape = null;
+  state.photons = [];
+  updateReadouts();
+  setStatus("Fresh atom: the electron is in the ground state, n = 1.");
+}
+
+// ---------- photon gun ----------
+const gun = $("gun");
+const gunExact = $("gun-exact");
+const gunValue = () => Number(gunExact.value.replace(",", "."));
+
+bindRange(gun, {
+  format: (v) => v.toFixed(1),
+  onInput: (v) => (gunExact.value = v.toFixed(1)),
+});
+gunExact.addEventListener("change", () => {
+  const v = gunValue();
+  if (!Number.isFinite(v) || v < 10 || v > 5000) {
+    setStatus("Enter a wavelength between 10 and 5000 nm.");
+    return;
+  }
+  gun.value = Math.min(Math.max(v, Number(gun.min)), Number(gun.max));
+  document.querySelector('[data-value-for="gun"]').textContent = v.toFixed(1);
+});
+
+$("fire").addEventListener("click", () => {
+  const nm = gunValue();
+  if (!Number.isFinite(nm) || nm <= 0) return;
+  const L = layout();
+  const e = electronPos(L);
+  state.photons.push({ nm, kind: "in", x0: -20, y0: e.y, x1: e.x, y1: e.y, t: 0 });
+  setStatus(`Fired a ${describe(nm)} photon carrying ${(1239.84 / nm).toFixed(2)} eV.`);
+});
+
+$("reset").addEventListener("click", resetAtom);
+$("clear").addEventListener("click", () => {
+  state.lines.clear();
+  $("r-photon").textContent = "none yet";
+  setStatus("Spectrum cleared.");
+});
 
 // ---------- controls ----------
 function exciteWithPhoton(target) {
