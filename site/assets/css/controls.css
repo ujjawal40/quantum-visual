@@ -43,12 +43,17 @@ select {
 .segmented button[aria-pressed="true"] { background: var(--ink); color: var(--paper-raised); }
 
 /* Readouts: the live numbers beside a simulation. */
+/* Cells draw their own dividers (not a grid gap over a coloured background),
+   so a part-filled last row never shows an empty grey cell. */
 .readouts {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 1px; margin: var(--space-4) 0;
-  background: var(--grid-strong); border: 1px solid var(--grid-strong); border-radius: var(--radius-m); overflow: hidden;
+  margin: var(--space-4) 0; background: var(--paper-raised);
+  border: 1px solid var(--grid-strong); border-radius: var(--radius-m); overflow: hidden;
 }
-.readout { background: var(--paper-raised); padding: var(--space-2) var(--space-3); }
+.readout {
+  padding: var(--space-2) var(--space-3);
+  box-shadow: 1px 0 0 var(--grid-strong), 0 1px 0 var(--grid-strong);
+}
 .readout dt { font-size: var(--step--1); color: var(--pencil); }
 .readout dd { margin: 0; font-size: var(--step-1); font-weight: 600; font-variant-numeric: tabular-nums; }
 .readout dd small { font-size: var(--step--1); font-weight: 400; color: var(--pencil); margin-left: 2px; }
