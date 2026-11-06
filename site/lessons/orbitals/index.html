@@ -99,6 +99,33 @@
           <a class="btn btn--quiet" data-repo="labs/05-orbitals/orbital_cloud.ipynb">View on GitHub</a>
         </div>
       </section>
+
+      <section data-quiz>
+        <script type="application/json">
+        [
+          { "q": "What does the density of dots in an orbital picture show?",
+            "options": ["The path the electron travels along", "How likely the electron is to be found in each region", "Where many electrons are packed together", "How fast the electron moves in each region"],
+            "answer": 1,
+            "explain": "Each dot is one possible place the electron could be found. Where the dots are dense, ψ² is large and the electron is likely to be found; the electron has no path." },
+          { "q": "How many radial nodes does the 3s orbital have?",
+            "options": ["0", "1", "2", "3"],
+            "answer": 2,
+            "explain": "Radial nodes = n − l − 1 = 3 − 0 − 1 = 2. The slice shows them as two empty rings, at about 1.9 a₀ and 7.1 a₀." },
+          { "q": "Which set of quantum numbers is not allowed?",
+            "options": ["n = 2, l = 1, m<sub>l</sub> = −1", "n = 3, l = 2, m<sub>l</sub> = 2", "n = 2, l = 2, m<sub>l</sub> = 0", "n = 1, l = 0, m<sub>l</sub> = 0"],
+            "answer": 2,
+            "explain": "l can only go from 0 to n − 1. With n = 2, l can be 0 or 1, so there is no 2d orbital." },
+          { "q": "In hydrogen, how do the energies of the 2s and 2p<sub>z</sub> orbitals compare?",
+            "options": ["2s is lower", "2p<sub>z</sub> is lower", "They are the same, −3.40 eV", "It depends on which way 2p<sub>z</sub> points"],
+            "answer": 2,
+            "explain": "In hydrogen the energy depends only on n: E = −13.6/n² eV = −3.40 eV for every n = 2 orbital. (In atoms with more electrons, 2s ends up slightly lower.)" },
+          { "q": "How many electrons can one 3d<sub>xy</sub> orbital hold?",
+            "options": ["1", "2", "5", "10"],
+            "answer": 1,
+            "explain": "Every orbital holds at most two electrons, one with spin +½ and one with spin −½. The five 3d orbitals together hold 10." }
+        ]
+        </script>
+      </section>
     </article>
 
     <aside class="lesson__bench" aria-label="Simulation and experiments">
