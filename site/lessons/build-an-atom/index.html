@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build an Atom</title>
+<meta name="description" content="Drag protons, neutrons and electrons together and watch the element, charge and mass change.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="../../assets/css/tokens.css">
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/controls.css">
+<link rel="stylesheet" href="../../assets/css/layout.css">
+<link rel="stylesheet" href="../../assets/css/lesson.css">
+<script type="module" src="../../assets/js/ui/lesson.js"></script>
+<script type="module" src="./sim.js"></script>
+<script type="module" src="./experiments.js"></script>
+</head>
+<body data-lesson="build-an-atom">
+<a class="skip-link" href="#main">Skip to the lesson</a>
+<header data-chrome></header>
+
+<main id="main" class="lesson">
+  <nav data-crumbs aria-label="Breadcrumb"></nav>
+  <div class="lesson__intro">
+    <h1>Build an atom</h1>
+    <p class="lede">Every atom is built from just three particles. The number of protons decides which element it is, the neutrons decide which version, and the electrons decide its charge. Add them one at a time and see.</p>
+  </div>
+
+  <div class="lesson__grid">
+    <article class="lesson__prose prose">
+      <h2>Three particles make everything</h2>
+      <p>Everything you can touch, from air to your own hand, is made of atoms. And every atom is made of the same three particles: <strong>protons</strong> and <strong>neutrons</strong> packed together in a tiny <em>nucleus</em> at the centre, and <strong>electrons</strong> spread around it.</p>
+      <table class="data-table">
+        <caption>The three particles of an atom</caption>
+        <thead><tr><th scope="col">Particle</th><th scope="col">Charge</th><th scope="col">Mass (kg)</th><th scope="col">Mass compared with an electron</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Proton</th><td>+1</td><td>1.673 × 10<sup>−27</sup></td><td>1836</td></tr>
+          <tr><th scope="row">Neutron</th><td>0</td><td>1.675 × 10<sup>−27</sup></td><td>1839</td></tr>
+          <tr><th scope="row">Electron</th><td>−1</td><td>9.109 × 10<sup>−31</sup></td><td>1</td></tr>
+        </tbody>
+      </table>
+      <p>Protons and neutrons weigh almost the same. An electron is nearly two thousand times lighter, so almost all of an atom's mass sits in its nucleus.</p>
+
+      <h2>The proton count is the element</h2>
+      <p>The number of protons is the <strong>atomic number</strong>, Z. It alone decides the element: one proton is always hydrogen, six is always carbon, twenty-six is always iron. Add one proton to carbon and it stops being carbon and becomes nitrogen.</p>
+      <p>Protons plus neutrons give the <strong>mass number</strong>, A:</p>
+      <div class="formula">A = Z + N
+        <small>Z = number of protons, N = number of neutrons. Electrons are too light to count.</small></div>
+      <p>We write an atom as its mass number above its symbol: <sup>12</sup>C is carbon with 12 nucleons (6 protons and 6 neutrons).</p>
+
+      <h2>Isotopes: same element, different weight</h2>
+      <p>Atoms of one element can carry different numbers of neutrons. These versions are called <strong>isotopes</strong>. Carbon-12 has 6 neutrons, carbon-13 has 7, and carbon-14 has 8. They behave the same in chemistry because chemistry depends on electrons, and the electron count follows the protons.</p>
+      <p>Not every combination holds together. Too many or too few neutrons and the nucleus is <em>unstable</em>: sooner or later it breaks apart, giving off radiation. Carbon-14 is unstable, which is what lets scientists date ancient bones and wood (lesson 6.4).</p>
+
+      <h2>Ions: when electrons don't match</h2>
+      <p>A neutral atom has as many electrons as protons, so the charges cancel. Remove an electron and the atom becomes a positive <strong>ion</strong>; add one and it becomes a negative ion.</p>
+      <div class="formula">charge = protons − electrons</div>
+      <p>Table salt is made of ions: sodium gives up one electron to become Na<sup>+</sup>, and chlorine takes one to become Cl<sup>−</sup>. The opposite charges hold the crystal together.</p>
+
+      <h2>Electrons fill shells</h2>
+      <p>For the first twenty elements, a simple rule tells you where the electrons go: the first shell holds 2, the second holds 8, the third holds 8, and the next 2 go into a fourth. The outermost electrons decide how an atom reacts. Atoms with full outer shells, like neon and argon, hardly react at all.</p>
+      <p>Shells are a simplified picture. In Module 5 you will see that electrons really form clouds of probability called orbitals.</p>
+
+      <h2>How small is the nucleus?</h2>
+      <p>An atom is about 10<sup>−10</sup> m across, but its nucleus is only about 10<sup>−15</sup> m: one hundred thousand times smaller. If an atom were a football stadium, the nucleus would be a marble on the centre spot, holding more than 99.9% of the mass. The rest is almost entirely empty space.</p>
+      <p>The simulation draws the nucleus thousands of times too big so you can see the particles inside it.</p>
+
+      <section class="versus" aria-labelledby="versus-title">
+        <h2 id="versus-title">Newton vs quantum</h2>
+        <div class="versus__grid">
+          <div class="versus__col versus__col--classical">
+            <h3>What Newton predicts</h3>
+            <p>A miniature solar system: the Coulomb pull of the nucleus replaces gravity, and electrons circle it like planets on any orbit they like. But a circling charge radiates, so each electron should lose energy and spiral into the nucleus in about 10<sup>−11</sup> s.</p>
+          </div>
+          <div class="versus__col">
+            <h3>What actually happens</h3>
+            <p>Atoms last for billions of years. Electrons sit in fixed shells with fixed energies and do not spiral in. A shell is not a track but a region where the electron is likely to be found.</p>
+          </div>
+        </div>
+        <p class="versus__meet">Where they meet: Newton and Coulomb still explain why the nucleus holds its electrons, and why opposite charges attract. What they cannot explain is why atoms are stable. Module 3 adds the missing rule.</p>
+      </section>
+
+      <section class="lab-card" aria-labelledby="lab-title">
+        <h2 id="lab-title">Python lab: build an atom in code</h2>
+        <p>Write a function that takes numbers of protons, neutrons and electrons and returns the element, its charge, its mass and its isotope notation.</p>
+        <ul>
+          <li>Look up the element from the proton count</li>
+          <li>Compute the mass in kilograms and in atomic mass units</li>
+          <li>Find how much of the atom's mass sits in the nucleus</li>
+        </ul>
+        <div class="lab-card__actions">
+          <a class="btn" data-colab="labs/01-atom/build_an_atom.ipynb">Open in Colab</a>
+          <a class="btn btn--quiet" data-repo="labs/01-atom/build_an_atom.ipynb">View on GitHub</a>
+        </div>
+      </section>
+
+      <section data-quiz>
+        <script type="application/json">
+        []
+        </script>
+      </section>
+    </article>
+
+    <aside class="lesson__bench" aria-label="Simulation and experiments">
+      <div class="bench">
+        <div class="bench__stage">
+          <canvas id="stage" aria-label="An atom: the nucleus at the centre with electron shells around it. Use the buttons below to add or remove particles."></canvas>
+        </div>
+        <p class="bench__caption">The nucleus is drawn thousands of times too big; in a real atom it would be smaller than a single pixel here.</p>
+        <p class="status" id="status" aria-live="polite">Nothing here yet. Add a proton to start an element.</p>
+
+        <dl class="readouts">
+          <div class="readout"><dt>Element</dt><dd id="r-element">none</dd></div>
+          <div class="readout"><dt>Written as</dt><dd id="r-notation">—</dd></div>
+          <div class="readout"><dt>Mass number</dt><dd id="r-mass">0</dd></div>
+          <div class="readout"><dt>Charge</dt><dd id="r-charge">0</dd></div>
+          <div class="readout"><dt>Nucleus</dt><dd id="r-stable">—</dd></div>
+        </dl>
+
+        <div class="counters">
+          <div class="counter" data-particle="p">
+            <span class="counter__dot counter__dot--p" aria-hidden="true"></span>
+            <span class="counter__name" id="label-p">Protons</span>
+            <button class="btn btn--quiet counter__btn" type="button" data-step="-1" aria-label="Remove a proton">−</button>
+            <output class="counter__value" id="count-p" aria-labelledby="label-p">0</output>
+            <button class="btn btn--quiet counter__btn" type="button" data-step="1" aria-label="Add a proton">+</button>
+          </div>
+          <div class="counter" data-particle="n">
+            <span class="counter__dot counter__dot--n" aria-hidden="true"></span>
+            <span class="counter__name" id="label-n">Neutrons</span>
+            <button class="btn btn--quiet counter__btn" type="button" data-step="-1" aria-label="Remove a neutron">−</button>
+            <output class="counter__value" id="count-n" aria-labelledby="label-n">0</output>
+            <button class="btn btn--quiet counter__btn" type="button" data-step="1" aria-label="Add a neutron">+</button>
+          </div>
+          <div class="counter" data-particle="e">
+            <span class="counter__dot counter__dot--e" aria-hidden="true"></span>
+            <span class="counter__name" id="label-e">Electrons</span>
+            <button class="btn btn--quiet counter__btn" type="button" data-step="-1" aria-label="Remove an electron">−</button>
+            <output class="counter__value" id="count-e" aria-labelledby="label-e">0</output>
+            <button class="btn btn--quiet counter__btn" type="button" data-step="1" aria-label="Add an electron">+</button>
+          </div>
+        </div>
+        <div class="bench__actions">
+          <button class="btn btn--quiet" type="button" id="empty">Empty the atom</button>
+        </div>
+      </div>
+
+      <section data-tasks aria-label="Experiments"></section>
+    </aside>
+  </div>
+</main>
+
+<nav data-lesson-nav aria-label="Lessons"></nav>
+<footer data-chrome></footer>
+</body>
+</html>
