@@ -4,7 +4,7 @@
 // Time inside the model is counted in half-lives (u). Each step of length du,
 // every surviving nucleus decays with probability 1 − 2^(−du), independently.
 
-import { fitCanvas, animate } from "../../assets/js/ui/simkit.js";
+import { fitCanvas, animate, bindRange } from "../../assets/js/ui/simkit.js";
 
 const canvas = document.getElementById("stage");
 const $ = (id) => document.getElementById(id);
@@ -244,15 +244,63 @@ function drawChart(ctx, C) {
   ctx.beginPath(); ctx.arc(x, y, 3.5, 0, Math.PI * 2); ctx.fill();
 }
 
-// ---------- animation ----------
+// ---------- running the clock ----------
 const SECONDS_PER_HALF_LIFE = 3;
 
-function step(dt) {
-  if (state.playing && state.left > 0) {
-    const decayed = advance(dt / SECONDS_PER_HALF_LIFE);
+function setStatus(text) {
+  $("status").textContent = text;
+}
+
+const fmtInt = (n) => n.toLocaleString("en-US");
+
+function updateReadouts() {
+  $("r-time").textContent = state.u === 0 ? "0" : formatTime(state.u);
+  $("r-halves").textContent = state.isotope.hidden ? "?" : state.u.toFixed(2);
+  $("r-left").textContent = fmtInt(state.left);
+  $("r-frac").textContent = ((100 * state.left) / state.n0).toFixed(1);
+}
+
+/** Largest gap between this run and the prediction, as a fraction of N0. */
+function maxDeviation() {
+  let worst = 0;
+  for (const s of state.samples) worst = Math.max(worst, Math.abs(s.n / state.n0 - 2 ** -s.u));
+  return worst;
+}
+
+/** Move time on by du half-lives, in small slices so the graph stays smooth. */
+function run(du) {
+  const before = state.u;
+  let remaining = du;
+  while (remaining > 1e-9 && state.left > 0) {
+    const slice = Math.min(remaining, 0.02);
+    const decayed = advance(slice);
+    remaining -= slice;
     for (const i of decayed) {
       paintCell(i, COLOURS.flash);
       state.flashes.push({ i, t: FLASH_TIME });
+    }
+    onDecayed(decayed);
+    // Report each whole half-life as it passes.
+    const k = Math.floor(state.u + 1e-9);
+    if (k > Math.floor(before + 1e-9) && k >= 1 && !state.reported.has(k)) {
+      state.reported.add(k);
+      document.dispatchEvent(new CustomEvent("halflife", { detail: { k, left: state.left, n0: state.n0, isotope: state.isotope } }));
+      if (k === 3) document.dispatchEvent(new CustomEvent("runcomplete", { detail: { n0: state.n0, deviation: maxDeviation() } }));
+    }
+  }
+  if (state.u === before) state.u += remaining; // all decayed: time still passes
+  updateReadouts();
+}
+
+/** Hook for the watched nucleus (filled in below). */
+let onDecayed = () => {};
+
+function step(dt) {
+  if (state.playing) {
+    run((dt / SECONDS_PER_HALF_LIFE) * Number($("speed").value));
+    if (state.left === 0) {
+      togglePlay(false);
+      setStatus(`Every nucleus has decayed, after ${formatTime(state.u)}.`);
     }
   }
   if (state.flashes.length) {
@@ -266,11 +314,67 @@ function step(dt) {
   draw();
 }
 
-$("play").addEventListener("click", () => {
-  state.playing = !state.playing;
-  $("play").textContent = state.playing ? "Pause" : "Play";
-  $("play").setAttribute("aria-pressed", String(state.playing));
+// ---------- controls ----------
+function togglePlay(on = !state.playing) {
+  if (on && state.left === 0) resetAll();
+  state.playing = on;
+  $("play").textContent = on ? "Pause" : "Play";
+  $("play").setAttribute("aria-pressed", String(on));
+  if (on) setStatus(`Running: ${state.isotope.name}, ${fmtInt(state.n0)} nuclei.`);
+}
+
+function resetAll() {
+  resetNuclei();
+  state.reported = new Set();
+  updateReadouts();
+  draw();
+}
+
+const select = $("isotope");
+select.innerHTML = ISOTOPES.map((iso) =>
+  `<option value="${iso.id}">${iso.name}${iso.hidden ? " (half-life hidden)" : `, T½ = ${iso.half.toLocaleString("en-US")} ${iso.unit}`}</option>`
+).join("");
+select.addEventListener("change", () => {
+  state.isotope = ISOTOPES.find((i) => i.id === select.value);
+  state.ghost = null;
+  state.samples = [];
+  togglePlay(false);
+  resetAll();
+  $("step").textContent = state.isotope.hidden ? "Step 1 hour" : "Step one half-life";
+  setStatus(state.isotope.hidden
+    ? "Mystery isotope X: its half-life is hidden. Run it and read the half-life off the graph."
+    : `${state.isotope.name}: half of any large sample decays every ${state.isotope.half.toLocaleString("en-US")} ${state.isotope.unit}.`);
 });
 
-resetNuclei();
+for (const b of document.querySelectorAll("#count button")) {
+  b.addEventListener("click", () => {
+    for (const o of document.querySelectorAll("#count button")) o.setAttribute("aria-pressed", String(o === b));
+    state.n0 = Number(b.dataset.n);
+    togglePlay(false);
+    resetAll();
+    setStatus(`${fmtInt(state.n0)} fresh nuclei. Press Play.`);
+  });
+}
+
+bindRange($("speed"), { format: (v) => `${v}×` });
+
+$("play").addEventListener("click", () => togglePlay());
+$("step").addEventListener("click", () => {
+  togglePlay(false);
+  if (state.left === 0) return;
+  const du = state.isotope.hidden ? 1 / state.isotope.half : 1;
+  run(du);
+  setStatus(`${formatTime(state.u)} passed: ${fmtInt(state.left)} of ${fmtInt(state.n0)} left (${((100 * state.left) / state.n0).toFixed(1)}%).`);
+});
+$("reset").addEventListener("click", () => {
+  togglePlay(false);
+  resetAll();
+  setStatus("Fresh sample. The faint line is your previous run.");
+});
+
+state.reported = new Set();
+resetAll();
 animate(canvas, step);
+
+export { state, run, togglePlay, resetAll, setStatus, maxDeviation, paintCell, COLOURS, layout, grid };
+export const hooks = { set onDecayed(fn) { onDecayed = fn; } };
