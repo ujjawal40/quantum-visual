@@ -29,6 +29,84 @@
 
   <div class="lesson__grid">
     <article class="lesson__prose prose">
+      <h2>Every electron is a tiny magnet</h2>
+      <p>An electron carries a built-in amount of angular momentum called <em>spin</em>, and with it a small magnetic moment, like a compass needle. The name is a leftover picture: if an electron really were a spinning ball, its surface would have to move faster than light. Spin is simply a property electrons have, like charge or mass.</p>
+      <p>What makes spin strange is what happens when you measure it. Pick any direction. The spin along that direction always comes out as one of exactly two values:</p>
+      <div class="formula">S<sub>z</sub> = m<sub>s</sub> ħ, &nbsp; m<sub>s</sub> = +½ or −½
+        <small>"Spin up" and "spin down". There is no third answer, and nothing in between.</small></div>
+
+      <h2>The 1922 experiment</h2>
+      <p>In Frankfurt, Otto Stern and Walther Gerlach heated silver in an oven and let a thin beam of atoms fly through a magnet with one pointed pole and one flat pole. Near the pointed pole the field is stronger, so the field is <em>non-uniform</em>. A tiny magnet in a non-uniform field is pushed toward or away from the strong side, depending on which way it points.</p>
+      <p>A silver atom has 47 electrons, and all but one are paired up so their magnets cancel. The single outer electron sets the atom's magnetism. So each silver atom is a test of one electron's spin.</p>
+      <p>If the atoms' magnets pointed every which way, as compass needles would, the beam should spread into a smear. Stern and Gerlach found two separate spots on their glass plate. Switch the simulation to <strong>Classical magnets</strong>, then to <strong>Quantum spin</strong>, and compare.</p>
+
+      <h2>Measuring changes the answer</h2>
+      <p>Take the atoms that came out "up" from a Z magnet and send them through a second Z magnet. Every one comes out up again: the first measurement left them in a definite state.</p>
+      <p>Now send those up atoms through an X magnet, turned 90°. They split 50/50 between +x and −x. Knowing the spin along z tells you nothing about the spin along x.</p>
+      <p>The real surprise comes with a third magnet. Keep only the +x atoms and measure z again. You might expect them all to be up, since you already selected up. They aren't: half come out down. The x measurement wiped out the z information. In quantum physics, a measurement is not a peek at a value that was already there; it changes the state.</p>
+      <p>For a magnet tilted at angle θ to the direction the spin was last measured, the chance of "up" is</p>
+      <div class="formula">P(up) = cos<sup>2</sup>(θ/2)
+        <small>θ = 0°: always up. θ = 90°: half and half. θ = 180°: never up.</small></div>
+
+      <h2>Why it matters</h2>
+      <p>Spin is why chemistry works. Each orbital can hold two electrons only because there are two spin states: one up, one down (lesson 5.5, Pauli exclusion). It is also how MRI scanners see inside the body, using the spins of protons in water.</p>
+      <p>And it is the simplest quantum computer. A spin-½ particle is a <em>qubit</em>: before measurement it can be in a blend of up and down, and the cos²(θ/2) rule is exactly how a qubit's measurement probabilities work.</p>
+
+      <section class="versus" aria-labelledby="versus-title">
+        <h2 id="versus-title">Newton vs quantum</h2>
+        <div class="versus__grid">
+          <div class="versus__col versus__col--classical">
+            <h3>What Newton predicts</h3>
+            <p>Each atom is a tiny spinning top whose magnet can point in any direction. The push it feels depends smoothly on that angle, so the beam spreads into one continuous smear from top to bottom.</p>
+          </div>
+          <div class="versus__col">
+            <h3>What actually happens</h3>
+            <p>Exactly two spots, every time, along whatever direction you measure. Angular momentum comes in fixed steps of ħ, and an electron's spin has only two possible measured values.</p>
+          </div>
+        </div>
+        <p class="versus__meet">Where they meet: a large spinning object, like a top or a planet, has an angular momentum of trillions of trillions of ħ. Its allowed values are so close together that they look continuous, and Newton's smooth picture works perfectly.</p>
+      </section>
+
+      <section class="lab-card" aria-labelledby="lab-title">
+        <h2 id="lab-title">Python lab: measuring spins</h2>
+        <p>Simulate thousands of silver atoms passing through chains of magnets with random numbers, and check the cos²(θ/2) rule yourself.</p>
+        <ul>
+          <li>Write <code>measure(state, axis)</code> that returns up or down at random with the right odds</li>
+          <li>Reproduce the Z → X → Z surprise</li>
+          <li>Plot the fraction "up" against the magnet's tilt and compare with cos²(θ/2)</li>
+        </ul>
+        <div class="lab-card__actions">
+          <a class="btn" data-colab="labs/05-orbitals/spin_measurements.ipynb">Open in Colab</a>
+          <a class="btn btn--quiet" data-repo="labs/05-orbitals/spin_measurements.ipynb">View on GitHub</a>
+        </div>
+      </section>
+
+      <section data-quiz>
+        <script type="application/json">
+        [
+          { "q": "Silver atoms pass through one Z magnet. What appears on the screen?",
+            "options": ["One spot in the middle", "Two separate spots, up and down", "A continuous smear from top to bottom", "Three spots: up, middle and down"],
+            "answer": 1,
+            "explain": "The spin along z can only be measured as +½ or −½, so the beam splits into exactly two spots. A smear is what classical magnets would give." },
+          { "q": "Atoms that came out up from a Z magnet go through a second Z magnet. What happens?",
+            "options": ["All come out up", "Half up, half down", "All come out down", "They are stopped by the magnet"],
+            "answer": 0,
+            "explain": "The first magnet left them in the spin-up state along z. Measuring the same thing again gives the same answer every time." },
+          { "q": "Those spin-up atoms now go through an X magnet instead. What fraction come out +x?",
+            "options": ["All of them", "None of them", "About half", "About three quarters"],
+            "answer": 2,
+            "explain": "The x direction is 90° from z, and cos²(45°) = ½. Knowing the spin along z tells you nothing about the spin along x." },
+          { "q": "You keep only the +x atoms from the X magnet and send them through another Z magnet. What comes out?",
+            "options": ["Only up, because they were selected up earlier", "Only down", "Half up and half down", "Nothing: they are all blocked"],
+            "answer": 2,
+            "explain": "Measuring x changed the state. The atoms are now +x and have no memory of being z-up, so z is 50/50 again." },
+          { "q": "Why can each orbital hold at most two electrons?",
+            "options": ["Electrons repel each other too strongly", "There are only two spin states, up and down", "Orbitals have exactly two lobes", "The nucleus can only attract two at a time"],
+            "answer": 1,
+            "explain": "No two electrons can share all four quantum numbers. In one orbital n, l and mₗ are fixed, so only the spin can differ: one up, one down." }
+        ]
+        </script>
+      </section>
     </article>
 
     <aside class="lesson__bench" aria-label="Simulation and experiments">
