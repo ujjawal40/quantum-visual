@@ -16,6 +16,7 @@
 <script type="module" src="../../assets/js/ui/lesson.js"></script>
 <script type="module" src="./sim.js"></script>
 <script type="module" src="./chart.js"></script>
+<script type="module" src="./experiments.js"></script>
 <style>
   /* Lesson-only: the measurement graph under the bench. */
   .pe-chart { position: relative; width: 100%; aspect-ratio: 16 / 10; margin-top: var(--space-3); }
@@ -134,7 +135,7 @@
           <canvas id="stage" aria-label="A lamp shines light on a metal plate in a vacuum tube; freed electrons fly towards a collector. Use the controls below."></canvas>
         </div>
         <p class="bench__caption">Light from the lamp hits the metal plate on the left. Any electrons it frees fly across the vacuum to the collector on the right, and the meter counts them.</p>
-        <p class="status" id="status" aria-live="polite">The lamp is on. Change the colour, brightness or metal and watch what the plate does.</p>
+        <p class="status" id="status" aria-live="polite">The lamp is on, shining red light on sodium. Change the colour, brightness or metal and watch what the plate does.</p>
 
         <dl class="readouts">
           <div class="readout"><dt>Photon energy</dt><dd><span id="r-photon">2.48</span><small>eV</small></dd></div>
@@ -146,7 +147,7 @@
           <div>
             <div class="control">
               <label class="control__label" for="wavelength">Light wavelength <span class="control__value"><span data-value-for="wavelength"></span></span></label>
-              <input type="range" id="wavelength" min="100" max="800" step="1" value="500">
+              <input type="range" id="wavelength" min="100" max="800" step="1" value="650">
             </div>
             <div class="control">
               <label class="control__label" for="brightness">Brightness <span class="control__value"><span data-value-for="brightness"></span></span></label>

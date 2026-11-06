@@ -23,7 +23,7 @@ const canvas = document.getElementById("stage");
 const $ = (id) => document.getElementById(id);
 
 const state = {
-  nm: 500,
+  nm: 650,
   brightness: 0.5,
   metal: "sodium",
   V: 0,
