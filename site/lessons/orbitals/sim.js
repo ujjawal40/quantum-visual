@@ -92,17 +92,26 @@ function buildCloud() {
   const o = state.orbital;
   const count = Number($("count").value);
   const { pos, sign, count: n } = sample(o, count);
-  const colours = new Float32Array(n * 3);
-  for (let i = 0; i < n; i++) {
-    colours[i * 3] = COLOURS.mono.r;
-    colours[i * 3 + 1] = COLOURS.mono.g;
-    colours[i * 3 + 2] = COLOURS.mono.b;
-  }
   const geo = new THREE.BufferGeometry();
   geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
-  geo.setAttribute("color", new THREE.BufferAttribute(colours, 3));
+  geo.setAttribute("color", new THREE.BufferAttribute(new Float32Array(n * 3), 3));
   const mat = new THREE.PointsMaterial({ size: o.box / 190, vertexColors: true, transparent: true, opacity: 0.6, depthWrite: false });
-  return new THREE.Points(geo, mat);
+  const points = new THREE.Points(geo, mat);
+  points.userData.sign = sign;
+  paint(points);
+  return points;
+}
+
+/** Colour every dot: one colour, or blue where ψ > 0 and orange where ψ < 0. */
+function paint(points) {
+  const byPhase = $("phase").checked;
+  const sign = points.userData.sign;
+  const attr = points.geometry.getAttribute("color");
+  for (let i = 0; i < sign.length; i++) {
+    const c = byPhase ? (sign[i] > 0 ? COLOURS.pos : COLOURS.neg) : COLOURS.mono;
+    attr.setXYZ(i, c.r, c.g, c.b);
+  }
+  attr.needsUpdate = true;
 }
 
 function show(key, { keepCamera = false } = {}) {
@@ -133,6 +142,8 @@ const groups = [1, 2, 3].map((n) => {
 for (const o of ORBITALS) groups[o.n - 1].append(new Option(o.name, o.key));
 select.value = "1s";
 select.addEventListener("change", () => show(select.value));
+
+$("phase").addEventListener("change", () => state.cloud && paint(state.cloud));
 
 bindRange($("count"), { format: (v) => v.toLocaleString("en-US") });
 $("count").addEventListener("change", () => show(state.orbital.key, { keepCamera: true }));
