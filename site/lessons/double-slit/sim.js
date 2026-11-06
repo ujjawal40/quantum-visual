@@ -1,8 +1,8 @@
 // Lesson 4.3 simulation: electrons fired one at a time through two slits,
 // seen from above. Each lands as one dot; the dots build up the pattern.
 
-import { fitCanvas, animate, prefersReducedMotion } from "../../assets/js/ui/simkit.js";
-import { SCREEN_HALF, deBroglie, sampleHit, binProbabilities } from "./model.js";
+import { fitCanvas, animate, prefersReducedMotion, bindRange } from "../../assets/js/ui/simkit.js";
+import { SCREEN_HALF, deBroglie, sampleHit, binProbabilities, fringeSpacing } from "./model.js";
 
 const BINS = 72;
 
@@ -287,7 +287,106 @@ function drawApparatus(ctx, L) {
   ctx.fillText("10 µm", bx - 4, L.bottom - tenMicron / 2 + 4);
 }
 
+// ---------- controls ----------
+const $ = (id) => document.getElementById(id);
+const statusEl = $("status");
+const setStatus = (t) => (statusEl.textContent = t);
+
+/** Slider 0–100 maps to 1–500 electrons per second on a log scale. */
+const rateFromSlider = (v) => Math.round(10 ** ((v / 100) * Math.log10(500)));
+let rate = 20;
+let running = false;
+let owed = 0; // fractional electrons waiting to be fired
+
+function updateReadouts() {
+  const lambda = deBroglie(state.V);
+  $("r-fired").textContent = state.fired.toLocaleString();
+  $("r-lambda").textContent = (lambda * 1e12).toFixed(1);
+  const fringes = mode() === "both";
+  $("r-spacing").textContent = fringes ? (fringeSpacing(lambda, state.d) * 1e6).toFixed(1) : "no fringes";
+  $("r-spacing-unit").hidden = !fringes;
+}
+
+/** Any change to the apparatus starts a fresh screen, so patterns never mix. */
+function setupChanged(what) {
+  const hadHits = state.landed > 0;
+  clearScreen();
+  updateReadouts();
+  const p = params();
+  const spacing = fringeSpacing(p.lambda, p.d);
+  document.dispatchEvent(new CustomEvent("setup", { detail: { ...p, spacing } }));
+  setStatus(`${what}${hadHits ? " The screen was cleared for the new setup." : ""}`);
+}
+
+$("fire-one").addEventListener("click", () => {
+  fire({ single: true });
+  updateReadouts();
+});
+
+$("run").addEventListener("click", () => {
+  running = !running;
+  $("run").textContent = running ? "Pause" : "Start firing";
+  $("run").setAttribute("aria-pressed", String(running));
+  setStatus(running ? `Firing ${rate} electrons per second.` : "Paused.");
+});
+
+bindRange($("rate"), {
+  format: (v) => rateFromSlider(v),
+  onInput: (v) => (rate = rateFromSlider(v)),
+});
+
+bindRange($("sep"), {
+  format: (v) => v.toFixed(1),
+  onInput: (v) => {
+    if (Math.abs(state.d - v * 1e-6) < 1e-12) return;
+    state.d = v * 1e-6;
+    setupChanged(`Slits now ${v.toFixed(1)} µm apart.`);
+  },
+});
+
+bindRange($("volt"), {
+  format: (v) => v,
+  onInput: (v) => {
+    if (state.V === v * 1000) return;
+    state.V = v * 1000;
+    setupChanged(`Electrons now accelerated through ${v} kV: wavelength ${(deBroglie(state.V) * 1e12).toFixed(1)} pm.`);
+  },
+});
+
+$("watch").addEventListener("change", (ev) => {
+  state.watch = ev.target.checked;
+  setupChanged(state.watch
+    ? "Detectors on: every electron is now caught at one slit or the other."
+    : "Detectors off: nobody knows which slit the electrons use.");
+});
+
+$("one-slit").addEventListener("change", (ev) => {
+  state.oneSlit = ev.target.checked;
+  setupChanged(state.oneSlit ? "Lower slit closed: only one path is open." : "Both slits open again.");
+});
+
+$("theory").addEventListener("change", (ev) => {
+  state.showTheory = ev.target.checked;
+});
+
+$("clear").addEventListener("click", () => {
+  clearScreen();
+  updateReadouts();
+  setStatus("Screen cleared.");
+});
+
+document.addEventListener("fired", ({ detail }) => {
+  if (detail.single) setStatus(`Electron ${state.fired} fired. Watch where it lands: always one dot, in one place.`);
+});
+
 function step(dt) {
+  if (running) {
+    owed += rate * dt;
+    const n = Math.floor(owed);
+    owed -= n;
+    for (let i = 0; i < n; i++) fire();
+    if (n) updateReadouts();
+  }
   for (const e of state.flying) e.t += dt;
   const done = state.flying.filter((e) => e.t >= T_GUN + T_SCREEN);
   state.flying = state.flying.filter((e) => e.t < T_GUN + T_SCREEN);
@@ -295,6 +394,7 @@ function step(dt) {
   draw();
 }
 
+updateReadouts();
 animate(canvas, step);
 
 export { state, layout, yToPx, slitPx, fire, clearScreen, mode, params };

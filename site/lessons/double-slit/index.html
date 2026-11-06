@@ -94,6 +94,41 @@
         </div>
         <p class="bench__caption">Seen from above. Slits 0.2 µm wide, screen 1 m away; the screen shows a 120 µm strip. Drawn not to scale.</p>
         <p class="status" id="status" aria-live="polite">Press "Fire one electron" to send a single electron through the slits.</p>
+
+        <dl class="readouts">
+          <div class="readout"><dt>Electrons fired</dt><dd id="r-fired">0</dd></div>
+          <div class="readout"><dt>Wavelength</dt><dd><span id="r-lambda">12.3</span><small>pm</small></dd></div>
+          <div class="readout"><dt>Fringe spacing</dt><dd><span id="r-spacing">12.3</span><small id="r-spacing-unit">µm</small></dd></div>
+        </dl>
+
+        <div class="bench__controls">
+          <div>
+            <div class="bench__actions">
+              <button class="btn" type="button" id="fire-one">Fire one electron</button>
+              <button class="btn btn--quiet" type="button" id="run" aria-pressed="false">Start firing</button>
+            </div>
+            <div class="control" style="margin-top: var(--space-3)">
+              <label class="control__label" for="rate">Firing rate <span class="control__value"><span data-value-for="rate"></span> per second</span></label>
+              <input type="range" id="rate" min="0" max="100" step="1" value="48">
+            </div>
+            <label class="toggle"><input type="checkbox" id="watch"> Watch which slit each electron uses</label>
+            <label class="toggle"><input type="checkbox" id="one-slit"> Close the lower slit</label>
+            <label class="toggle"><input type="checkbox" id="theory"> Show the predicted pattern</label>
+          </div>
+          <div>
+            <div class="control">
+              <label class="control__label" for="sep">Slit separation <span class="control__value"><span data-value-for="sep"></span> µm</span></label>
+              <input type="range" id="sep" min="0.5" max="2.5" step="0.1" value="1.0">
+            </div>
+            <div class="control">
+              <label class="control__label" for="volt">Electron energy <span class="control__value"><span data-value-for="volt"></span> kV</span></label>
+              <input type="range" id="volt" min="2" max="50" step="1" value="10">
+            </div>
+            <div class="bench__actions">
+              <button class="btn btn--quiet" type="button" id="clear">Clear screen</button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <section data-tasks aria-label="Experiments"></section>
