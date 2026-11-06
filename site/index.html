@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quantum Visual</title>
+<meta name="description" content="Learn quantum physics from the atom up with live simulations, experiments you can run, and Python labs. Free, for grades 11 and 12.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/controls.css">
+<link rel="stylesheet" href="assets/css/layout.css">
+<link rel="stylesheet" href="assets/css/home.css">
+<script type="module" src="assets/js/ui/chrome.js"></script>
+<script type="module" src="assets/js/home.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to the course</a>
+<header data-chrome></header>
+
+<main id="main">
+  <section class="hero">
+    <div class="hero__text">
+      <h1 class="hero__title">Quantum physics you can run, not just read.</h1>
+      <p class="hero__lede">Start from the atom and work up to electron spin and the qubit. Every lesson has a live simulation, experiments that check what you find, and a Python lab you can open in one click.</p>
+      <div class="hero__actions">
+        <a class="btn" id="start" href="lessons/build-an-atom/">Start with lesson 1.4: Build an atom</a>
+        <a class="btn btn--quiet" href="#course">See the whole course</a>
+      </div>
+      <p class="hero__note">Free and open source. Written for grades 11 and 12: AP Physics and Chemistry, CBSE and ICSE, JEE, and Chinese senior high physics.</p>
+    </div>
+
+    <figure class="hero__demo">
+      <div class="hero__stage">
+        <canvas id="hero-atom" aria-label="A hydrogen atom. Tap it to give the electron energy and watch it emit light."></canvas>
+        <button class="hero__tap" type="button" id="hero-tap">Give the electron energy</button>
+      </div>
+      <figcaption id="hero-caption" aria-live="polite">A hydrogen atom. Tap it: the electron jumps up, falls back, and gives out one photon of an exact colour.</figcaption>
+    </figure>
+  </section>
+
+  <section class="method" aria-labelledby="method-title">
+    <h2 id="method-title" class="section-title">Every lesson works the same way</h2>
+    <dl class="method__grid">
+      <div><dt>Read one idea</dt><dd>A short explanation with at most one key formula, in plain language.</dd></div>
+      <div><dt>Play with it</dt><dd>A live simulation beside the text: fire photons, build atoms, split beams.</dd></div>
+      <div><dt>Run experiments</dt><dd>Tasks that tick themselves when you find something, or check the value you measured.</dd></div>
+      <div><dt>Check yourself</dt><dd>Questions with instant feedback and a worked explanation for every answer.</dd></div>
+      <div><dt>Compare with Newton</dt><dd>What classical physics predicts, what actually happens, and where the two agree.</dd></div>
+      <div><dt>Code it in Python</dt><dd>A notebook that opens in Google Colab, so you need nothing installed.</dd></div>
+    </dl>
+  </section>
+
+  <section class="course" id="course" aria-labelledby="course-title">
+    <div class="course__head">
+      <h2 id="course-title" class="section-title">The course</h2>
+      <p class="course__key"><span class="key key--live"></span> interactive now <span class="key key--planned"></span> outline written, simulation coming</p>
+    </div>
+    <ol class="modules" id="modules"></ol>
+  </section>
+
+  <section class="teachers" aria-labelledby="teachers-title">
+    <h2 id="teachers-title" class="section-title">For teachers</h2>
+    <div class="teachers__grid">
+      <p>Every simulation runs in the browser with nothing to install, so it works on school laptops, tablets and a projector. Progress is saved only in each student's own browser; there are no accounts.</p>
+      <p>The lesson text, question banks and Python notebooks are plain files on <a id="repo-link" href="#">GitHub</a>. Copy them, adapt them to your syllabus, or send a correction.</p>
+    </div>
+  </section>
+</main>
+
+<footer data-chrome></footer>
+</body>
+</html>
