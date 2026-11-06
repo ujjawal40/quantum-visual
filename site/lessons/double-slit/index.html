@@ -16,6 +16,10 @@
 <script type="module" src="../../assets/js/ui/lesson.js"></script>
 <script type="module" src="./sim.js"></script>
 <script type="module" src="./experiments.js"></script>
+<style>
+  /* Lesson-only spacing: keep the three switches together and clear of the sliders. */
+  .switches { display: grid; gap: var(--space-2); margin: var(--space-2) 0 var(--space-4); }
+</style>
 </head>
 <body data-lesson="double-slit">
 <a class="skip-link" href="#main">Skip to the lesson</a>
@@ -133,9 +137,11 @@
               <label class="control__label" for="rate">Firing rate <span class="control__value"><span data-value-for="rate"></span> per second</span></label>
               <input type="range" id="rate" min="0" max="100" step="1" value="48">
             </div>
-            <label class="toggle"><input type="checkbox" id="watch"> Watch which slit each electron uses</label>
-            <label class="toggle"><input type="checkbox" id="one-slit"> Close the lower slit</label>
-            <label class="toggle"><input type="checkbox" id="theory"> Show the predicted pattern</label>
+            <div class="switches">
+              <label class="toggle"><input type="checkbox" id="watch"> Watch which slit each electron uses</label>
+              <label class="toggle"><input type="checkbox" id="one-slit"> Close the lower slit</label>
+              <label class="toggle"><input type="checkbox" id="theory"> Show the predicted pattern</label>
+            </div>
           </div>
           <div>
             <div class="control">

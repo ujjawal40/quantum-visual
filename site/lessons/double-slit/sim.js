@@ -230,7 +230,8 @@ function drawApparatus(ctx, L) {
   ctx.arc(L.gunX + 10, L.cy, 3, 0, Math.PI * 2);
   ctx.fill();
   ctx.fillStyle = "rgba(255,255,255,0.55)";
-  ctx.fillText("electron gun", L.gunX, L.cy + 30);
+  const gunLabelX = Math.max(L.gunX, ctx.measureText("electron gun").width / 2 + 4); // keep it on-canvas on phones
+  ctx.fillText("electron gun", gunLabelX, L.cy + 30);
 
   // Barrier with two slits
   const s = slitPx(L);
