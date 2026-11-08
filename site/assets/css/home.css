@@ -97,3 +97,16 @@
 .teachers__grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); max-width: 60rem; }
 .teachers__grid p { font-family: var(--font-prose); font-size: 1.125rem; line-height: 1.6; margin: 0; }
 @media (max-width: 700px) { .teachers__grid { grid-template-columns: 1fr; } }
+
+/* Formulas and the 3D labs */
+.extras { max-width: 1240px; margin: 0 auto; padding: var(--space-7) var(--gutter) 0; }
+.extras__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--space-4); }
+.extras__card {
+  display: grid; align-content: start; gap: var(--space-2); padding: var(--space-5);
+  color: var(--ink); text-decoration: none;
+  background: var(--paper-raised); border: 1px solid var(--grid-strong); border-radius: var(--radius-m);
+}
+.extras__card:hover { border-color: var(--signal); }
+.extras__kicker { font-size: var(--step--1); font-weight: 600; color: var(--signal); text-transform: uppercase; letter-spacing: 0.06em; }
+.extras__title { font-size: var(--step-1); font-weight: 600; line-height: 1.2; }
+.extras__text { color: var(--pencil); font-size: var(--step--1); line-height: 1.55; }

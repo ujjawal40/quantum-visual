@@ -20,6 +20,15 @@ Written for AP Physics and Chemistry, CBSE and ICSE Class 11–12, JEE, and Chin
 
 The full course has 8 modules and 44 lessons; outlines for all of them are in [`curriculum/`](curriculum/), and [the Newtonian thread](curriculum/newtonian-thread.md) shows how each quantum idea connects to classical physics.
 
+## Formulas, derived, and two 3D labs
+
+[**Formulas, derived**](https://ujjawal40.github.io/quantum-visual/formulas/) collects 24 formulas from simple to advanced, from E = hf to Rabi oscillations. Each has what every symbol means, a step-by-step derivation, and a check with real numbers.
+
+| 3D lab | What you see |
+| --- | --- |
+| [The Schrödinger equation, live](https://ujjawal40.github.io/quantum-visual/formulas/wave-packet/) | The time-dependent Schrödinger equation solved in your browser (split-step Fourier). A wave packet spreads, tunnels through a barrier, passes two slits, swings in a harmonic well, and collapses when you measure it. |
+| [An atom changing energy level](https://ujjawal40.github.io/quantum-visual/formulas/transition/) | Hydrogen's real 1s, 2s, 2p and 3d orbitals in superposition. Light drives Rabi oscillations, the cloud sloshes at ΔE/h, forbidden jumps do nothing, and the atom falls back giving out a photon. |
+
 ## How each lesson works
 
 | Part | What it is |
@@ -47,6 +56,7 @@ jupyter lab labs/
 site/          the website: plain HTML, CSS and JavaScript modules, no build step
   assets/      shared styles, physics code, experiments, quiz and page chrome
   lessons/     one folder per interactive lesson (page, simulation, experiments)
+  formulas/    the formulas page and the two 3D labs (wave-packet/, transition/)
 labs/          Python notebooks, one folder per module; constants.py is shared
 curriculum/    outlines for all 8 modules, plus the Newtonian thread
 questions/     question banks in YAML

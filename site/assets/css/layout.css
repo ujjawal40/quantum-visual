@@ -31,6 +31,11 @@
   .site-nav a[href*="labs"] { display: none; }
   .site-nav { gap: var(--space-3); }
 }
+/* The footer links to GitHub too, so the header can drop it on phones. */
+@media (max-width: 480px) {
+  .site-nav a[href^="https://github.com"] { display: none; }
+}
+.wordmark { white-space: nowrap; }
 
 .site-footer {
   max-width: 1240px; margin: var(--space-8) auto 0; padding: var(--space-6) var(--gutter) var(--space-7);

@@ -1,0 +1,761 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<title>Formulas, Derived</title>
+<meta name="description" content="Every formula in the course, from E = hf to the Schrödinger equation and Rabi oscillations, with what each symbol means, a step-by-step derivation and a worked example.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/controls.css">
+<link rel="stylesheet" href="../assets/css/layout.css">
+<link rel="stylesheet" href="../assets/css/lesson.css">
+<link rel="stylesheet" href="../assets/css/formulas.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+<script type="module" src="../assets/js/ui/chrome.js"></script>
+<script type="module" src="./formulas.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to the formulas</a>
+<header data-chrome></header>
+
+<main id="main" class="formulas">
+  <div class="formulas__intro">
+    <h1>Formulas, derived</h1>
+    <p class="lede">Every formula in the course, from the energy of one photon to the Schrödinger equation. Each one comes with what every symbol means, where it comes from step by step, and a check with real numbers. They run from simple to advanced, so start wherever you are comfortable.</p>
+  </div>
+
+  <div class="labs3d">
+    <a class="labs3d__card" href="wave-packet/">
+      <p class="labs3d__kicker">3D lab</p>
+      <p class="labs3d__title">The Schrödinger equation, live</p>
+      <p class="labs3d__text">A wave packet solved in real time on a 3D surface. Send it at a barrier and watch part of it tunnel through, through two slits, or into a well. Then measure it.</p>
+    </a>
+    <a class="labs3d__card" href="transition/">
+      <p class="labs3d__kicker">3D lab</p>
+      <p class="labs3d__title">An atom changing energy level</p>
+      <p class="labs3d__text">Shine light on hydrogen and watch its electron cloud slosh from 1s to 2p and back. Try a forbidden jump and see nothing happen.</p>
+    </a>
+  </div>
+
+  <div class="formulas__grid">
+    <nav class="ftoc" aria-label="Formulas on this page">
+      <details open>
+        <summary>Contents</summary>
+        <ol>
+          <li class="ftoc__tier"><a href="#tier-1">1 · Foundations</a>
+            <ol>
+              <li><a href="#photon-energy">Photon energy</a></li>
+              <li><a href="#photon-momentum">Photon momentum</a></li>
+              <li><a href="#photoelectric">Photoelectric equation</a></li>
+              <li><a href="#de-broglie">De Broglie wavelength</a></li>
+              <li><a href="#bohr">Bohr model of hydrogen</a></li>
+              <li><a href="#rydberg">Rydberg formula</a></li>
+              <li><a href="#decay">Radioactive decay</a></li>
+              <li><a href="#mass-energy">E = mc² and mass defect</a></li>
+            </ol>
+          </li>
+          <li class="ftoc__tier"><a href="#tier-2">2 · Waves and uncertainty</a>
+            <ol>
+              <li><a href="#double-slit">Double-slit fringes</a></li>
+              <li><a href="#particle-in-box">Particle in a box</a></li>
+              <li><a href="#uncertainty">Uncertainty principle</a></li>
+            </ol>
+          </li>
+          <li class="ftoc__tier"><a href="#tier-3">3 · The Schrödinger equation</a>
+            <ol>
+              <li><a href="#schrodinger">Schrödinger equation</a></li>
+              <li><a href="#born-rule">Born rule and conservation</a></li>
+              <li><a href="#stationary">Stationary states</a></li>
+              <li><a href="#wave-packet">Spreading wave packet</a></li>
+              <li><a href="#tunnelling">Tunnelling</a></li>
+              <li><a href="#oscillator">Harmonic oscillator</a></li>
+            </ol>
+          </li>
+          <li class="ftoc__tier"><a href="#tier-4">4 · Hydrogen and light</a>
+            <ol>
+              <li><a href="#hydrogen-ground-state">Hydrogen, solved</a></li>
+              <li><a href="#angular-momentum">Angular momentum</a></li>
+              <li><a href="#spin">Spin measurements</a></li>
+              <li><a href="#transition">Changing energy level</a></li>
+              <li><a href="#rabi">Rabi oscillations</a></li>
+              <li><a href="#selection-rules">Selection rules</a></li>
+            </ol>
+          </li>
+          <li class="ftoc__tier"><a href="#tier-5">5 · Qubits</a>
+            <ol>
+              <li><a href="#bloch">The Bloch sphere</a></li>
+            </ol>
+          </li>
+        </ol>
+      </details>
+    </nav>
+
+    <div class="formulas__body">
+
+<!-- ===================================================== TIER 1 -->
+      <section class="tier" aria-labelledby="tier-1">
+        <h2 id="tier-1"><span class="tier__num">1</span>Foundations</h2>
+        <p class="tier__blurb">Light comes in packets, matter behaves like waves, and the hydrogen atom has a ladder of energies. Algebra and a little calculus are all you need.</p>
+
+        <!-- Photon energy -->
+        <section class="fcard" id="photon-energy">
+          <h3>Photon energy</h3>
+          <p class="fcard__says">Light is delivered in packets called photons, and the energy of each packet is set by the light's frequency, that is, by its colour.</p>
+          <div class="fcard__formula">$$E = hf = \frac{hc}{\lambda}, \qquad hc \approx 1240\ \text{eV}\cdot\text{nm}$$</div>
+          <h4>Symbols</h4>
+          <dl class="symbols">
+            <dt>\(E\)</dt><dd>energy of one photon, J (often quoted in eV; 1 eV = 1.602 × 10⁻¹⁹ J)</dd>
+            <dt>\(h\)</dt><dd>Planck's constant, 6.626 × 10⁻³⁴ J·s</dd>
+            <dt>\(f\)</dt><dd>frequency of the light, Hz</dd>
+            <dt>\(c\)</dt><dd>speed of light, 2.998 × 10⁸ m/s</dd>
+            <dt>\(\lambda\)</dt><dd>wavelength, m</dd>
+          </dl>
+          <h4>Derivation</h4>
+          <p class="honest"><strong>Postulate.</strong> \(E = hf\) is not derived from anything older. Planck guessed it in 1900 to explain the glow of hot objects, and Einstein took it seriously in 1905 to explain the photoelectric effect. It is checked by experiment.</p>
+          <ol class="steps">
+            <li>Planck's rule: light of frequency \(f\) can only give or take energy in whole packets of size \(hf\).</li>
+            <li>Every wave obeys speed = frequency × wavelength, so for light \(c = f\lambda\), which gives \(f = c/\lambda\).</li>
+            <li>Substitute: $$E = hf = \frac{hc}{\lambda}.$$</li>
+            <li>A handy number: \(hc = (6.626\times10^{-34})(2.998\times10^{8}) = 1.986\times10^{-25}\ \text{J}\cdot\text{m}\). Divide by \(1.602\times10^{-19}\) J/eV and by \(10^{-9}\) m/nm to get \(hc \approx 1240\ \text{eV}\cdot\text{nm}\). Now \(E\,[\text{eV}] = 1240 / \lambda\,[\text{nm}]\).</li>
+          </ol>
+          <h4>Check with numbers</h4>
+          <div class="check"><p>Green light, \(\lambda = 500\) nm: \(E = 1240/500 = 2.48\) eV \(= 3.97\times10^{-19}\) J. A 1 W green laser therefore sends out \(1/(3.97\times10^{-19}) \approx 2.5\times10^{18}\) photons every second.</p></div>
+          <p class="fcard__links"><a class="btn btn--quiet" href="../lessons/photoelectric/">Lesson 2.4: The photoelectric effect</a></p>
+        </section>
+
+        <!-- Photon momentum -->
+        <section class="fcard" id="photon-momentum">
+          <h3>Photon momentum</h3>
+          <p class="fcard__says">A photon has no mass, yet it carries momentum. That is why light can push on things.</p>
+          <div class="fcard__formula">$$p = \frac{E}{c} = \frac{h}{\lambda}$$</div>
+          <h4>Symbols</h4>
+          <dl class="symbols">
+            <dt>\(p\)</dt><dd>momentum of one photon, kg·m/s</dd>
+            <dt>\(E\)</dt><dd>photon energy, J</dd>
+            <dt>\(m\)</dt><dd>rest mass, kg (zero for a photon)</dd>
+            <dt>\(c,\ h,\ \lambda\)</dt><dd>speed of light, Planck's constant, wavelength</dd>
+          </dl>
+          <h4>Derivation</h4>
+          <ol class="steps">
+            <li>Special relativity links energy, momentum and rest mass for any particle: $$E^2 = (pc)^2 + (mc^2)^2.$$</li>
+            <li>A photon has \(m = 0\), so \(E^2 = (pc)^2\), and since both are positive, \(E = pc\).</li>
+            <li>Rearrange and use \(E = hc/\lambda\): $$p = \frac{E}{c} = \frac{hc/\lambda}{c} = \frac{h}{\lambda}.$$</li>
+          </ol>
+          <h4>Check with numbers</h4>
+          <div class="check"><p>A 500 nm photon: \(p = 6.626\times10^{-34}/(5.00\times10^{-7}) = 1.33\times10^{-27}\) kg·m/s. Tiny, but a solar sail near Earth catches about \(4\times10^{21}\) photons per square metre each second, and the pushes add up.</p></div>
+        </section>
+
+        <!-- Photoelectric -->
+        <section class="fcard" id="photoelectric">
+          <h3>Photoelectric equation</h3>
+          <p class="fcard__says">One photon frees at most one electron. The electron leaves with whatever energy is left after paying the metal's exit fee.</p>
+          <div class="fcard__formula">$$K_{\max} = hf - \phi, \qquad eV_s = K_{\max}$$</div>
+          <h4>Symbols</h4>
+          <dl class="symbols">
+            <dt>\(K_{\max}\)</dt><dd>largest kinetic energy of an emitted electron, J or eV</dd>
+            <dt>\(hf\)</dt><dd>energy of one incoming photon</dd>
+            <dt>\(\phi\)</dt><dd>work function: the least energy needed to pull an electron out of the metal, J or eV</dd>
+            <dt>\(e\)</dt><dd>elementary charge, 1.602 × 10⁻¹⁹ C</dd>
+            <dt>\(V_s\)</dt><dd>stopping potential: the reverse voltage that just stops the fastest electrons, V</dd>
+          </dl>
+          <h4>Derivation</h4>
+          <ol class="steps">
+            <li>Energy is conserved when one photon is absorbed by one electron: the electron gains \(hf\).</li>
+            <li>Escaping costs at least \(\phi\) (more for electrons that start deeper in the metal). The least-bound electrons keep the most: $$K_{\max} = hf - \phi.$$</li>
+            <li>If \(hf \lt \phi\), no electron escapes however bright the light is. The threshold frequency is \(f_0 = \phi/h\).</li>
+            <li>To stop the fastest electron, a reverse voltage must remove all its kinetic energy. Work done by the field is \(eV_s\), so \(eV_s = K_{\max}\), giving $$V_s = \frac{h}{e}\,f - \frac{\phi}{e}.$$ A graph of \(V_s\) against \(f\) is a straight line with slope \(h/e\): this is how Millikan measured Planck's constant.</li>
+          </ol>
+          <h4>Check with numbers</h4>
+          <div class="check"><p>Sodium, \(\phi = 2.28\) eV, lit with 400 nm violet light: \(hf = 1240/400 = 3.10\) eV, so \(K_{\max} = 3.10 - 2.28 = 0.82\) eV and \(V_s = 0.82\) V. Red light at 700 nm has \(hf = 1.77\) eV \(\lt \phi\): no electrons at all.</p></div>
+          <p class="fcard__links"><a class="btn btn--quiet" href="../lessons/photoelectric/">Lesson 2.4: The photoelectric effect</a></p>
+        </section>
+
+        <!-- de Broglie -->
+        <section class="fcard" id="de-broglie">
+          <h3>De Broglie wavelength</h3>
+          <p class="fcard__says">Everything that moves has a wavelength. The more momentum it has, the shorter the wave.</p>
+          <div class="fcard__formula">$$\lambda = \frac{h}{p}, \qquad \lambda = \frac{h}{\sqrt{2meV}}\ \text{(electron accelerated through } V\text{)}$$</div>
+          <h4>Symbols</h4>
+          <dl class="symbols">
+            <dt>\(\lambda\)</dt><dd>de Broglie wavelength, m</dd>
+            <dt>\(p\)</dt><dd>momentum, kg·m/s</dd>
+            <dt>\(m\)</dt><dd>mass of the particle, kg (electron: 9.109 × 10⁻³¹ kg)</dd>
+            <dt>\(V\)</dt><dd>accelerating voltage, V</dd>
+            <dt>\(e,\ h\)</dt><dd>elementary charge, Planck's constant</dd>
+          </dl>
+          <h4>Derivation</h4>
+          <p class="honest"><strong>Postulate.</strong> In 1924 de Broglie proposed that the photon rule \(p = h/\lambda\) works backwards for matter. Davisson and Germer confirmed it in 1927 by diffracting electrons off a nickel crystal.</p>
+          <ol class="steps">
+            <li>For light, \(p = h/\lambda\). Assume the same holds for any particle: \(\lambda = h/p\).</li>
+            <li>An electron starting from rest and accelerated through a voltage \(V\) gains kinetic energy \(K = eV\).</li>
+            <li>At everyday speeds \(K = \tfrac12 mv^2 = p^2/2m\), so \(p = \sqrt{2mK} = \sqrt{2meV}\).</li>
+            <li>Substitute: $$\lambda = \frac{h}{\sqrt{2meV}} \approx \frac{1.226\ \text{nm}}{\sqrt{V\,[\text{volts}]}}.$$</li>
+          </ol>
+          <h4>Check with numbers</h4>
+          <div class="check"><p>An electron through 100 V: \(\sqrt{2(9.109\times10^{-31})(1.602\times10^{-19})(100)} = 5.40\times10^{-24}\) kg·m/s, so \(\lambda = 6.626\times10^{-34}/5.40\times10^{-24} = 1.23\times10^{-10}\) m \(= 0.123\) nm, about the spacing of atoms in a crystal. A 0.15 kg cricket ball at 40 m/s has \(\lambda \approx 1\times10^{-34}\) m: far too small to ever see.</p></div>
+          <p class="fcard__links"><a class="btn btn--quiet" href="../lessons/double-slit/">Lesson 4.3: The double-slit experiment</a></p>
+        </section>
+
+        <!-- Bohr -->
+        <section class="fcard" id="bohr">
+          <h3>Bohr model of hydrogen</h3>
+          <p class="fcard__says">If the electron's angular momentum can only come in whole steps of ħ, hydrogen gets a ladder of allowed orbits and energies.</p>
+          <div class="fcard__formula">$$r_n = n^2 a_0, \qquad v_n = \frac{\alpha c}{n}, \qquad E_n = -\frac{13.6\ \text{eV}}{n^2}$$</div>
+          <h4>Symbols</h4>
+          <dl class="symbols">
+            <dt>\(n\)</dt><dd>level number, 1, 2, 3, …</dd>
+            <dt>\(r_n\)</dt><dd>orbit radius, m</dd>
+            <dt>\(a_0\)</dt><dd>Bohr radius, \(\hbar^2/(m_e k e^2) = 5.29\times10^{-11}\) m = 0.0529 nm</dd>
+            <dt>\(v_n\)</dt><dd>electron speed, m/s</dd>
+            <dt>\(\alpha\)</dt><dd>fine-structure constant, \(ke^2/(\hbar c) \approx 1/137\), no unit</dd>
+            <dt>\(E_n\)</dt><dd>total energy of level \(n\), eV; negative means bound</dd>
+            <dt>\(k\)</dt><dd>Coulomb constant, 8.988 × 10⁹ N·m²/C²</dd>
+            <dt>\(\hbar\)</dt><dd>\(h/2\pi = 1.055\times10^{-34}\) J·s</dd>
+            <dt>\(m_e\)</dt><dd>electron mass, 9.109 × 10⁻³¹ kg</dd>
+          </dl>
+          <h4>Derivation</h4>
+          <p class="honest"><strong>Part postulate.</strong> Bohr's quantisation rule \(m_e v r = n\hbar\) was a bold guess in 1913. It gives exactly the right energies for hydrogen, but the picture of a circular orbit is wrong; the Schrödinger equation (<a href="#hydrogen-ground-state">tier 4</a>) replaces it.</p>
+          <ol class="steps">
+            <li>The Coulomb pull provides the centripetal force: $$\frac{m_e v^2}{r} = \frac{ke^2}{r^2}\quad\Rightarrow\quad m_e v^2 = \frac{ke^2}{r}.$$</li>
+            <li>Bohr's rule: \(m_e v r = n\hbar\), so \(v = n\hbar/(m_e r)\).</li>
+            <li>Substitute into step 1: \(m_e \dfrac{n^2\hbar^2}{m_e^2 r^2} = \dfrac{ke^2}{r}\), which gives $$r_n = \frac{n^2\hbar^2}{m_e k e^2} = n^2 a_0.$$</li>
+            <li>Speed: \(v_n = \dfrac{n\hbar}{m_e r_n} = \dfrac{ke^2}{n\hbar} = \dfrac{1}{n}\cdot\dfrac{ke^2}{\hbar c}\,c = \dfrac{\alpha c}{n}.\)</li>
+            <li>Energy is kinetic plus potential: \(E = \tfrac12 m_e v^2 - \dfrac{ke^2}{r}\). Step 1 says \(\tfrac12 m_e v^2 = \dfrac{ke^2}{2r}\), so $$E_n = -\frac{ke^2}{2r_n} = -\frac{m_e k^2 e^4}{2\hbar^2}\cdot\frac{1}{n^2}.$$</li>
+            <li>The constant is \(\dfrac{ke^2}{2a_0} = \dfrac{1.440\ \text{eV}\cdot\text{nm}}{2 \times 0.0529\ \text{nm}} = 13.6\) eV.</li>
+          </ol>
+          <h4>Check with numbers</h4>
+          <div class="check"><p>Level 2: \(r_2 = 4 \times 0.0529 = 0.212\) nm, \(v_2 = (2.998\times10^8)/(137 \times 2) = 1.09\times10^6\) m/s, \(E_2 = -13.6/4 = -3.40\) eV. Freeing the electron from the ground state takes \(+13.6\) eV, matching hydrogen's measured ionisation energy.</p></div>
+          <p class="fcard__links"><a class="btn btn--quiet" href="../lessons/bohr-spectra/">Lesson 3.4: Jumps and photons</a></p>
+        </section>
+
+        <!-- Rydberg -->
+        <section class="fcard" id="rydberg">
+          <h3>Rydberg formula</h3>
+          <p class="fcard__says">When hydrogen's electron drops from one level to a lower one, it gives out a photon whose wavelength is fixed by the two level numbers.</p>
+          <div class="fcard__formula">$$\frac{1}{\lambda} = R\left(\frac{1}{n_1^2} - \frac{1}{n_2^2}\right), \qquad R = \frac{13.6\ \text{eV}}{hc} = 1.097\times10^{7}\ \text{m}^{-1}$$</div>
+          <h4>Symbols</h4>
+          <dl class="symbols">
+            <dt>\(\lambda\)</dt><dd>wavelength of the emitted photon, m</dd>
+            <dt>\(n_1,\ n_2\)</dt><dd>lower and upper level numbers, \(n_2 \gt n_1\)</dd>
+            <dt>\(R\)</dt><dd>Rydberg constant, m⁻¹</dd>
+          </dl>
+          <h4>Derivation</h4>
+          <ol class="steps">
+            <li>Energy is conserved: the photon carries away the energy the atom loses, \(hf = E_{n_2} - E_{n_1}\).</li>
+            <li>Use \(E_n = -E_R/n^2\) with \(E_R = 13.6\) eV: $$\frac{hc}{\lambda} = -\frac{E_R}{n_2^2} + \frac{E_R}{n_1^2} = E_R\left(\frac{1}{n_1^2} - \frac{1}{n_2^2}\right).$$</li>
+            <li>Divide by \(hc\) and call \(R = E_R/hc = 13.6/1240\ \text{nm}^{-1} = 0.01097\ \text{nm}^{-1}\).</li>
+            <li>Drops to \(n_1 = 1\) form the Lyman series (ultraviolet), to \(n_1 = 2\) the Balmer series (visible), to \(n_1 = 3\) Paschen (infrared).</li>
+          </ol>
+          <h4>Check with numbers</h4>
+          <div class="check"><p>Red Balmer line, \(3 \to 2\): \(1/\lambda = 0.01097\,(1/4 - 1/9) = 0.01097 \times 5/36\), so \(\lambda = 656\) nm. Lyman-α, \(2 \to 1\): \(\lambda = 4/(3 \times 0.01097) = 121.5\) nm with energy 10.2 eV (measured: 121.6 nm; the tiny gap is because the proton recoils a little).</p></div>
+          <p class="fcard__links"><a class="btn btn--quiet" href="../lessons/bohr-spectra/">Lesson 3.4: Jumps and photons</a></p>
+        </section>
+
+        <!-- Decay -->
+        <section class="fcard" id="decay">
+          <h3>Radioactive decay and half-life</h3>
+          <p class="fcard__says">Each nucleus decays at random, but a large crowd of them always halves in the same time.</p>
+          <div class="fcard__formula">$$N(t) = N_0\,e^{-\lambda t}, \qquad T_{1/2} = \frac{\ln 2}{\lambda}$$</div>
+          <h4>Symbols</h4>
+          <dl class="symbols">
+            <dt>\(N(t)\)</dt><dd>number of undecayed nuclei at time \(t\)</dd>
+            <dt>\(N_0\)</dt><dd>number at \(t = 0\)</dd>
+            <dt>\(\lambda\)</dt><dd>decay constant: probability per second that one nucleus decays, s⁻¹ (not a wavelength here)</dd>
+            <dt>\(T_{1/2}\)</dt><dd>half-life, s</dd>
+          </dl>
+          <h4>Derivation</h4>
+          <ol class="steps">
+            <li>Assume every nucleus has the same small chance \(\lambda\,dt\) of decaying in a short time \(dt\), independent of its age and of the others. Out of \(N\) nuclei, about \(\lambda N\,dt\) decay: $$dN = -\lambda N\,dt.$$</li>
+            <li>Separate the variables and integrate from \(0\) to \(t\): $$\int_{N_0}^{N}\frac{dN'}{N'} = -\lambda\int_0^t dt' \quad\Rightarrow\quad \ln\frac{N}{N_0} = -\lambda t.$$</li>
+            <li>Take the exponential: \(N = N_0 e^{-\lambda t}\).</li>
+            <li>Half-life: set \(N = N_0/2\). Then \(\tfrac12 = e^{-\lambda T_{1/2}}\), so \(\lambda T_{1/2} = \ln 2\), giving \(T_{1/2} = \ln 2/\lambda \approx 0.693/\lambda\).</li>
+            <li>The same law in half-lives: \(N = N_0 \left(\tfrac12\right)^{t/T_{1/2}}\).</li>
+          </ol>
+          <h4>Check with numbers</h4>
+          <div class="check"><p>Carbon-14 has \(T_{1/2} = 5730\) years, so \(\lambda = 0.693/5730 = 1.21\times10^{-4}\) per year. A bone with 30% of its original carbon-14 left is \(t = T_{1/2}\log_2(1/0.30) = 5730 \times 1.74 \approx 9950\) years old.</p></div>
+          <p class="fcard__links"><a class="btn btn--quiet" href="../lessons/half-life/">Lesson 6.4: Half-life</a></p>
+        </section>
+
+        <!-- Mass energy -->
+        <section class="fcard" id="mass-energy">
+          <h3>E = mc² and mass defect</h3>
+          <p class="fcard__says">Energy has mass. A nucleus weighs less than its separate protons and neutrons, and the missing mass is the energy that binds it.</p>
+          <div class="fcard__formula">$$E = mc^2, \qquad E_{\text{binding}} = \Delta m\,c^2,\quad 1\ \text{u} \leftrightarrow 931.5\ \text{MeV}$$</div>
+          <h4>Symbols</h4>
+          <dl class="symbols">
+            <dt>\(E\)</dt><dd>energy, J</dd>
+            <dt>\(m\)</dt><dd>mass, kg</dd>
+            <dt>\(\Delta m\)</dt><dd>mass defect: (mass of separate nucleons) − (mass of nucleus), kg or u</dd>
+            <dt>u</dt><dd>atomic mass unit, 1.6605 × 10⁻²⁷ kg</dd>
+          </dl>
+          <h4>Derivation</h4>
+          <p class="fcard__note">Einstein's 1906 "box" argument, which needs only the photon momentum \(p = E/c\) and the fact that a closed system's centre of mass cannot move by itself.</p>
+          <ol class="steps">
+            <li>A closed box of mass \(M\) and length \(L\) sits at rest in empty space. The left wall emits a flash of light of energy \(E\) towards the right wall.</li>
+            <li>The light carries momentum \(E/c\), so the box recoils to the left with speed \(v = E/(Mc)\).</li>
+            <li>The light crosses in time \(t \approx L/c\) (the box barely moves), then is absorbed and the box stops. The box has moved \(\Delta x = -vt = -\dfrac{EL}{Mc^2}\).</li>
+            <li>Nothing outside pushed the box, so its centre of mass cannot have moved. The only way out is that the light carried some mass \(m\) from left to right: $$mL + M\Delta x = 0 \quad\Rightarrow\quad mL = \frac{EL}{c^2} \quad\Rightarrow\quad m = \frac{E}{c^2}.$$</li>
+            <li>Turned around: removing energy \(E\) from any object lowers its mass by \(E/c^2\). When nucleons bind, they release energy, so the nucleus is lighter by \(\Delta m = E_{\text{binding}}/c^2\).</li>
+            <li>Unit shortcut: \(1\ \text{u} \times c^2 = (1.6605\times10^{-27})(2.998\times10^8)^2 = 1.4924\times10^{-10}\) J \(= 931.5\) MeV.</li>
+          </ol>
+          <h4>Check with numbers</h4>
+          <div class="check"><p>Helium-4: two protons and two neutrons weigh \(2(1.007276) + 2(1.008665) = 4.031882\) u. The nucleus weighs 4.001506 u. \(\Delta m = 0.030376\) u, so \(E_{\text{binding}} = 0.030376 \times 931.5 = 28.3\) MeV, about 7.1 MeV per nucleon.</p></div>
+        </section>
+      </section>
+
+<!-- ===================================================== TIER 2 -->
+      <section class="tier" aria-labelledby="tier-2">
+        <h2 id="tier-2"><span class="tier__num">2</span>Waves and uncertainty</h2>
+        <p class="tier__blurb">Treat particles as waves and three things follow: interference, quantised energies in a box, and a limit on how sharply anything can be known.</p>
+
+        <!-- Double slit -->
+        <section class="fcard" id="double-slit">
+          <h3>Double-slit fringes</h3>
+          <p class="fcard__says">Waves from two slits add up where their paths differ by a whole number of wavelengths, making evenly spaced bright fringes.</p>
+          <div class="fcard__formula">$$d\sin\theta = m\lambda, \qquad \Delta y = \frac{\lambda L}{d}$$</div>
+          <h4>Symbols</h4>
+          <dl class="symbols">
+            <dt>\(d\)</dt><dd>distance between the slit centres, m</dd>
+            <dt>\(\theta\)</dt><dd>angle from the centre line to a bright fringe</dd>
+            <dt>\(m\)</dt><dd>fringe order, 0, ±1, ±2, …</dd>
+            <dt>\(\lambda\)</dt><dd>wavelength (de Broglie wavelength for electrons), m</dd>
+            <dt>\(L\)</dt><dd>distance from slits to screen, m</dd>
+            <dt>\(\Delta y\)</dt><dd>spacing between neighbouring bright fringes, m</dd>
+          </dl>
+          <h4>Derivation</h4>
+          <ol class="steps">
+            <li>For a distant screen, the two paths to a point at angle \(\theta\) are almost parallel. The lower path is longer by \(d\sin\theta\).</li>
+            <li>The waves arrive in step, and add, when this extra path is a whole number of wavelengths: \(d\sin\theta = m\lambda\). They cancel when it is a half-number.</li>
+            <li>The fringe's height on the screen is \(y = L\tan\theta\). For small angles \(\tan\theta \approx \sin\theta \approx \theta\), so \(y_m = m\lambda L/d\).</li>
+            <li>Neighbouring fringes are \(\Delta y = y_{m+1} - y_m = \lambda L/d\) apart.</li>
+            <li>For electrons, use \(\lambda = h/p\). The pattern builds up one dot at a time: the probability of a dot is \(|\psi_1 + \psi_2|^2\), not \(|\psi_1|^2 + |\psi_2|^2\).</li>
+          </ol>
+          <h4>Check with numbers</h4>
+          <div class="check"><p>A red laser, \(\lambda = 633\) nm, slits \(d = 0.10\) mm apart, screen at \(L = 1.0\) m: \(\Delta y = (633\times10^{-9})(1.0)/(1.0\times10^{-4}) = 6.3\) mm.</p></div>
+          <p class="fcard__links"><a class="btn see3d" href="wave-packet/">See it in 3D: a wave packet through two slits</a><a class="btn btn--quiet" href="../lessons/double-slit/">Lesson 4.3</a></p>
+        </section>
+
+        <!-- Particle in a box -->
+        <section class="fcard" id="particle-in-box">
+          <h3>Particle in a box</h3>
+          <p class="fcard__says">A particle trapped between two walls can only have certain energies, because a whole number of half-wavelengths must fit between the walls.</p>
+          <div class="fcard__formula">$$E_n = \frac{n^2 h^2}{8 m L^2}, \qquad \psi_n(x) = \sqrt{\frac{2}{L}}\,\sin\!\left(\frac{n\pi x}{L}\right)$$</div>
+          <h4>Symbols</h4>
+          <dl class="symbols">
+            <dt>\(n\)</dt><dd>quantum number, 1, 2, 3, …</dd>
+            <dt>\(m\)</dt><dd>mass of the particle, kg</dd>
+            <dt>\(L\)</dt><dd>width of the box, m</dd>
+            <dt>\(\psi_n(x)\)</dt><dd>wavefunction, m⁻¹ᐟ²</dd>
+            <dt>\(V(x)\)</dt><dd>potential energy: 0 inside, infinite at and beyond the walls</dd>
+          </dl>
+          <h4>Derivation</h4>
+          <ol class="steps">
+            <li>Inside the box \(V = 0\), so the time-independent Schrödinger equation (see <a href="#stationary">stationary states</a>) is $$-\frac{\hbar^2}{2m}\frac{d^2\psi}{dx^2} = E\psi \quad\Rightarrow\quad \frac{d^2\psi}{dx^2} = -k^2\psi,\quad k = \frac{\sqrt{2mE}}{\hbar}.$$</li>
+            <li>The general solution is \(\psi = A\sin kx + B\cos kx\).</li>
+            <li>The walls are infinitely high, so \(\psi = 0\) there. At \(x = 0\): \(B = 0\). At \(x = L\): \(A\sin kL = 0\). \(A = 0\) would mean no particle, so \(\sin kL = 0\), giving \(kL = n\pi\).</li>
+            <li>Then \(\dfrac{2mE}{\hbar^2} = \dfrac{n^2\pi^2}{L^2}\), so $$E_n = \frac{n^2\pi^2\hbar^2}{2mL^2} = \frac{n^2 h^2}{8mL^2}\quad(\hbar = h/2\pi).$$ \(n = 0\) is ruled out because then \(\psi = 0\) everywhere: the particle can never sit still.</li>
+            <li>Normalise so the total probability is 1: \(\int_0^L A^2\sin^2(n\pi x/L)\,dx = A^2 L/2 = 1\), so \(A = \sqrt{2/L}\).</li>
+          </ol>
+          <h4>Check with numbers</h4>
+          <div class="check"><p>An electron in a box \(L = 1.0\) nm wide: \(E_1 = (6.626\times10^{-34})^2/(8 \times 9.109\times10^{-31} \times 10^{-18}) = 6.03\times10^{-20}\) J \(= 0.376\) eV. Then \(E_2 = 1.50\) eV and \(E_3 = 3.38\) eV. This is roughly why small dye molecules and quantum dots have colours.</p></div>
+        </section>
+
+        <!-- Uncertainty -->
+        <section class="fcard" id="uncertainty">
+          <h3>Uncertainty principle</h3>
+          <p class="fcard__says">No state has both a sharp position and a sharp momentum. The product of the two spreads can never be smaller than ħ/2.</p>
+          <div class="fcard__formula">$$\sigma_x\,\sigma_p \ \ge\ \frac{\hbar}{2}$$</div>
+          <h4>Symbols</h4>
+          <dl class="symbols">
+            <dt>\(\sigma_x\)</dt><dd>standard deviation of position measurements, m</dd>
+            <dt>\(\sigma_p\)</dt><dd>standard deviation of momentum measurements, kg·m/s</dd>
+            <dt>\(\hat{x},\ \hat{p}\)</dt><dd>position and momentum operators; \(\hat{p} = -i\hbar\,\dfrac{d}{dx}\)</dd>
+            <dt>\(\langle f|g\rangle\)</dt><dd>inner product \(\int f^*g\,dx\)</dd>
+          </dl>
+          <h4>Derivation</h4>
+          <p class="fcard__note">This is the Robertson derivation. It needs complex numbers and the idea of an inner product.</p>
+          <ol class="steps">
+            <li>Define the shifted wavefunctions \(f = (\hat{x} - \langle x\rangle)\psi\) and \(g = (\hat{p} - \langle p\rangle)\psi\). Then \(\sigma_x^2 = \langle f|f\rangle\) and \(\sigma_p^2 = \langle g|g\rangle\).</li>
+            <li>The Cauchy–Schwarz inequality, \(\langle f|f\rangle\langle g|g\rangle \ge |\langle f|g\rangle|^2\), and the fact that any complex number \(z\) has \(|z|^2 \ge (\operatorname{Im} z)^2\), give $$\sigma_x^2\sigma_p^2 \ \ge\ \left(\frac{\langle f|g\rangle - \langle g|f\rangle}{2i}\right)^2.$$</li>
+            <li>Expanding, the \(\langle x\rangle\langle p\rangle\) terms cancel and \(\langle f|g\rangle - \langle g|f\rangle = \langle \hat{x}\hat{p} - \hat{p}\hat{x}\rangle = \langle[\hat{x},\hat{p}]\rangle\).</li>
+            <li>Compute the commutator on any function \(\phi\): $$[\hat{x},\hat{p}]\phi = x(-i\hbar\phi') + i\hbar(x\phi)' = -i\hbar x\phi' + i\hbar\phi + i\hbar x\phi' = i\hbar\phi.$$</li>
+            <li>So \(\sigma_x^2\sigma_p^2 \ge (i\hbar/2i)^2 = (\hbar/2)^2\), and taking square roots, \(\sigma_x\sigma_p \ge \hbar/2\).</li>
+            <li>Equality: a Gaussian \(\psi \propto e^{-x^2/4\sigma^2}\) has \(\sigma_x = \sigma\) and \(\sigma_p = \hbar/2\sigma\), so the product is exactly \(\hbar/2\). Gaussians are the "least uncertain" states, which is why the <a href="#wave-packet">wave packet</a> lab starts with one.</li>
+          </ol>
+          <h4>Check with numbers</h4>
+          <div class="check"><p>Confine an electron to \(\sigma_x = 0.1\) nm, about the size of an atom: \(\sigma_p \ge 1.055\times10^{-34}/(2\times10^{-10}) = 5.3\times10^{-25}\) kg·m/s, so its speed is uncertain by at least \(5.3\times10^{-25}/9.109\times10^{-31} \approx 5.8\times10^5\) m/s. That is why electrons in atoms move so fast.</p></div>
+        </section>
+      </section>
+
+<!-- ===================================================== TIER 3 -->
+      <section class="tier" aria-labelledby="tier-3">
+        <h2 id="tier-3"><span class="tier__num">3</span>The Schrödinger equation</h2>
+        <p class="tier__blurb">One equation tells a wavefunction how to change in time. Everything in this tier follows from it. Complex numbers and partial derivatives appear from here on.</p>
+
+        <!-- TDSE -->
+        <section class="fcard" id="schrodinger">
+          <h3>The time-dependent Schrödinger equation</h3>
+          <p class="fcard__says">The quantum version of F = ma: given the wavefunction now, it tells you the wavefunction a moment later.</p>
+          <div class="fcard__formula">$$i\hbar\,\frac{\partial \psi}{\partial t} = -\frac{\hbar^2}{2m}\,\nabla^2\psi + V\psi \;=\; \hat{H}\psi$$</div>
+          <h4>Symbols</h4>
+          <dl class="symbols">
+            <dt>\(\psi(\mathbf{r},t)\)</dt><dd>wavefunction, a complex number at every point; \(|\psi|^2\) is probability density, m⁻³ in 3D</dd>
+            <dt>\(i\)</dt><dd>\(\sqrt{-1}\)</dd>
+            <dt>\(\hbar\)</dt><dd>reduced Planck constant, 1.055 × 10⁻³⁴ J·s</dd>
+            <dt>\(m\)</dt><dd>mass of the particle, kg</dd>
+            <dt>\(\nabla^2\)</dt><dd>\(\partial^2/\partial x^2 + \partial^2/\partial y^2 + \partial^2/\partial z^2\), m⁻²</dd>
+            <dt>\(V(\mathbf{r})\)</dt><dd>potential energy, J</dd>
+            <dt>\(\hat{H}\)</dt><dd>Hamiltonian: the energy operator, kinetic plus potential</dd>
+          </dl>
+          <h4>Where it comes from</h4>
+          <p class="honest"><strong>Postulate.</strong> The Schrödinger equation cannot be derived from older physics, just as Newton's laws cannot. What follows is the reasoning Schrödinger used to guess it in 1926. It is accepted because every prediction checked since then has agreed with experiment.</p>
+          <ol class="steps">
+            <li>A free particle with definite momentum should be a wave with \(p = \hbar k\) (de Broglie) and \(E = \hbar\omega\) (Planck). The simplest such wave is $$\psi = A\,e^{i(kx - \omega t)}.$$</li>
+            <li>Differentiating picks out energy and momentum: $$i\hbar\frac{\partial\psi}{\partial t} = \hbar\omega\,\psi = E\psi, \qquad -i\hbar\frac{\partial\psi}{\partial x} = \hbar k\,\psi = p\psi.$$ So energy becomes the operator \(i\hbar\,\partial/\partial t\) and momentum becomes \(-i\hbar\,\partial/\partial x\).</li>
+            <li>For a free particle \(E = p^2/2m\). Apply the operators: \(i\hbar\,\partial_t\psi = \dfrac{1}{2m}(-i\hbar\,\partial_x)^2\psi = -\dfrac{\hbar^2}{2m}\partial_x^2\psi\). Check: both sides give \(\hbar\omega\psi\) and \(\dfrac{\hbar^2k^2}{2m}\psi\), equal when \(\hbar\omega = \hbar^2k^2/2m\), which is just \(E = p^2/2m\).</li>
+            <li>With a force, energy is \(E = p^2/2m + V(x)\). Add \(V\psi\) on the right, and use all three directions: that is the equation above.</li>
+            <li>Why the \(i\)? A real equation like the heat equation would make \(\psi\) die away. The \(i\) makes the wave oscillate and keeps total probability fixed (proved in the <a href="#born-rule">next card</a>).</li>
+          </ol>
+          <h4>Check with numbers</h4>
+          <div class="check"><p>A free electron with \(E = 1.00\) eV: \(\omega = E/\hbar = 1.602\times10^{-19}/1.055\times10^{-34} = 1.52\times10^{15}\) rad/s and \(k = \sqrt{2mE}/\hbar = 5.12\times10^9\) m⁻¹. Its wavelength \(2\pi/k = 1.23\) nm agrees with the de Broglie formula \(1.226/\sqrt{1}\) nm.</p></div>
+          <p class="fcard__links"><a class="btn see3d" href="wave-packet/">See it in 3D: the Schrödinger equation, live</a></p>
+        </section>
+
+        <!-- Born -->
+        <section class="fcard" id="born-rule">
+          <h3>Born rule, normalisation and conservation</h3>
+          <p class="fcard__says">|ψ|² tells you where the particle is likely to be found. The Schrödinger equation never creates or destroys that probability; it only moves it around.</p>
+          <div class="fcard__formula">$$P(a \lt x \lt b) = \int_a^b |\psi|^2\,dx, \qquad \frac{\partial|\psi|^2}{\partial t} + \frac{\partial j}{\partial x} = 0, \qquad j = \frac{\hbar}{m}\operatorname{Im}\!\left(\psi^*\frac{\partial\psi}{\partial x}\right)$$</div>
+          <h4>Symbols</h4>
+          <dl class="symbols">
+            <dt>\(P\)</dt><dd>probability of finding the particle between \(a\) and \(b\), no unit</dd>
+            <dt>\(|\psi|^2 = \psi^*\psi\)</dt><dd>probability density, m⁻¹ in 1D</dd>
+            <dt>\(\psi^*\)</dt><dd>complex conjugate of \(\psi\)</dd>
+            <dt>\(j\)</dt><dd>probability current: probability flowing past a point per second, s⁻¹ in 1D</dd>
+          </dl>
+          <h4>Derivation</h4>
+          <p class="honest"><strong>The Born rule itself is a postulate</strong> (Max Born, 1926). What can be derived is that it is consistent: total probability stays exactly 1 for all time.</p>
+          <ol class="steps">
+            <li>Write \(\rho = \psi^*\psi\). Then \(\partial_t\rho = \psi^*\,\partial_t\psi + \psi\,\partial_t\psi^*\).</li>
+            <li>From the Schrödinger equation, \(\partial_t\psi = \dfrac{i\hbar}{2m}\psi'' - \dfrac{i}{\hbar}V\psi\). Its conjugate is \(\partial_t\psi^* = -\dfrac{i\hbar}{2m}\psi^{*\prime\prime} + \dfrac{i}{\hbar}V\psi^*\) (\(V\) is real).</li>
+            <li>Substitute. The \(V\) terms cancel: $$\partial_t\rho = \frac{i\hbar}{2m}\left(\psi^*\psi'' - \psi\psi^{*\prime\prime}\right) = \frac{i\hbar}{2m}\,\frac{\partial}{\partial x}\left(\psi^*\psi' - \psi\psi^{*\prime}\right).$$ (Differentiate the bracket to check: the \(\psi^{*\prime}\psi'\) terms cancel.)</li>
+            <li>Since \(\psi^*\psi' - \psi\psi^{*\prime} = 2i\operatorname{Im}(\psi^*\psi')\), this is \(\partial_t\rho = -\partial_x j\) with \(j = \dfrac{\hbar}{m}\operatorname{Im}(\psi^*\psi')\): the continuity equation, the same form as for flowing water or charge.</li>
+            <li>Integrate over all \(x\): \(\dfrac{d}{dt}\displaystyle\int\rho\,dx = -\big[j\big]_{-\infty}^{\infty} = 0\), because \(\psi\) vanishes far away. If \(\int|\psi|^2dx = 1\) at the start, it stays 1 forever.</li>
+          </ol>
+          <h4>Check with numbers</h4>
+          <div class="check"><p>For a plane wave \(Ae^{ikx}\): \(\psi^*\psi' = ik|A|^2\), so \(j = |A|^2\,\hbar k/m = \rho\,v\), density times speed, as for a flowing fluid. For the 1 eV electron above, \(v = \hbar k/m = (1.055\times10^{-34})(5.12\times10^9)/(9.109\times10^{-31}) = 5.93\times10^5\) m/s, the same as \(\sqrt{2E/m}\).</p></div>
+          <p class="fcard__links"><a class="btn see3d" href="wave-packet/">See it in 3D: total probability stays at 1, then measure</a></p>
+        </section>
+
+        <!-- Stationary -->
+        <section class="fcard" id="stationary">
+          <h3>Stationary states</h3>
+          <p class="fcard__says">States with a definite energy only spin their phase as time passes. Their probability cloud never changes, which is why atoms are stable.</p>
+          <div class="fcard__formula">$$\psi(\mathbf{r},t) = \phi(\mathbf{r})\,e^{-iEt/\hbar}, \qquad \hat{H}\phi = E\phi$$</div>
+          <h4>Symbols</h4>
+          <dl class="symbols">
+            <dt>\(\phi(\mathbf{r})\)</dt><dd>spatial part of the wavefunction</dd>
+            <dt>\(E\)</dt><dd>energy of the state, J</dd>
+            <dt>\(\hat{H}\phi = E\phi\)</dt><dd>time-independent Schrödinger equation</dd>
+          </dl>
+          <h4>Derivation</h4>
+          <ol class="steps">
+            <li>Try a solution that is a product of a space part and a time part: \(\psi = \phi(\mathbf{r})\,T(t)\), with \(V\) not depending on time.</li>
+            <li>Substitute and divide by \(\phi T\): $$i\hbar\,\frac{1}{T}\frac{dT}{dt} = \frac{1}{\phi}\hat{H}\phi.$$</li>
+            <li>The left side depends only on \(t\), the right only on \(\mathbf{r}\). For them to be equal everywhere and always, both must equal the same constant. Call it \(E\).</li>
+            <li>Time part: \(dT/dt = -(iE/\hbar)T\), so \(T = e^{-iEt/\hbar}\). Space part: \(\hat{H}\phi = E\phi\).</li>
+            <li>The probability density is \(|\psi|^2 = |\phi|^2\,|e^{-iEt/\hbar}|^2 = |\phi|^2\): constant in time. Only superpositions of different energies change shape (see <a href="#transition">changing energy level</a>).</li>
+            <li>Because the equation is linear, any sum \(\sum_n c_n\phi_n e^{-iE_nt/\hbar}\) is also a solution, and every solution can be written this way.</li>
+          </ol>
+          <h4>Check with numbers</h4>
+          <div class="check"><p>Hydrogen's 1s state (\(E = -13.6\) eV) turns its phase at \(\omega = |E|/\hbar = 13.6 \times 1.602\times10^{-19}/1.055\times10^{-34} = 2.07\times10^{16}\) rad/s, yet its cloud is perfectly still.</p></div>
+          <p class="fcard__links"><a class="btn btn--quiet" href="../lessons/orbitals/">Lesson 5.2: Orbital shapes in 3D</a></p>
+        </section>
+
+        <!-- Wave packet -->
+        <section class="fcard" id="wave-packet">
+          <h3>A spreading wave packet</h3>
+          <p class="fcard__says">A localised particle is a bundle of waves. The bundle moves at the classical speed, but it also spreads out, faster the tighter it started.</p>
+          <div class="fcard__formula">$$\sigma(t) = \sigma_0\sqrt{1 + \left(\frac{\hbar t}{2m\sigma_0^2}\right)^2}, \qquad \langle x\rangle = \frac{\hbar k_0}{m}\,t$$</div>
+          <h4>Symbols</h4>
+          <dl class="symbols">
+            <dt>\(\sigma_0\)</dt><dd>starting width (standard deviation of position), m</dd>
+            <dt>\(\sigma(t)\)</dt><dd>width at time \(t\), m</dd>
+            <dt>\(k_0\)</dt><dd>central wavenumber, m⁻¹; mean momentum is \(\hbar k_0\)</dd>
+            <dt>\(\langle x\rangle\)</dt><dd>centre of the packet, m</dd>
+            <dt>\(\phi(k)\)</dt><dd>amount of each plane wave \(e^{ikx}\) in the packet</dd>
+          </dl>
+          <h4>Derivation</h4>
+          <ol class="steps">
+            <li>Start with a Gaussian packet, \(\psi(x,0) \propto e^{-x^2/4\sigma_0^2}\,e^{ik_0x}\). As a sum of plane waves it is \(\psi(x,0) \propto \int \phi(k)\,e^{ikx}\,dk\) with \(\phi(k) \propto e^{-\sigma_0^2(k-k_0)^2}\).</li>
+            <li>Each plane wave is a stationary state of a free particle with \(E = \hbar^2k^2/2m\), so it just gains the phase \(e^{-i\hbar k^2 t/2m}\): $$\psi(x,t) \propto \int e^{-\sigma_0^2(k-k_0)^2 + ikx - i\hbar k^2t/2m}\,dk.$$</li>
+            <li>Collect the powers of \(k\) in the exponent: \(-\alpha k^2 + \beta k - \sigma_0^2k_0^2\), with \(\alpha = \sigma_0^2 + \dfrac{i\hbar t}{2m}\) and \(\beta = 2\sigma_0^2k_0 + ix\).</li>
+            <li>Gaussian integral: \(\int e^{-\alpha k^2 + \beta k}\,dk = \sqrt{\pi/\alpha}\,e^{\beta^2/4\alpha}\). Completing the square and simplifying (with \(v = \hbar k_0/m\)) gives $$\psi(x,t) \propto \frac{1}{\sqrt{\alpha}}\exp\!\left[-\frac{(x - vt)^2}{4\alpha}\right]e^{i(k_0x - \hbar k_0^2t/2m)}.$$</li>
+            <li>Square the modulus. Since \(\operatorname{Re}(1/\alpha) = \sigma_0^2/|\alpha|^2\), $$|\psi|^2 \propto \exp\!\left[-\frac{(x-vt)^2\,\sigma_0^2}{2|\alpha|^2}\right] = \exp\!\left[-\frac{(x - vt)^2}{2\sigma(t)^2}\right],$$ with \(\sigma(t)^2 = |\alpha|^2/\sigma_0^2 = \sigma_0^2 + \left(\dfrac{\hbar t}{2m\sigma_0}\right)^2\). That is the formula above.</li>
+            <li>So the centre moves at \(v = \hbar k_0/m = p/m\), exactly as Newton says, while the width grows. The spreading timescale is \(\tau = 2m\sigma_0^2/\hbar\).</li>
+          </ol>
+          <h4>Check with numbers</h4>
+          <div class="check"><p>An electron with \(\sigma_0 = 0.10\) nm: \(\tau = 2(9.109\times10^{-31})(10^{-20})/1.055\times10^{-34} = 1.7\times10^{-16}\) s. After 1 fs it is \(0.10\sqrt{1 + (10^{-15}/1.7\times10^{-16})^2} \approx 0.59\) nm wide. A 1 μg dust grain with \(\sigma_0 = 1\) μm has \(\tau \approx 2\times10^{13}\) s, about 600 000 years.</p></div>
+          <p class="fcard__links"><a class="btn see3d" href="wave-packet/">See it in 3D: watch a free packet spread</a></p>
+        </section>
+
+        <!-- Tunnelling -->
+        <section class="fcard" id="tunnelling">
+          <h3>Tunnelling through a barrier</h3>
+          <p class="fcard__says">A particle can get through a wall it does not have the energy to climb. The chance falls off exponentially with the wall's thickness.</p>
+          <div class="fcard__formula">$$T = \left[1 + \frac{V_0^2\,\sinh^2(\kappa a)}{4E(V_0 - E)}\right]^{-1} \;\approx\; 16\,\frac{E}{V_0}\left(1 - \frac{E}{V_0}\right)e^{-2\kappa a}, \qquad \kappa = \frac{\sqrt{2m(V_0 - E)}}{\hbar}$$</div>
+          <h4>Symbols</h4>
+          <dl class="symbols">
+            <dt>\(T\)</dt><dd>transmission probability, no unit</dd>
+            <dt>\(E\)</dt><dd>particle energy, J, with \(E \lt V_0\)</dd>
+            <dt>\(V_0\)</dt><dd>barrier height, J</dd>
+            <dt>\(a\)</dt><dd>barrier thickness, m</dd>
+            <dt>\(k\)</dt><dd>\(\sqrt{2mE}/\hbar\), wavenumber outside the barrier, m⁻¹</dd>
+            <dt>\(\kappa\)</dt><dd>decay constant inside the barrier, m⁻¹</dd>
+            <dt>\(r,\ t\)</dt><dd>reflected and transmitted amplitudes</dd>
+          </dl>
+          <h4>Derivation</h4>
+          <ol class="steps">
+            <li>The barrier: \(V = V_0\) for \(0 \lt x \lt a\) and \(V = 0\) elsewhere. Solve \(\hat H\psi = E\psi\) in each region. Outside, waves \(e^{\pm ikx}\); inside, since \(E \lt V_0\), growing and decaying exponentials \(e^{\pm\kappa x}\): $$\psi = \begin{cases} e^{ikx} + r\,e^{-ikx} & x \lt 0 \\ C e^{\kappa x} + D e^{-\kappa x} & 0 \lt x \lt a \\ t\,e^{ikx} & x \gt a \end{cases}$$</li>
+            <li>\(\psi\) and \(d\psi/dx\) must be continuous at \(x = 0\) and \(x = a\) (otherwise \(\psi''\) would be infinite). At \(x = a\): $$Ce^{\kappa a} + De^{-\kappa a} = te^{ika},\qquad \kappa\left(Ce^{\kappa a} - De^{-\kappa a}\right) = ik\,te^{ika},$$ which give \(C = \dfrac{\kappa + ik}{2\kappa}\,t\,e^{ika}e^{-\kappa a}\) and \(D = \dfrac{\kappa - ik}{2\kappa}\,t\,e^{ika}e^{\kappa a}\).</li>
+            <li>At \(x = 0\): \(1 + r = C + D\) and \(ik(1 - r) = \kappa(C - D)\). Multiply the first by \(ik\) and add the second to remove \(r\): \(2ik = (\kappa + ik)C - (\kappa - ik)D\).</li>
+            <li>Substitute \(C\) and \(D\): $$\frac{1}{t} = \frac{e^{ika}}{4ik\kappa}\left[(\kappa + ik)^2e^{-\kappa a} - (\kappa - ik)^2e^{\kappa a}\right] = e^{ika}\left[\cosh\kappa a + i\,\frac{\kappa^2 - k^2}{2k\kappa}\sinh\kappa a\right].$$</li>
+            <li>Take the modulus squared and use \(\cosh^2 = 1 + \sinh^2\): $$\frac{1}{T} = \frac{1}{|t|^2} = 1 + \sinh^2\kappa a\left[1 + \frac{(\kappa^2 - k^2)^2}{4k^2\kappa^2}\right] = 1 + \frac{(k^2 + \kappa^2)^2}{4k^2\kappa^2}\sinh^2\kappa a.$$</li>
+            <li>With \(\hbar^2k^2 = 2mE\) and \(\hbar^2\kappa^2 = 2m(V_0 - E)\), \(\dfrac{(k^2+\kappa^2)^2}{4k^2\kappa^2} = \dfrac{V_0^2}{4E(V_0 - E)}\). That is the exact result.</li>
+            <li>Thick barrier (\(\kappa a \gg 1\)): \(\sinh\kappa a \approx \tfrac12 e^{\kappa a}\) and the 1 is negligible, giving the approximate form. This is an approximation, good once \(\kappa a \gtrsim 2\).</li>
+          </ol>
+          <h4>Check with numbers</h4>
+          <div class="check"><p>An electron with \(E = 1.0\) eV meets a barrier \(V_0 = 2.0\) eV, \(a = 0.50\) nm thick. \(\kappa = \sqrt{2m(1.0\ \text{eV})}/\hbar = 5.12\times10^9\) m⁻¹, so \(\kappa a = 2.56\) and \(\sinh^2(2.56) = 41.5\). \(V_0^2/4E(V_0-E) = 1\), so \(T = 1/42.5 = 2.4\%\). Double the thickness to 1.0 nm and \(T\) falls to \(1.4\times10^{-4}\): 170 times smaller. Scanning tunnelling microscopes use this steep fall to sense single atoms.</p></div>
+          <p class="fcard__links"><a class="btn see3d" href="wave-packet/">See it in 3D: a packet tunnelling through a barrier</a></p>
+        </section>
+
+        <!-- Oscillator -->
+        <section class="fcard" id="oscillator">
+          <h3>Quantum harmonic oscillator</h3>
+          <p class="fcard__says">A mass on a spring, made quantum, has evenly spaced energy levels and can never be completely still.</p>
+          <div class="fcard__formula">$$E_n = \left(n + \tfrac12\right)\hbar\omega, \qquad n = 0, 1, 2, \dots$$</div>
+          <h4>Symbols</h4>
+          <dl class="symbols">
+            <dt>\(\omega\)</dt><dd>classical angular frequency \(\sqrt{k_s/m}\), rad/s</dd>
+            <dt>\(\hat H\)</dt><dd>\(\dfrac{\hat p^2}{2m} + \tfrac12 m\omega^2\hat x^2\)</dd>
+            <dt>\(\hat a,\ \hat a^\dagger\)</dt><dd>lowering and raising (ladder) operators</dd>
+            <dt>\(n\)</dt><dd>number of energy quanta in the oscillator</dd>
+          </dl>
+          <h4>Derivation</h4>
+          <ol class="steps">
+            <li>Define \(\hat a = \sqrt{\dfrac{m\omega}{2\hbar}}\left(\hat x + \dfrac{i\hat p}{m\omega}\right)\) and its partner \(\hat a^\dagger = \sqrt{\dfrac{m\omega}{2\hbar}}\left(\hat x - \dfrac{i\hat p}{m\omega}\right)\).</li>
+            <li>Multiply out, using \([\hat x,\hat p] = i\hbar\) from the <a href="#uncertainty">uncertainty card</a>: $$\hat a^\dagger\hat a = \frac{m\omega}{2\hbar}\left(\hat x^2 + \frac{\hat p^2}{m^2\omega^2} + \frac{i}{m\omega}[\hat x,\hat p]\right) = \frac{\hat H}{\hbar\omega} - \frac12.$$ So \(\hat H = \hbar\omega\left(\hat a^\dagger\hat a + \tfrac12\right)\). The same algebra gives \([\hat a,\hat a^\dagger] = 1\).</li>
+            <li>Then \([\hat H,\hat a] = -\hbar\omega\,\hat a\). If \(\hat H\psi = E\psi\), then \(\hat H(\hat a\psi) = (E - \hbar\omega)(\hat a\psi)\): \(\hat a\) steps down the ladder by exactly \(\hbar\omega\), and \(\hat a^\dagger\) steps up.</li>
+            <li>The energy cannot go below zero: \(\langle\hat H\rangle = \hbar\omega\left(\|\hat a\psi\|^2 + \tfrac12\right) \ge \tfrac12\hbar\omega\). So the ladder must stop at a bottom state with \(\hat a\psi_0 = 0\), which has \(E_0 = \tfrac12\hbar\omega\).</li>
+            <li>Climbing up \(n\) rungs: \(E_n = \left(n + \tfrac12\right)\hbar\omega\).</li>
+            <li>The ground state itself: \(\hat a\psi_0 = 0\) is \(x\psi_0 + \dfrac{\hbar}{m\omega}\psi_0' = 0\), so \(\psi_0 \propto e^{-m\omega x^2/2\hbar}\), a Gaussian.</li>
+          </ol>
+          <h4>Check with numbers</h4>
+          <div class="check"><p>The H–Cl bond vibrates at \(f = 8.66\times10^{13}\) Hz, so its levels are \(hf = 6.626\times10^{-34} \times 8.66\times10^{13} = 5.74\times10^{-20}\) J \(= 0.358\) eV apart. HCl therefore absorbs infrared light at \(\lambda = 1240/0.358 = 3.46\) μm, which is exactly where its absorption band is.</p></div>
+          <p class="fcard__links"><a class="btn see3d" href="wave-packet/">See it in 3D: a packet sloshing in a harmonic well</a></p>
+        </section>
+      </section>
+
+<!-- ===================================================== TIER 4 -->
+      <section class="tier" aria-labelledby="tier-4">
+        <h2 id="tier-4"><span class="tier__num">4</span>Hydrogen and light</h2>
+        <p class="tier__blurb">Solve the Schrödinger equation for hydrogen, then ask what happens when light shines on it. This is how atoms absorb and emit photons.</p>
+
+        <!-- Hydrogen -->
+        <section class="fcard" id="hydrogen-ground-state">
+          <h3>Hydrogen, solved</h3>
+          <p class="fcard__says">Plug a simple guess into the Schrödinger equation for hydrogen and out drop Bohr's radius and the 13.6 eV ionisation energy, with no orbits assumed.</p>
+          <div class="fcard__formula">$$\psi_{1s} = \frac{1}{\sqrt{\pi a_0^3}}\,e^{-r/a_0}, \qquad E_n = -\frac{13.6\ \text{eV}}{n^2},\quad l = 0,\dots,n-1,\quad m_l = -l,\dots,l$$</div>
+          <h4>Symbols</h4>
+          <dl class="symbols">
+            <dt>\(r\)</dt><dd>distance from the proton, m</dd>
+            <dt>\(a_0\)</dt><dd>Bohr radius, 0.0529 nm</dd>
+            <dt>\(n,\ l,\ m_l\)</dt><dd>principal, orbital and magnetic quantum numbers</dd>
+            <dt>\(V(r)\)</dt><dd>\(-ke^2/r\), Coulomb potential energy, J</dd>
+          </dl>
+          <h4>Derivation</h4>
+          <ol class="steps">
+            <li>For a spherically symmetric state, \(\nabla^2\psi = \psi'' + \dfrac{2}{r}\psi'\). The time-independent equation is $$-\frac{\hbar^2}{2m_e}\left(\psi'' + \frac{2}{r}\psi'\right) - \frac{ke^2}{r}\psi = E\psi.$$</li>
+            <li>Guess \(\psi = e^{-r/a}\) for some length \(a\). Then \(\psi' = -\psi/a\) and \(\psi'' = \psi/a^2\).</li>
+            <li>Substitute and divide by \(\psi\): $$-\frac{\hbar^2}{2m_e a^2} + \left(\frac{\hbar^2}{m_e a} - ke^2\right)\frac{1}{r} = E.$$</li>
+            <li>The right side is a constant, so the \(1/r\) term must vanish for every \(r\): \(\dfrac{\hbar^2}{m_e a} = ke^2\), so \(a = \dfrac{\hbar^2}{m_e ke^2} = a_0\), Bohr's radius.</li>
+            <li>What is left is the energy: \(E = -\dfrac{\hbar^2}{2m_e a_0^2} = -\dfrac{ke^2}{2a_0} = -13.6\) eV.</li>
+            <li>Normalise: \(\int_0^\infty e^{-2r/a_0}\,4\pi r^2\,dr = \pi a_0^3\), so the constant is \(1/\sqrt{\pi a_0^3}\).</li>
+            <li>The general solution (separating \(\psi = R(r)\,Y_l^{m}(\theta,\phi)\) and requiring \(\psi\) to stay finite) only works when \(E_n = -13.6\ \text{eV}/n^2\), with \(l\) from 0 to \(n - 1\) and \(m_l\) from \(-l\) to \(l\). That is \(n^2\) orbitals per level, \(2n^2\) electrons with spin. The full series solution is a university topic; the result is shown here.</li>
+          </ol>
+          <h4>Check with numbers</h4>
+          <div class="check"><p>\(ke^2 = 1.440\) eV·nm, so \(ke^2/2a_0 = 1.440/(2 \times 0.0529) = 13.6\) eV. The most likely distance for the 1s electron, where \(4\pi r^2|\psi|^2\) peaks, is at \(\dfrac{d}{dr}\left(r^2e^{-2r/a_0}\right) = 0\), so \(r = a_0\).</p></div>
+          <p class="fcard__links"><a class="btn btn--quiet" href="../lessons/orbitals/">Lesson 5.2: Orbital shapes in 3D</a></p>
+        </section>
+
+        <!-- Angular momentum -->
+        <section class="fcard" id="angular-momentum">
+          <h3>Quantised angular momentum</h3>
+          <p class="fcard__says">An electron's orbital angular momentum has a fixed size set by l, and only 2l + 1 allowed directions.</p>
+          <div class="fcard__formula">$$|\mathbf{L}| = \sqrt{l(l+1)}\,\hbar, \qquad L_z = m_l\hbar,\quad m_l = -l, \dots, +l$$</div>
+          <h4>Symbols</h4>
+          <dl class="symbols">
+            <dt>\(\mathbf L\)</dt><dd>orbital angular momentum, J·s</dd>
+            <dt>\(L_z\)</dt><dd>its component along the z-axis, J·s</dd>
+            <dt>\(l,\ m_l\)</dt><dd>orbital and magnetic quantum numbers</dd>
+            <dt>\(\hat L_\pm\)</dt><dd>\(\hat L_x \pm i\hat L_y\), ladder operators</dd>
+          </dl>
+          <h4>Derivation</h4>
+          <ol class="steps">
+            <li>From \(\hat{\mathbf L} = \hat{\mathbf r}\times\hat{\mathbf p}\) and \([\hat x,\hat p_x] = i\hbar\) one finds \([\hat L_x,\hat L_y] = i\hbar\hat L_z\) (and cyclic). So \(\hat L_z\) and \(\hat L^2\) can be sharp together, but not two components.</li>
+            <li>Then \([\hat L_z,\hat L_\pm] = \pm\hbar\hat L_\pm\): \(\hat L_+\) raises \(L_z\) by \(\hbar\), \(\hat L_-\) lowers it, without changing \(L^2\).</li>
+            <li>\(L_z^2 \le L^2\), so the ladder has a top state with \(\hat L_+\psi_{\text{top}} = 0\). Call its \(L_z = l\hbar\).</li>
+            <li>Use \(\hat L^2 = \hat L_-\hat L_+ + \hat L_z^2 + \hbar\hat L_z\) on the top state: \(L^2 = 0 + l^2\hbar^2 + l\hbar^2 = l(l+1)\hbar^2\).</li>
+            <li>By the same argument the bottom rung is at \(-l\hbar\), reached in whole steps, so \(2l\) is a whole number. For orbital motion the wavefunction \(e^{im_l\phi}\) must repeat after one turn, so \(l\) and \(m_l\) are integers. (Spin, with \(l = \tfrac12\), is the half-integer case.)</li>
+          </ol>
+          <h4>Check with numbers</h4>
+          <div class="check"><p>A p electron (\(l = 1\)): \(|\mathbf L| = \sqrt2\,\hbar = 1.49\times10^{-34}\) J·s, with \(L_z = -\hbar, 0, +\hbar\). Even at \(m_l = +1\), the angle to the z-axis is \(\cos^{-1}(1/\sqrt2) = 45^\circ\): the vector can never point straight along z.</p></div>
+        </section>
+
+        <!-- Spin -->
+        <section class="fcard" id="spin">
+          <h3>Spin measurements</h3>
+          <p class="fcard__says">Measure spin along any direction and you get only up or down. If it was up along z, the chance of up along a tilted direction is cos²(θ/2).</p>
+          <div class="fcard__formula">$$P(\text{up along } \hat n) = \cos^2\frac{\theta}{2}, \qquad |{\uparrow_{\hat n}}\rangle = \cos\frac{\theta}{2}|{\uparrow}\rangle + e^{i\varphi}\sin\frac{\theta}{2}|{\downarrow}\rangle$$</div>
+          <h4>Symbols</h4>
+          <dl class="symbols">
+            <dt>\(\theta\)</dt><dd>angle between the z-axis and the new measuring direction \(\hat n\)</dd>
+            <dt>\(\varphi\)</dt><dd>azimuthal angle of \(\hat n\)</dd>
+            <dt>\(|{\uparrow}\rangle,\ |{\downarrow}\rangle\)</dt><dd>spin up and down along z, \(S_z = \pm\tfrac12\hbar\)</dd>
+            <dt>\(\boldsymbol\sigma\)</dt><dd>Pauli matrices; spin is \(\tfrac{\hbar}{2}\boldsymbol\sigma\)</dd>
+          </dl>
+          <h4>Derivation</h4>
+          <ol class="steps">
+            <li>Spin along \(\hat n = (\sin\theta\cos\varphi, \sin\theta\sin\varphi, \cos\theta)\) is measured by \(\tfrac\hbar2\,\hat n\cdot\boldsymbol\sigma\), with $$\hat n\cdot\boldsymbol\sigma = \begin{pmatrix}\cos\theta & \sin\theta\,e^{-i\varphi}\\ \sin\theta\,e^{i\varphi} & -\cos\theta\end{pmatrix}.$$</li>
+            <li>Check that \(\left(\cos\tfrac\theta2,\ e^{i\varphi}\sin\tfrac\theta2\right)\) is the "up" eigenvector with eigenvalue \(+1\). Top row: \(\cos\theta\cos\tfrac\theta2 + \sin\theta\sin\tfrac\theta2 = \cos\tfrac\theta2\left(\cos\theta + 2\sin^2\tfrac\theta2\right) = \cos\tfrac\theta2\), using \(\sin\theta = 2\sin\tfrac\theta2\cos\tfrac\theta2\) and \(\cos\theta = 1 - 2\sin^2\tfrac\theta2\). The bottom row works the same way.</li>
+            <li>Born rule: an atom prepared up along z is found up along \(\hat n\) with probability \(|\langle{\uparrow_{\hat n}}|{\uparrow}\rangle|^2 = \cos^2\tfrac\theta2\).</li>
+          </ol>
+          <h4>Check with numbers</h4>
+          <div class="check"><p>Magnet tilted by 60°: \(\cos^2 30^\circ = 0.75\), so 75% go up and 25% down. At 90°: \(\cos^2 45^\circ = 0.5\), a coin toss. At 180° (upside down): 0%. A classical spinning magnet would instead give a smear of deflections.</p></div>
+          <p class="fcard__links"><a class="btn btn--quiet" href="../lessons/stern-gerlach/">Lesson 5.4: Spin, up or down</a></p>
+        </section>
+
+        <!-- Transition -->
+        <section class="fcard" id="transition">
+          <h3>Changing energy level: the oscillating cloud</h3>
+          <p class="fcard__says">While an atom is partway between two levels, its electron cloud sloshes back and forth at exactly the frequency of the light it absorbs or emits.</p>
+          <div class="fcard__formula">$$|\psi|^2 = |c_1|^2\phi_1^2 + |c_2|^2\phi_2^2 + 2|c_1c_2|\,\phi_1\phi_2\cos(\omega t - \delta), \qquad \omega = \frac{E_2 - E_1}{\hbar}$$</div>
+          <h4>Symbols</h4>
+          <dl class="symbols">
+            <dt>\(\phi_1,\ \phi_2\)</dt><dd>lower and upper stationary states (real orbitals such as 1s and 2p<sub>z</sub>)</dd>
+            <dt>\(c_1,\ c_2\)</dt><dd>complex amplitudes, \(|c_1|^2 + |c_2|^2 = 1\)</dd>
+            <dt>\(\delta\)</dt><dd>relative phase of \(c_2\) and \(c_1\)</dd>
+            <dt>\(E_1,\ E_2\)</dt><dd>energies of the two levels, J</dd>
+            <dt>\(z_{12}\)</dt><dd>dipole matrix element \(\int\phi_1\,z\,\phi_2\,dV\), m</dd>
+          </dl>
+          <h4>Derivation</h4>
+          <ol class="steps">
+            <li>From <a href="#stationary">stationary states</a>, a mix of two levels evolves as $$\psi = c_1\phi_1e^{-iE_1t/\hbar} + c_2\phi_2e^{-iE_2t/\hbar}.$$</li>
+            <li>Multiply by its conjugate. The squared terms are steady; the cross terms carry the phase difference \(e^{\pm i(E_2 - E_1)t/\hbar}\): $$|\psi|^2 = |c_1|^2\phi_1^2 + |c_2|^2\phi_2^2 + 2\operatorname{Re}\!\left(c_1^*c_2\,e^{-i\omega t}\right)\phi_1\phi_2.$$ Writing \(c_1^*c_2 = |c_1c_2|e^{i\delta}\) gives the cosine.</li>
+            <li>The cloud's centre of charge: \(\langle z\rangle = \int z|\psi|^2dV\). The steady terms give zero for orbitals that are symmetric about the nucleus, leaving $$\langle z\rangle(t) = 2|c_1c_2|\,z_{12}\cos(\omega t - \delta).$$</li>
+            <li>An electron cloud whose centre moves up and down is an oscillating electric dipole, like a tiny radio aerial. It couples to light of angular frequency \(\omega\), so \(hf = \hbar\omega = E_2 - E_1\): Bohr's frequency condition, now explained rather than assumed.</li>
+            <li>The dipole is biggest when \(|c_1| = |c_2| = 1/\sqrt2\) and zero in a pure stationary state, which is why an atom sitting in one level does not radiate classically. (Spontaneous emission from the pure upper level needs quantum electrodynamics; this picture explains absorption and stimulated emission.)</li>
+          </ol>
+          <h4>Check with numbers</h4>
+          <div class="check"><p>1s ↔ 2p in hydrogen: \(E_2 - E_1 = 13.6(1 - \tfrac14) = 10.2\) eV, so \(\omega = 10.2 \times 1.602\times10^{-19}/1.055\times10^{-34} = 1.55\times10^{16}\) rad/s, \(f = 2.47\times10^{15}\) Hz and \(\lambda = c/f = 121.5\) nm, the Lyman-α line. At an equal mix the cloud's centre swings \(\pm z_{12} = \pm0.745\,a_0 = \pm0.039\) nm.</p></div>
+          <p class="fcard__links"><a class="btn see3d" href="transition/">See it in 3D: an atom changing energy level</a></p>
+        </section>
+
+        <!-- Rabi -->
+        <section class="fcard" id="rabi">
+          <h3>Rabi oscillations</h3>
+          <p class="fcard__says">Shine steady light at the right colour on an atom and it does not just jump up: it swings smoothly up and down between the two levels.</p>
+          <div class="fcard__formula">$$P_2(t) = \frac{\Omega^2}{\Omega'^2}\,\sin^2\!\left(\frac{\Omega' t}{2}\right), \qquad \Omega' = \sqrt{\Omega^2 + \Delta^2}$$</div>
+          <h4>Symbols</h4>
+          <dl class="symbols">
+            <dt>\(P_2(t)\)</dt><dd>probability of finding the atom in the upper level</dd>
+            <dt>\(\Omega\)</dt><dd>Rabi frequency, \(eE_0z_{12}/\hbar\): how strongly the light couples the levels, rad/s</dd>
+            <dt>\(E_0\)</dt><dd>amplitude of the light's electric field, V/m</dd>
+            <dt>\(\omega_L,\ \omega_0\)</dt><dd>light's angular frequency and the atom's \((E_2 - E_1)/\hbar\)</dd>
+            <dt>\(\Delta\)</dt><dd>detuning \(\omega_L - \omega_0\), rad/s</dd>
+            <dt>\(\Omega'\)</dt><dd>generalised Rabi frequency, rad/s</dd>
+          </dl>
+          <h4>Derivation</h4>
+          <ol class="steps">
+            <li>Light along z adds the energy \(eE_0z\cos\omega_Lt\). Write \(\psi = c_1(t)\phi_1e^{-iE_1t/\hbar} + c_2(t)\phi_2e^{-iE_2t/\hbar}\) and put it into the Schrödinger equation. Projecting onto \(\phi_1\) and \(\phi_2\) (using \(z_{11} = z_{22} = 0\)) gives $$i\dot c_1 = \Omega\cos(\omega_Lt)\,e^{-i\omega_0t}\,c_2,\qquad i\dot c_2 = \Omega\cos(\omega_Lt)\,e^{i\omega_0t}\,c_1.$$</li>
+            <li>Write \(\cos\omega_Lt = \tfrac12(e^{i\omega_Lt} + e^{-i\omega_Lt})\). Each equation gets a slow term \(e^{\pm i\Delta t}\) and a fast term \(e^{\pm i(\omega_L + \omega_0)t}\). <strong>Rotating-wave approximation:</strong> the fast term averages to nearly zero, so drop it (good when \(\Omega,|\Delta| \ll \omega_0\)): $$i\dot c_1 = \frac{\Omega}{2}e^{i\Delta t}c_2,\qquad i\dot c_2 = \frac{\Omega}{2}e^{-i\Delta t}c_1.$$</li>
+            <li>Differentiate the second equation and use the first to remove \(c_1\): $$\ddot c_2 + i\Delta\,\dot c_2 + \frac{\Omega^2}{4}c_2 = 0.$$</li>
+            <li>Try \(c_2 = e^{st}\): \(s^2 + i\Delta s + \Omega^2/4 = 0\), so \(s = -\tfrac{i\Delta}{2} \pm \tfrac{i\Omega'}{2}\) with \(\Omega' = \sqrt{\Omega^2 + \Delta^2}\).</li>
+            <li>Start in the lower level: \(c_2(0) = 0\), and from step 2, \(\dot c_2(0) = -i\Omega/2\). The solution is $$c_2(t) = -\frac{i\Omega}{\Omega'}\,e^{-i\Delta t/2}\sin\frac{\Omega't}{2},$$ and \(P_2 = |c_2|^2\) is the formula above.</li>
+            <li>On resonance (\(\Delta = 0\)), \(P_2 = \sin^2(\Omega t/2)\): a pulse lasting \(t = \pi/\Omega\) (a "π pulse") flips the atom completely. Off resonance, the swing is faster but never complete.</li>
+          </ol>
+          <h4>Check with numbers</h4>
+          <div class="check"><p>With \(\Omega = 2\pi \times 10\) MHz, one full Rabi cycle takes \(2\pi/\Omega = 100\) ns and a π pulse 50 ns. Detune by \(\Delta = \Omega\): \(\Omega' = \sqrt2\,\Omega\), so the atom reaches the upper level with at most 50% probability, and cycles \(\sqrt2\) times faster.</p></div>
+          <p class="fcard__links"><a class="btn see3d" href="transition/">See it in 3D: drive the atom with light</a></p>
+        </section>
+
+        <!-- Selection rules -->
+        <section class="fcard" id="selection-rules">
+          <h3>Selection rules</h3>
+          <p class="fcard__says">Light can only drive jumps where l changes by exactly one. Some jumps, like 1s to 2s, are forbidden however bright the light.</p>
+          <div class="fcard__formula">$$\Delta l = \pm1, \qquad z_{12} = \int\phi_1\,z\,\phi_2\,dV; \qquad z_{1s,2p_z} = \frac{128\sqrt2}{243}\,a_0 \approx 0.745\,a_0, \quad z_{1s,2s} = 0$$</div>
+          <h4>Symbols</h4>
+          <dl class="symbols">
+            <dt>\(\Delta l\)</dt><dd>change in the orbital quantum number</dd>
+            <dt>\(z_{12}\)</dt><dd>dipole matrix element, m; the Rabi frequency is proportional to it</dd>
+            <dt>parity</dt><dd>whether a function is even or odd under \(\mathbf r \to -\mathbf r\); orbitals have parity \((-1)^l\)</dd>
+          </dl>
+          <h4>Derivation</h4>
+          <ol class="steps">
+            <li>From the <a href="#rabi">Rabi card</a>, light can only couple two levels if \(z_{12} \ne 0\).</li>
+            <li>Turn every point through the nucleus, \(\mathbf r \to -\mathbf r\). The volume integral is unchanged, but \(z \to -z\), and each orbital picks up \((-1)^l\). So \(z_{12} = (-1)^{l_1 + l_2 + 1}z_{12}\).</li>
+            <li>If \(l_1 + l_2\) is even, \(z_{12} = -z_{12}\), so \(z_{12} = 0\). Only odd changes in \(l\) survive. The photon carries one unit of angular momentum, which rules out \(|\Delta l| \ge 3\), leaving \(\Delta l = \pm1\). (The \(\phi\) integral also forces \(\Delta m_l = 0\) for light polarised along z.)</li>
+            <li>1s → 2s: both have \(l = 0\), so \(z_{12} = 0\). Forbidden.</li>
+            <li>1s → 2p<sub>z</sub>: with \(\phi_{1s} = \dfrac{e^{-r/a_0}}{\sqrt{\pi a_0^3}}\) and \(\phi_{2p_z} = \dfrac{1}{\sqrt{32\pi a_0^3}}\dfrac{r}{a_0}e^{-r/2a_0}\cos\theta\), $$z_{12} = \frac{1}{\sqrt{32}\,\pi a_0^4}\underbrace{\int_0^{2\pi}\!\!\int_0^\pi\cos^2\theta\sin\theta\,d\theta\,d\phi}_{4\pi/3}\ \underbrace{\int_0^\infty r^4e^{-3r/2a_0}\,dr}_{4!\,(2a_0/3)^5}.$$</li>
+            <li>\(4!\,(2/3)^5 = 768/243\), so \(z_{12} = \dfrac{4\pi}{3}\cdot\dfrac{768}{243}\cdot\dfrac{a_0}{\sqrt{32}\,\pi} = \dfrac{256}{243\sqrt2}\,a_0 = \dfrac{128\sqrt2}{243}\,a_0\).</li>
+          </ol>
+          <h4>Check with numbers</h4>
+          <div class="check"><p>\(128\sqrt2/243 = 181.0/243 = 0.745\), so \(z_{12} = 0.745 \times 0.0529 = 0.0394\) nm. Because 1s → 2s is forbidden, an electron put in 2s cannot drop straight down by emitting one photon. It lives about 0.12 s (it decays by emitting two photons), against 1.6 ns for 2p: about 75 million times longer.</p></div>
+          <p class="fcard__links"><a class="btn see3d" href="transition/">See it in 3D: try an allowed and a forbidden jump</a></p>
+        </section>
+      </section>
+
+<!-- ===================================================== TIER 5 -->
+      <section class="tier" aria-labelledby="tier-5">
+        <h2 id="tier-5"><span class="tier__num">5</span>Qubits</h2>
+        <p class="tier__blurb">Any two-level system, a spin, an atom's two levels or a superconducting circuit, is a qubit. One picture describes them all.</p>
+
+        <!-- Bloch -->
+        <section class="fcard" id="bloch">
+          <h3>The Bloch sphere</h3>
+          <p class="fcard__says">Every possible state of a qubit is one point on the surface of a sphere. The north pole is |0⟩, the south pole is |1⟩, and everything else is a superposition.</p>
+          <div class="fcard__formula">$$|\psi\rangle = \cos\frac{\theta}{2}\,|0\rangle + e^{i\varphi}\sin\frac{\theta}{2}\,|1\rangle, \qquad 0 \le \theta \le \pi,\ 0 \le \varphi \lt 2\pi$$</div>
+          <h4>Symbols</h4>
+          <dl class="symbols">
+            <dt>\(|0\rangle,\ |1\rangle\)</dt><dd>the two basis states (spin up/down, lower/upper level)</dd>
+            <dt>\(\theta\)</dt><dd>polar angle on the sphere</dd>
+            <dt>\(\varphi\)</dt><dd>azimuthal angle: the relative phase of the two parts</dd>
+          </dl>
+          <h4>Derivation</h4>
+          <ol class="steps">
+            <li>A general state is \(\alpha|0\rangle + \beta|1\rangle\): two complex numbers, four real numbers.</li>
+            <li>Normalisation, \(|\alpha|^2 + |\beta|^2 = 1\), removes one.</li>
+            <li>An overall phase changes nothing measurable: for any state \(\chi\), \(|\langle\chi|e^{i\gamma}\psi\rangle|^2 = |e^{i\gamma}|^2|\langle\chi|\psi\rangle|^2 = |\langle\chi|\psi\rangle|^2\). So choose \(\gamma\) to make \(\alpha\) real and positive. That removes another, leaving two real numbers: a point on a sphere.</li>
+            <li>With \(\alpha\) real and \(|\alpha|^2 + |\beta|^2 = 1\), write \(\alpha = \cos(\theta/2)\) and \(\beta = e^{i\varphi}\sin(\theta/2)\).</li>
+            <li>Why half-angles? \(|0\rangle\) and \(|1\rangle\) cannot both be found (they are orthogonal), yet they should sit at opposite poles, \(\theta = 0\) and \(\theta = \pi\). Half-angles turn "opposite on the sphere" into "orthogonal": \(\langle 0|1\rangle = 0\) at \(\pi/2\) in the state space, \(\pi\) on the sphere.</li>
+            <li>The point's position is the average spin direction: \(\langle\boldsymbol\sigma\rangle = (\sin\theta\cos\varphi,\ \sin\theta\sin\varphi,\ \cos\theta)\). This is the same as the <a href="#spin">spin card</a>, with \(\theta\) and \(\varphi\) as real directions in space.</li>
+          </ol>
+          <h4>Check with numbers</h4>
+          <div class="check"><p>On the equator, \(\theta = 90^\circ\), \(\varphi = 0\): \(|\psi\rangle = (|0\rangle + |1\rangle)/\sqrt2\), so \(P(0) = \cos^2 45^\circ = 0.5\). At \(\theta = 60^\circ\): \(P(0) = \cos^2 30^\circ = 0.75\). A π pulse in the <a href="#rabi">Rabi card</a> moves the point from the north pole to the south pole.</p></div>
+        </section>
+      </section>
+
+    </div>
+  </div>
+</main>
+
+<footer data-chrome></footer>
+</body>
+</html>

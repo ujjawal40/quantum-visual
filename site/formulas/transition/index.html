@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<title>An Atom Changing Level</title>
+<meta name="description" content="Watch a hydrogen atom's electron cloud change from 1s to 2p in 3D as light drives it: Rabi oscillation, the sloshing cloud that makes light, selection rules and spontaneous emission.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="../../assets/css/tokens.css">
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/controls.css">
+<link rel="stylesheet" href="../../assets/css/layout.css">
+<link rel="stylesheet" href="../../assets/css/lesson.css">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module" src="../../assets/js/ui/lesson.js"></script>
+<script type="module" src="./experiments.js"></script>
+<script type="module" src="./sim.js"></script>
+</head>
+<body data-lesson="transition">
+<a class="skip-link" href="#main">Skip to the simulation</a>
+<header data-chrome></header>
+
+<main id="main" class="lesson">
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="../">Formulas, derived</a> <span aria-hidden="true">/</span> <span>3D lab</span></nav>
+  <div class="lesson__intro">
+    <h1>An atom changing energy level</h1>
+    <p class="lede">Bohr said the electron jumps from one level to the next in an instant. The Schrödinger equation shows what really happens: the cloud melts smoothly from one shape into the other, and while it is between the two it sloshes back and forth, and that sloshing is what makes light.</p>
+  </div>
+
+  <div class="lesson__grid">
+    <article class="lesson__prose prose">
+      <h2>Between two levels</h2>
+      <p>A hydrogen atom in its ground state has its electron in the 1s orbital, a ball. One level up, in 2p<sub>z</sub>, the cloud is a dumbbell along z. While the atom is changing level, the electron is in a <em>superposition</em> of both:</p>
+      <div class="formula">ψ = c<sub>1</sub> ψ<sub>1s</sub> e<sup>−iE<sub>1</sub>t/ħ</sup> + c<sub>2</sub> ψ<sub>2p</sub> e<sup>−iE<sub>2</sub>t/ħ</sup>
+        <small>|c₁|² and |c₂|² are the chances of finding the atom in each level. They always add up to 1.</small></div>
+      <p>Square it to get where the electron is likely to be. Besides the two clouds, there is a cross term:</p>
+      <div class="formula">|ψ|<sup>2</sup> = |c<sub>1</sub>|<sup>2</sup>ψ<sub>1s</sub><sup>2</sup> + |c<sub>2</sub>|<sup>2</sup>ψ<sub>2p</sub><sup>2</sup> + 2|c<sub>1</sub>||c<sub>2</sub>| ψ<sub>1s</sub>ψ<sub>2p</sub> cos(ωt − φ)
+        <small>with ω = (E₂ − E₁)/ħ. The cross term is positive above the nucleus and negative below, so it pushes the cloud up, then down, at frequency ω.</small></div>
+      <p>The cloud carries the electron's charge, so a cloud swinging up and down is a tiny antenna. It radiates, or absorbs, light of exactly the frequency it swings at:</p>
+      <div class="formula">f = <span class="frac"><span>ω</span><span>2π</span></span> = <span class="frac"><span>E<sub>2</sub> − E<sub>1</sub></span><span>h</span></span>
+        <small>That is Bohr's rule hf = ΔE, no longer a postulate but a result. For 1s ↔ 2p, ΔE = 10.20 eV and f = 2.47 × 10¹⁵ Hz. <a href="../#transition">Derivation →</a></small></div>
+      <p>The yellow arrow in the simulation is the dipole ⟨z⟩, how far the centre of the cloud sits above or below the nucleus. In a pure level it is zero. Only in a superposition does it swing.</p>
+
+      <h2>Light drives the jump: Rabi oscillation</h2>
+      <p>Switch on the light. Its electric field pushes the cloud up and down at the light's frequency. If that matches the cloud's own frequency, every push lands in step, and the atom climbs steadily into the upper level. Keep the light on and it is driven back down again, then up, forever. The chance of being in the upper level is</p>
+      <div class="formula">P<sub>2</sub>(t) = <span class="frac"><span>Ω<sup>2</sup></span><span>Ω<sup>2</sup> + Δ<sup>2</sup></span></span> sin<sup>2</sup>(<span class="frac"><span>√(Ω² + Δ²) · t</span><span>2</span></span>)
+        <small>Ω, the Rabi frequency, grows with the light's strength. Δ is the detuning: how far the light's frequency is from ΔE/h. <a href="../#rabi">Derivation →</a></small></div>
+      <p>On resonance (Δ = 0) the atom goes all the way up. Detune the light and the pushes drift out of step: the atom only gets partway, then falls back sooner. This is how lasers, atomic clocks and quantum computers control atoms, one pulse at a time.</p>
+
+      <h2>Selection rules: jumps light can't make</h2>
+      <p>How hard the light can push depends on the dipole integral ⟨1|z|2⟩ = ∫ψ₁ z ψ₂ dV, how lopsided the cross term is. Choose <strong>1s ↔ 2s</strong>: both clouds are perfect spheres, the cross term is a sphere too, it can only breathe in and out, and ⟨z⟩ = 0. The light finds nothing to push. The rule for one photon is Δl = ±1: the orbital shape letter must change by one step, s ↔ p or p ↔ d. <a href="../#selection-rules">Why →</a></p>
+      <p>Because a 2s atom can't drop to 1s by giving out one photon, it lives about 0.12 s, some 75 million times longer than 2p.</p>
+
+      <h2>Falling back: spontaneous emission</h2>
+      <p>An excited atom left alone does not stay up. Even in empty space it falls, giving out one photon, after 1.6 ns on average for 2p. The fall happens at a random moment, like a nucleus decaying, and the photon flies off as an expanding shell. Look at its shape: bright around the waist and dark along the z axis, because an antenna swinging along z sends no light along its own length.</p>
+
+      <h2>What is slowed down</h2>
+      <p>The real cloud swings 2.47 × 10¹⁵ times a second, far too fast to see, so here it swings about once a second. The Rabi flip and the fall are slowed too. Everything else is real: the orbitals are the true hydrogen wavefunctions, the dipoles are calculated from them, and the jumps obey the equations above. The light for 1s ↔ 2p is ultraviolet (about 122 nm) and is drawn violet; 2p ↔ 3d is hydrogen's red line at 656 nm.</p>
+
+      <section class="versus" aria-labelledby="versus-title">
+        <h2 id="versus-title">Bohr vs Schrödinger</h2>
+        <div class="versus__grid">
+          <div class="versus__col versus__col--classical">
+            <h3>What Bohr's model says</h3>
+            <p>The electron sits on one orbit, then leaps to another in no time at all, and a photon appears. The model says nothing about what happens during the leap, or why some leaps never happen.</p>
+          </div>
+          <div class="versus__col">
+            <h3>What actually happens</h3>
+            <p>The amplitudes c₁ and c₂ change smoothly, and the cloud morphs and sloshes as they do. Only when you check which level the atom is in do you get one answer or the other. Forbidden jumps have a zero dipole.</p>
+          </div>
+        </div>
+        <p class="versus__meet">Where they meet: Bohr's energies E<sub>n</sub> = −13.6 eV/n² and his rule hf = E₂ − E₁ both come out of the Schrödinger equation exactly.</p>
+      </section>
+
+      <section data-quiz>
+        <script type="application/json">
+        [
+          { "q": "Why does the cloud slosh while the atom is between two levels?",
+            "options": ["The nucleus is vibrating", "The cross term 2|c₁||c₂|ψ₁ψ₂ cos(ωt − φ) oscillates at ω = (E₂ − E₁)/ħ", "The electron is orbiting very fast", "The light is pushing the nucleus"],
+            "answer": 1,
+            "explain": "Each level on its own has a density that never changes. The two levels together interfere, and their interference term swings at the difference of their frequencies." },
+          { "q": "Light exactly on resonance shines on an atom in 1s. What happens if you keep it on?",
+            "options": ["The atom goes to 2p and stays there", "The atom ionises", "The atom swings between 1s and 2p again and again", "Nothing, light can't excite an atom"],
+            "answer": 2,
+            "explain": "That is Rabi oscillation: P₂ = sin²(Ωt/2). The same light that pushes it up then pushes it back down (stimulated emission)." },
+          { "q": "Why can't one photon drive 1s → 2s?",
+            "options": ["2s has more energy than a photon can carry", "The dipole ⟨1s|z|2s⟩ is zero, because both orbitals are spherically symmetric", "2s is already full", "The photon would need to be red"],
+            "answer": 1,
+            "explain": "The selection rule Δl = ±1. With Δl = 0 the cross term is symmetric, so it has no up-down swing for the light to push." },
+          { "q": "The light is detuned so that Δ = Ω. What is the most probability the upper level ever reaches?",
+            "options": ["100%", "71%", "50%", "0%"],
+            "answer": 2,
+            "explain": "P₂,max = Ω² / (Ω² + Δ²) = Ω² / 2Ω² = 50%." }
+        ]
+        </script>
+      </section>
+    </article>
+
+    <aside class="lesson__bench" aria-label="Simulation and experiments">
+      <div class="bench">
+        <div class="bench__stage" id="stage" role="img" aria-label="3D cloud of dots showing where hydrogen's electron is likely to be as it changes between two levels. Drag to rotate."></div>
+        <p class="bench__caption">Each dot is one place the electron could be found; brighter regions are more likely. Yellow arrow: the dipole ⟨z⟩. z points up. Drag to rotate; pinch, or hold Ctrl and scroll, to zoom.</p>
+        <canvas id="ladder" class="ladder" aria-label="Energy levels with how much of the atom is in each, and the upper-level probability over time."></canvas>
+        <p class="status" id="status" aria-live="polite">Loading the atom…</p>
+
+        <dl class="readouts">
+          <div class="readout"><dt>Upper level</dt><dd><span id="r-p2">0</span><small>%</small></dd></div>
+          <div class="readout"><dt>Dipole ⟨z⟩</dt><dd><span id="r-z">0.00</span><small>a₀</small></dd></div>
+          <div class="readout"><dt>Photon energy</dt><dd><span id="r-e">10.20</span><small>eV</small></dd></div>
+          <div class="readout"><dt>Wavelength</dt><dd><span id="r-nm">121.5</span><small>nm</small></dd></div>
+          <div class="readout"><dt>⟨1|z|2⟩</dt><dd><span id="r-d">0.745</span><small>a₀</small></dd></div>
+          <div class="readout"><dt>Real lifetime</dt><dd id="r-life">1.6 ns</dd></div>
+        </dl>
+
+        <div class="bench__actions">
+          <button class="btn" type="button" id="light" aria-pressed="false">Switch light on</button>
+          <button class="btn btn--quiet" type="button" id="to-lower">Put in lower level</button>
+          <button class="btn btn--quiet" type="button" id="to-upper">Put in upper level</button>
+          <button class="btn btn--quiet" type="button" id="to-half">Half and half</button>
+        </div>
+
+        <div class="bench__controls">
+          <div>
+            <div class="control">
+              <label class="control__label" for="jump">Jump</label>
+              <select id="jump"></select>
+            </div>
+            <div class="control">
+              <label class="control__label" for="strength">Light strength <span class="control__value" data-value-for="strength"></span></label>
+              <input type="range" id="strength" min="0.2" max="1.5" step="0.05" value="0.8">
+            </div>
+            <div class="control">
+              <label class="control__label" for="detune">Detuning Δ <span class="control__value" data-value-for="detune"></span></label>
+              <input type="range" id="detune" min="-2" max="2" step="0.1" value="0">
+            </div>
+          </div>
+          <div>
+            <label class="toggle"><input type="checkbox" id="decay" checked> Spontaneous emission</label>
+            <label class="toggle"><input type="checkbox" id="spin" checked> Rotate slowly</label>
+          </div>
+        </div>
+      </div>
+
+      <section data-tasks aria-label="Experiments"></section>
+    </aside>
+  </div>
+</main>
+
+<footer data-chrome></footer>
+</body>
+</html>

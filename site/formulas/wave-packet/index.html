@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<title>The Schrödinger Equation, Live</title>
+<meta name="description" content="Watch the time-dependent Schrödinger equation run in 3D: a wave packet spreads, tunnels through a wall, passes two slits and collapses when you measure it.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="../../assets/css/tokens.css">
+<link rel="stylesheet" href="../../assets/css/base.css">
+<link rel="stylesheet" href="../../assets/css/controls.css">
+<link rel="stylesheet" href="../../assets/css/layout.css">
+<link rel="stylesheet" href="../../assets/css/lesson.css">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script type="module" src="../../assets/js/ui/lesson.js"></script>
+<script type="module" src="./experiments.js"></script>
+<script type="module" src="./sim.js"></script>
+</head>
+<body data-lesson="wave-packet">
+<a class="skip-link" href="#main">Skip to the simulation</a>
+<header data-chrome></header>
+
+<main id="main" class="lesson">
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="../">Formulas, derived</a> <span aria-hidden="true">/</span> <span>3D lab</span></nav>
+  <div class="lesson__intro">
+    <h1>The Schrödinger equation, live</h1>
+    <p class="lede">This is not an animation someone drew. Your browser is solving the Schrödinger equation on a grid of 16,000 points, many times a second. Send a particle at a wall, through two slits or into a bowl, and watch what the equation does.</p>
+  </div>
+
+  <div class="lesson__grid">
+    <article class="lesson__prose prose">
+      <h2>The equation being solved</h2>
+      <div class="formula">iħ <span class="frac"><span>∂ψ</span><span>∂t</span></span> = − <span class="frac"><span>ħ<sup>2</sup></span><span>2m</span></span> ∇<sup>2</sup>ψ + Vψ
+        <small>Left: how ψ changes in time. Right: the kinetic energy term, which makes waves spread and move, plus the potential energy V(x, y) of the landscape.</small></div>
+      <p>ψ (psi) is the wavefunction. It is a complex number at every point, so it has a size and a <em>phase</em>, an angle that turns as the wave moves. In the simulation:</p>
+      <ul>
+        <li><strong>Height</strong> is |ψ|², the probability of finding the particle there. The total volume under the surface is always 1: the particle is somewhere.</li>
+        <li><strong>Colour</strong> is the phase. Stripes of colour moving across the packet are its wavelength; the faster the stripes, the faster the particle.</li>
+        <li><strong>The grey floor</strong> is the potential V. Raised parts are walls and bowls the particle has to climb.</li>
+      </ul>
+      <p>Everything uses units where ħ = m = 1. A packet with wavenumber k then moves at speed k, and its kinetic energy is k²/2. <a href="../#schrodinger">How the equation is built →</a></p>
+
+      <h2>How the computer solves it</h2>
+      <p>Each time step does two exact things in turn. The potential just turns the phase at each point: ψ → e<sup>−iVΔt/ħ</sup>ψ. The kinetic term is simple in terms of wavelengths, so the program splits ψ into plane waves with a fast Fourier transform, turns each one's phase by e<sup>−iħk²Δt/2m</sup>, and adds them back up. Alternating the two, with half a potential step on each side, is called the <em>split-step Fourier method</em>. Every factor has size exactly 1, so total probability cannot leak: watch the readout stay at 100% until the wave reaches the edge of the grid, where a soft absorbing border swallows it.</p>
+
+      <h2>Four landscapes</h2>
+      <h3>Free space: the packet spreads</h3>
+      <p>A particle with a well-defined position must have an uncertain momentum, so its parts move at slightly different speeds and the packet widens. The width grows as</p>
+      <div class="formula">σ(t) = σ<sub>0</sub> √(1 + (ħt / 2mσ<sub>0</sub><sup>2</sup>)<sup>2</sup>)
+        <small>A narrow packet (small σ₀) spreads fastest. Try the narrowest width. <a href="../#wave-packet">Derivation →</a></small></div>
+
+      <h3>A barrier: tunnelling</h3>
+      <p>Give the barrier a height V₀ above the packet's energy. A ball would bounce back every time. The wave bounces back mostly, but a part leaks through, because ψ does not stop at the wall: inside it dies away like e<sup>−κx</sup>, with κ = √(2m(V₀ − E))/ħ. If the wall is thin, some of it is still left on the far side. Double the thickness and the transmitted part drops roughly by a factor of e<sup>2κa</sup>. <a href="../#tunnelling">The transmission formula →</a></p>
+
+      <h3>Two slits: interference</h3>
+      <p>The packet passes through both slits at once. Behind the wall the two halves overlap; where their phases match they add, where they are opposite they cancel. Look at the colours: fringes appear exactly where the stripes from the two slits fall in and out of step.</p>
+
+      <h3>A harmonic well: a quantum pendulum</h3>
+      <p>In the bowl V = ½mω²r², a packet released from the side swings across and back with period 2π/ω, just like a pendulum, and the right width of packet keeps its shape forever. This is the quantum harmonic oscillator, the model behind molecular vibrations and light itself. <a href="../#oscillator">Its energy levels →</a></p>
+
+      <h2>Measuring collapses the wave</h2>
+      <p>Press <strong>Measure position</strong>. The program picks one point at random, weighted by |ψ|², exactly as nature does (the Born rule). Then ψ is replaced by a narrow spike at that point. The spread-out wave is gone; immediately afterwards the spike starts to spread again, faster than before, because a sharp position means a very uncertain momentum. <a href="../#born-rule">The Born rule →</a></p>
+
+      <section class="versus" aria-labelledby="versus-title">
+        <h2 id="versus-title">Newton vs quantum</h2>
+        <div class="versus__grid">
+          <div class="versus__col versus__col--classical">
+            <h3>What Newton predicts</h3>
+            <p>A ball with less energy than a wall's height always bounces back. A ball through two slits goes through one of them. A ball in a bowl has a definite position at every instant.</p>
+          </div>
+          <div class="versus__col">
+            <h3>What actually happens</h3>
+            <p>Part of the wave tunnels through the wall. The wave goes through both slits and interferes. Only a measurement gives the particle a definite place, and only for a moment.</p>
+          </div>
+        </div>
+        <p class="versus__meet">Where they meet: the centre of the packet, ⟨x⟩, moves exactly like Newton's ball (Ehrenfest's theorem). In free space it moves at constant speed; in the bowl it swings with period 2π/ω.</p>
+      </section>
+
+      <section data-quiz>
+        <script type="application/json">
+        [
+          { "q": "What does the height of the surface show?",
+            "options": ["The particle's energy", "The probability density |ψ|² of finding the particle there", "The real part of the particle's velocity", "The potential energy V"],
+            "answer": 1,
+            "explain": "Height is |ψ|². The total volume under the surface is the total probability, which stays at 1." },
+          { "q": "You double the thickness of a barrier the packet is tunnelling through. What happens to the transmitted part?",
+            "options": ["It halves", "It stays the same", "It drops by roughly a factor of e^(2κa), usually much more than half", "It doubles"],
+            "answer": 2,
+            "explain": "For a thick barrier T ≈ 16(E/V₀)(1 − E/V₀) e^(−2κa). Adding thickness a multiplies T by about e^(−2κa) again: an exponential drop." },
+          { "q": "A packet has wavenumber k = 2 in units where ħ = m = 1. How fast does its centre move?",
+            "options": ["1", "2", "4", "It does not move; it only spreads"],
+            "answer": 1,
+            "explain": "The group velocity is ħk/m = k = 2. Its phase stripes move at half that speed, but the packet itself moves at 2." },
+          { "q": "Right after you measure the position, the narrow spike spreads out very fast. Why?",
+            "options": ["The measurement gave it extra energy from nowhere", "A sharp position means a very uncertain momentum, Δx Δp ≥ ħ/2", "The grid is too coarse", "The absorbing edge pulls it apart"],
+            "answer": 1,
+            "explain": "A narrow spike is a mixture of many momenta, so its parts fly apart quickly. That is the uncertainty principle at work." }
+        ]
+        </script>
+      </section>
+    </article>
+
+    <aside class="lesson__bench" aria-label="Simulation and experiments">
+      <div class="bench">
+        <div class="bench__stage" id="stage" role="img" aria-label="3D surface showing the probability of finding the particle, coloured by phase, over the potential landscape."></div>
+        <p class="bench__caption">Height: probability |ψ|². Colour: phase of ψ. Grey: the potential V. Drag to rotate; pinch, or hold Ctrl and scroll, to zoom.</p>
+        <p class="status" id="status" aria-live="polite">Loading the solver…</p>
+
+        <dl class="readouts">
+          <div class="readout"><dt>Time</dt><dd id="r-t">0.0</dd></div>
+          <div class="readout"><dt>Probability on grid</dt><dd><span id="r-p">100.0</span><small>%</small></dd></div>
+          <div class="readout"><dt>Energy ⟨E⟩</dt><dd id="r-e">4.60</dd></div>
+          <div class="readout"><dt>Centre ⟨x⟩</dt><dd id="r-x">−9.0</dd></div>
+          <div class="readout" id="r-beyond-cell" hidden><dt>Got past the wall</dt><dd><span id="r-beyond">0.0</span><small>%</small></dd></div>
+        </dl>
+
+        <div class="bench__actions">
+          <button class="btn" type="button" id="play">Pause</button>
+          <button class="btn btn--quiet" type="button" id="restart">Restart</button>
+          <button class="btn btn--quiet" type="button" id="measure">Measure position</button>
+        </div>
+
+        <div class="bench__controls">
+          <div>
+            <div class="control">
+              <label class="control__label" for="landscape">Landscape</label>
+              <select id="landscape">
+                <option value="free">Free space</option>
+                <option value="barrier">Barrier (tunnelling)</option>
+                <option value="slits">Double slit</option>
+                <option value="well">Harmonic well</option>
+              </select>
+            </div>
+            <div class="control">
+              <label class="control__label" for="k">Wavenumber k (speed) <span class="control__value" data-value-for="k"></span></label>
+              <input type="range" id="k" min="0" max="5" step="0.25" value="3">
+            </div>
+            <div class="control">
+              <label class="control__label" for="sigma">Starting width σ₀ <span class="control__value" data-value-for="sigma"></span></label>
+              <input type="range" id="sigma" min="0.6" max="3" step="0.1" value="1.6">
+            </div>
+          </div>
+          <div>
+            <div class="control" data-for="barrier">
+              <label class="control__label" for="height">Barrier height V₀ <span class="control__value" data-value-for="height"></span></label>
+              <input type="range" id="height" min="0" max="12" step="0.5" value="6">
+            </div>
+            <div class="control" data-for="barrier">
+              <label class="control__label" for="thick">Barrier thickness a <span class="control__value" data-value-for="thick"></span></label>
+              <input type="range" id="thick" min="0.2" max="2" step="0.1" value="0.8">
+            </div>
+            <div class="control">
+              <span class="control__label">Height shows</span>
+              <div class="segmented" id="show" role="group" aria-label="Height shows">
+                <button type="button" data-show="prob" aria-pressed="true">|ψ|²</button><button type="button" data-show="re">Re ψ</button>
+              </div>
+            </div>
+            <div class="control">
+              <span class="control__label">Grid</span>
+              <div class="segmented" id="grid" role="group" aria-label="Grid resolution">
+                <button type="button" data-n="128" aria-pressed="true">128²</button><button type="button" data-n="256">256²</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section data-tasks aria-label="Experiments"></section>
+    </aside>
+  </div>
+</main>
+
+<footer data-chrome></footer>
+</body>
+</html>

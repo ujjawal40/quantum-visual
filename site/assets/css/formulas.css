@@ -1,0 +1,113 @@
+/* The formulas reference: a contents sidebar beside a column of formula
+   cards, each with the formula, its symbols, a derivation and a worked check. */
+
+.formulas { max-width: 1240px; margin: 0 auto; padding: var(--space-6) var(--gutter) 0; }
+.formulas__intro { max-width: 52rem; margin-bottom: var(--space-6); }
+.formulas__intro h1 { font-size: var(--step-5); line-height: 1.02; margin-bottom: var(--space-4); }
+
+.formulas__grid {
+  display: grid; grid-template-columns: 250px minmax(0, 1fr);
+  gap: var(--space-7); align-items: start;
+}
+.formulas__body { min-width: 0; max-width: 50rem; }
+
+/* Contents */
+.ftoc {
+  position: sticky; top: 76px; max-height: calc(100vh - 92px); overflow-y: auto;
+  font-size: var(--step--1); scrollbar-width: thin;
+  background: var(--paper-raised); border: 1px solid var(--grid-strong); border-radius: var(--radius-m);
+  padding: var(--space-3) var(--space-4);
+}
+.ftoc summary { font-weight: 600; cursor: pointer; padding: var(--space-1) 0; }
+.ftoc ol { list-style: none; margin: 0; padding: 0; }
+.ftoc > details > ol { margin-top: var(--space-2); }
+.ftoc__tier { margin-top: var(--space-3); }
+.ftoc__tier > a { font-weight: 600; color: var(--ink); text-decoration: none; }
+.ftoc__tier ol { margin: var(--space-1) 0 0; padding-left: var(--space-3); border-left: 1px solid var(--grid); }
+.ftoc__tier li li { margin: 2px 0; }
+.ftoc a { color: var(--pencil); text-decoration: none; display: block; padding: 2px 0; }
+.ftoc a:hover, .ftoc a[aria-current="true"] { color: var(--signal); }
+.ftoc a[aria-current="true"] { font-weight: 600; }
+
+@media (max-width: 960px) {
+  .formulas__grid { grid-template-columns: minmax(0, 1fr); gap: var(--space-5); }
+  .ftoc { position: static; max-height: none; }
+  .formulas__intro h1 { font-size: var(--step-4); }
+}
+
+/* Feature cards for the 3D labs */
+.labs3d { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--space-4); margin-bottom: var(--space-6); }
+.labs3d__card {
+  display: grid; gap: var(--space-2); padding: var(--space-5); text-decoration: none; color: var(--ink);
+  background: #0a0f1a; color: #e4e9f0; border-radius: var(--radius-m); border: 1px solid #26334a;
+  position: relative; overflow: hidden;
+}
+.labs3d__card::after {
+  content: ""; position: absolute; inset: auto -40px -60px auto; width: 180px; height: 180px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(122, 162, 255, 0.45), rgba(122, 162, 255, 0) 70%);
+}
+.labs3d__card:hover { border-color: #7aa2ff; }
+.labs3d__kicker { font-size: var(--step--1); color: #94a0b3; margin: 0; }
+.labs3d__title { font-size: var(--step-1); font-weight: 600; margin: 0; }
+.labs3d__text { font-size: var(--step--1); color: #c3cbd6; margin: 0; max-width: 36ch; }
+
+/* Tiers */
+.tier { margin-bottom: var(--space-7); }
+.tier > h2 { margin-top: 0; padding-top: var(--space-4); border-top: 2px solid var(--ink); }
+.tier__num { color: var(--signal); margin-right: 0.3em; }
+.tier__blurb { color: var(--pencil); max-width: var(--measure); }
+
+/* One formula */
+.fcard {
+  margin: var(--space-5) 0; padding: var(--space-5);
+  background: var(--paper-raised); border: 1px solid var(--grid-strong); border-radius: var(--radius-m);
+  scroll-margin-top: 84px;
+}
+.fcard > h3 { margin: 0 0 var(--space-2); }
+.fcard__says { font-family: var(--font-prose); font-size: 1.08rem; color: var(--pencil); margin-bottom: var(--space-3); }
+.fcard h4 {
+  margin: var(--space-5) 0 var(--space-2); font-size: var(--step--1); text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--pencil);
+}
+.fcard p, .fcard li { line-height: 1.6; }
+.fcard__formula {
+  margin: var(--space-3) 0; padding: var(--space-2) var(--space-4);
+  font-size: 1.15rem; background: var(--signal-soft); border-left: 3px solid var(--signal);
+  border-radius: 0 var(--radius-m) var(--radius-m) 0; overflow-x: auto;
+}
+.fcard__note { font-size: var(--step--1); color: var(--pencil); }
+
+.symbols { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: var(--space-1) var(--space-4); margin: 0; font-size: var(--step--1); }
+.symbols dt { font-weight: 600; }
+.symbols dd { margin: 0; color: var(--ink); }
+
+.steps { counter-reset: step; list-style: none; margin: 0; padding: 0; }
+.steps > li {
+  counter-increment: step; position: relative; padding: 0 0 var(--space-3) 2.2em; margin: 0;
+}
+.steps > li::before {
+  content: counter(step); position: absolute; left: 0; top: 0.1em;
+  width: 1.6em; height: 1.6em; border-radius: 50%; display: grid; place-items: center;
+  font-size: 0.8em; font-weight: 600; color: var(--signal); border: 1.5px solid var(--signal);
+}
+
+.honest {
+  margin: var(--space-3) 0; padding: var(--space-2) var(--space-3); font-size: var(--step--1);
+  background: var(--warn-soft); border-radius: var(--radius-s);
+}
+.honest strong { color: var(--warn); }
+
+.check {
+  padding: var(--space-3) var(--space-4); font-size: var(--step--1);
+  background: var(--ok-soft); border-radius: var(--radius-s);
+}
+.check p:last-child { margin-bottom: 0; }
+
+.fcard__links { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: var(--space-4) 0 0; }
+.see3d { gap: var(--space-2); }
+.see3d::before { content: "◆"; font-size: 0.8em; }
+
+/* KaTeX: inherit the theme's ink, and let long equations scroll instead of widening the page. */
+.formulas .katex { color: inherit; font-size: 1.08em; }
+.formulas .katex-display { overflow-x: auto; overflow-y: hidden; padding: var(--space-1) 0; margin: var(--space-2) 0; }
+.formulas .katex-display > .katex { white-space: nowrap; }

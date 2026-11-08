@@ -15,6 +15,7 @@
 .btn--quiet[aria-pressed="true"] { background: var(--signal-soft); border-color: var(--signal); color: var(--signal); }
 
 .control { display: grid; gap: var(--space-1); margin-bottom: var(--space-4); }
+.control[hidden] { display: none; }
 .control__label {
   display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-3);
   font-size: var(--step--1); color: var(--pencil);

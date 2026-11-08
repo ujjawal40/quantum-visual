@@ -45,7 +45,13 @@ await new Promise((r) => server.listen(0, r));
 const base = `http://127.0.0.1:${server.address().port}`;
 
 const { INTERACTIVE } = await import(join(SITE, "assets/js/course.js"));
-let pages = [{ name: "home", path: "/index.html" }, ...INTERACTIVE.map((l) => ({ name: l.slug, path: `/lessons/${l.slug}/` }))];
+let pages = [
+  { name: "home", path: "/index.html" },
+  ...INTERACTIVE.map((l) => ({ name: l.slug, path: `/lessons/${l.slug}/` })),
+  { name: "formulas", path: "/formulas/" },
+  { name: "wave-packet", path: "/formulas/wave-packet/" },
+  { name: "transition", path: "/formulas/transition/" },
+];
 if (only) pages = pages.filter((p) => p.name === only);
 
 const browser = await chromium.launch({ args: ["--use-gl=swiftshader", "--enable-webgl", "--ignore-gpu-blocklist"] });

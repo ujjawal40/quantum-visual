@@ -45,6 +45,7 @@ function header() {
       <a class="wordmark" href="${url("index.html")}">Quantum Visual</a>
       <nav class="site-nav" aria-label="Main">
         <a href="${url("index.html#course")}">Course</a>
+        <a href="${url("formulas/")}">Formulas</a>
         <a href="${REPO}/tree/main/labs">Python labs</a>
         <a href="${REPO}">GitHub</a>
         <button class="theme-switch" type="button" aria-label="Switch to dark mode"></button>
